@@ -10,7 +10,7 @@ import seaborn as sns
 # Is this a personal or work computer
 # Are you graphing for hood or no hood
 
-Computer = 'work' #or 'personal' or 'work'
+Computer = 'personal' #or 'personal' or 'work'
 Hood_or_no = 'no_hood' # 'no_hood' or 'hood'
 
 if Computer == 'personal' and Hood_or_no == 'no_hood':
@@ -182,34 +182,76 @@ else:
     #3H survey 
     datafile_path_survey_3H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3H/3H_Survey_summary_.csv"
     Survey_3H = pd.read_csv(datafile_path_survey_3H, skiprows=0)
-    
+
+# What households do you want to be removed
+Household_removal = [1046]
+
+
 #time to start ploting fun things 
 #1st starting with the fuel per day per adult histogram and box plot
 NO_hood_counter = np.arange(0,39)
 hood_counter = np.arange(0,14)
 
-print(Survey_1N.iloc[:,7])
+print(Day_1N.iloc[:,13])
 Fuel_per_day_per_adult_1N = []
+f_d_a_1N = []
 Fuel_per_day_per_adult_2N = []
-Fuel_per_day_per_adult_3N = []   
+f_d_a_2N = []
+Fuel_per_day_per_adult_3N = []
+f_d_a_3N = []
 Fuel_per_day_per_adult_4N = []
+f_d_a_4N = []
+count = 0
 for c in NO_hood_counter:
-    Fuel_per_day_per_adult_1N.append(Day_1N.iloc[c,13]/Survey_1N.iloc[c,7])
-    
-    
-    
-    
+    if c == (Household_removal[count] - 1001):
+        count = count + 1
+        pass
+    if Day_1N.iloc[c,13] != -1.00:
+        Fuel_per_day_per_adult_1N.append(Day_1N.iloc[c,13]/Survey_1N.iloc[c,7])
+        f_d_a_1N.append(Day_1N.iloc[c,0])
+    if Day_2N.iloc[c, 13] != -1.00:
+        Fuel_per_day_per_adult_2N.append(Day_2N.iloc[c, 13] / Survey_2N.iloc[c, 7])
+        f_d_a_2N.append(Day_2N.iloc[c,0])
+    if Day_3N.iloc[c, 13] != -1.00:
+        Fuel_per_day_per_adult_3N.append(Day_3N.iloc[c, 13] / Survey_3N.iloc[c, 7])
+        f_d_a_3N.append(Day_3N.iloc[c, 0])
+    if Day_3N.iloc[c, 13] != -1.00:
+        Fuel_per_day_per_adult_4N.append(Day_4N.iloc[c, 13] / Survey_4N.iloc[c, 7])
+        f_d_a_4N.append(Day_3N.iloc[c, 0])
+
+
 print(Fuel_per_day_per_adult_1N)
 
-
+#Average fuel per day per adult
+#1N
 
 sns.set(style="ticks")
-
+plt.subplot(2,2,1)
 f, (ax_box, ax_hist) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios": (0.15, 0.85)})
-
 sns.boxplot(Fuel_per_day_per_adult_1N, ax=ax_box)
 sns.distplot(Fuel_per_day_per_adult_1N, ax=ax_hist)
-
 ax_box.set(yticks=[])
 sns.despine(ax=ax_hist)
 sns.despine(ax=ax_box, left=True)
+#2N
+
+sns.set(style="ticks")
+plt.subplot(2,2,2)
+f, (ax_box2, ax_hist2) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios": (0.15, 0.85)})
+sns.boxplot(Fuel_per_day_per_adult_2N, ax=ax_box)
+sns.distplot(Fuel_per_day_per_adult_2N, ax=ax_hist)
+
+#3N
+sns.set(style="ticks")
+plt.subplot(2,2,3)
+f, (ax_box3, ax_hist3) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios": (0.15, 0.85)})
+sns.boxplot(Fuel_per_day_per_adult_3N, ax=ax_box)
+sns.distplot(Fuel_per_day_per_adult_3N, ax=ax_hist)
+
+#4N
+sns.set(style="ticks")
+plt.subplot(2,2,4)
+f, (ax_box4, ax_hist4) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios": (0.15, 0.85)})
+sns.boxplot(Fuel_per_day_per_adult_4N, ax=ax_box)
+sns.distplot(Fuel_per_day_per_adult_4N, ax=ax_hist)
+plt.show()

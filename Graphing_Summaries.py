@@ -218,7 +218,7 @@ for c in NO_hood_counter:
     
     
 # now for plotting
-
+#1N
 sns.set(style="ticks")
 
 f, (ax_box, ax_hist) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios": (0.15, 0.85)})
@@ -228,3 +228,17 @@ sns.distplot(Fuel_per_day_per_adult_1N, ax=ax_hist, color='b')
 ax_box.set(yticks=[])
 sns.despine(ax=ax_hist)
 sns.despine(ax=ax_box, left=True)
+
+
+#2N
+sns.set(style="ticks")
+
+f, (ax_box, ax_hist) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios": (0.15, 0.85)})
+
+sns.boxplot(Fuel_per_day_per_adult_2N, ax=ax_box, color='g')
+sns.distplot(Fuel_per_day_per_adult_2N, ax=ax_hist, color='g')
+ax_box.set(yticks=[])
+sns.despine(ax=ax_hist)
+sns.despine(ax=ax_box, left=True)
+
+

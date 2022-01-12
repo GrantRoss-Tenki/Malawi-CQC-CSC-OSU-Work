@@ -1,10 +1,11 @@
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
 import glob
 import itertools
 import csv
+import seaborn as sns
 
 # Is this a personal or work computer
 # Are you graphing for hood or no hood
@@ -183,13 +184,32 @@ else:
     Survey_3H = pd.read_csv(datafile_path_survey_3H, skiprows=0)
     
 #time to start ploting fun things 
-#1st starting with 
+#1st starting with the fuel per day per adult histogram and box plot
+NO_hood_counter = np.arange(0,39)
+hood_counter = np.arange(0,14)
+
+print(Survey_1N.iloc[:,7])
+Fuel_per_day_per_adult_1N = []
+Fuel_per_day_per_adult_2N = []
+Fuel_per_day_per_adult_3N = []   
+Fuel_per_day_per_adult_4N = []
+for c in NO_hood_counter:
+    Fuel_per_day_per_adult_1N.append(Day_1N.iloc[c,13]/Survey_1N.iloc[c,7])
+    
+    
+    
+    
+print(Fuel_per_day_per_adult_1N)
 
 
-        
 
-    
-    
-    
-    
-    
+sns.set(style="ticks")
+
+f, (ax_box, ax_hist) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios": (0.15, 0.85)})
+
+sns.boxplot(Fuel_per_day_per_adult_1N, ax=ax_box)
+sns.distplot(Fuel_per_day_per_adult_1N, ax=ax_hist)
+
+ax_box.set(yticks=[])
+sns.despine(ax=ax_hist)
+sns.despine(ax=ax_box, left=True)

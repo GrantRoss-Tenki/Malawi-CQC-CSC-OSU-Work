@@ -187,29 +187,44 @@ else:
 #1st starting with the fuel per day per adult histogram and box plot
 NO_hood_counter = np.arange(0,39)
 hood_counter = np.arange(0,14)
-
+Household_removal = [1046]
 print(Survey_1N.iloc[:,7])
 Fuel_per_day_per_adult_1N = []
+f_d_a_1N = []
 Fuel_per_day_per_adult_2N = []
-Fuel_per_day_per_adult_3N = []   
+f_d_a_2N = []
+Fuel_per_day_per_adult_3N = []
+f_d_a_3N = []
 Fuel_per_day_per_adult_4N = []
+f_d_a_4N =[]
+count = 0
 for c in NO_hood_counter:
-    Fuel_per_day_per_adult_1N.append(Day_1N.iloc[c,13]/Survey_1N.iloc[c,7])
+    if c == (Household_removal[count] - 1001):
+        count = count + 1
+        pass
+    if Day_1N.iloc[c,13] != -1.00:
+        Fuel_per_day_per_adult_1N.append(Day_1N.iloc[c,13]/Survey_1N.iloc[c,7])
+        f_d_a_1N.append(Day_1N.iloc[c,0])
+    if Day_2N.iloc[c, 13] != -1.00:
+        Fuel_per_day_per_adult_2N.append(Day_2N.iloc[c, 13] / Survey_2N.iloc[c, 7])
+        f_d_a_2N.append(Day_2N.iloc[c,0])
+    if Day_3N.iloc[c, 13] != -1.00:
+        Fuel_per_day_per_adult_3N.append(Day_3N.iloc[c, 13] / Survey_3N.iloc[c, 7])
+        f_d_a_3N.append(Day_3N.iloc[c, 0])
+    if Day_3N.iloc[c, 13] != -1.00:
+        Fuel_per_day_per_adult_4N.append(Day_4N.iloc[c, 13] / Survey_4N.iloc[c, 7])
+        f_d_a_4N.append(Day_3N.iloc[c, 0])
     
     
     
-    
-print(Fuel_per_day_per_adult_1N)
-
-
+# now for plotting
 
 sns.set(style="ticks")
 
 f, (ax_box, ax_hist) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios": (0.15, 0.85)})
 
-sns.boxplot(Fuel_per_day_per_adult_1N, ax=ax_box)
-sns.distplot(Fuel_per_day_per_adult_1N, ax=ax_hist)
-
+sns.boxplot(Fuel_per_day_per_adult_1N, ax=ax_box, color='b')
+sns.distplot(Fuel_per_day_per_adult_1N, ax=ax_hist, color='b')
 ax_box.set(yticks=[])
 sns.despine(ax=ax_hist)
 sns.despine(ax=ax_box, left=True)

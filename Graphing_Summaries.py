@@ -11,8 +11,8 @@ import seaborn as sns
 # Is this a personal or work computer
 # Are you graphing for hood or no hood
 
-Computer = 'work' #or 'personal' or 'work'
-Hood_or_no = 'hood' # 'no_hood' or 'hood'
+Computer = 'personal' #or 'personal' or 'work'
+Hood_or_no = 'no_hood' # 'no_hood' or 'hood'
 #what household do you want to remove make sure it is in ascending order
 # if there is nothing, then put a placeholder of 1045 or higher
 Household_removal = [1045]
@@ -195,7 +195,7 @@ else:
 NO_hood_counter = np.arange(0,39)
 hood_counter = np.arange(0,14)
 #what household do you want to remove from the graphs (1046 is a dummy spacer)
-print('-----------can i remove 1031?',Day_1N.iloc[31,0]-1001)
+
 
 print('---------------Fuel per Day per Adult No-Hood Phase---------------------')
 if Hood_or_no == 'no_hood':
@@ -227,20 +227,21 @@ if Hood_or_no == 'no_hood':
             Fuel_per_day_per_adult_4N.append(Day_4N.iloc[c, 13] / Survey_4N.iloc[c, 7])
             f_d_a_4N.append(Day_3N.iloc[c, 0])
     # percentage Change of Fuel per day between the phases
-    Fuel_per_day_2N_1N = []
-    f_d_2N_1N = []
-    Fuel_per_day_3N_1N = []
-    f_d_3N_1N = []
-    Fuel_per_day_4N_1N = []
-    f_d_4N_1N = []
+    Fuel_per_day_per_adult_2N_1N = []
+    f_d_a_2N_1N = []
+    Fuel_per_day_per_adult_3N_1N = []
+    f_d_a_3N_1N = []
+    Fuel_per_day_per_adult_4N_1N = []
+    f_d_a_4N_1N = []
     
-    Fuel_per_day_3N_2N = []
-    f_d_3N_2N = []
-    Fuel_per_day_4N_3N = []
-    f_d_4N_3N = []
-    Fuel_per_day_4N_2N = []
-    f_d_4N_2N = []
-    
+    Fuel_per_day_per_adult_3N_2N = []
+    f_d_a_3N_2N = []
+    Fuel_per_day_per_adult_4N_3N = []
+    f_d_a_4N_3N = []
+    Fuel_per_day_per_adult_4N_2N = []
+    f_d_a_4N_2N = []
+    print('-------- what is out of index 4N------', Fuel_per_day_per_adult_4N[32])
+    print('-------- what is out of index 1N------', Fuel_per_day_per_adult_1N[32])
     count = 0
     for c in NO_hood_counter:
         if c == (Household_removal[count] - C_Place_holder):
@@ -248,25 +249,31 @@ if Hood_or_no == 'no_hood':
             if count == len(Household_removal):
                 count = 0
             continue
-        if Day_1N.iloc[c,13] > 0 and Day_2N.iloc[c,13]  > 0:
-            Fuel_per_day_2N_1N.append(Day_2N.iloc[c,13]/Day_1N.iloc[c,13])
-            f_d_2N_1N.append(Day_1N.iloc[c,0])
-        if Day_3N.iloc[c,13] > 0 and Day_1N.iloc[c,13]  > 0:
-            Fuel_per_day_3N_1N.append(Day_3N.iloc[c,13]/Day_1N.iloc[c,13])
-            f_d_3N_1N.append(Day_1N.iloc[c,0])
-        if Day_4N.iloc[c,13] > 0 and Day_1N.iloc[c,13]  > 0:
-            Fuel_per_day_4N_1N.append(Day_4N.iloc[c,13]/Day_1N.iloc[c,13])
-            f_d_4N_1N.append(Day_1N.iloc[c,0])
-            
-        if Day_3N.iloc[c,13] > 0 and Day_2N.iloc[c,13]  > 0:
-            Fuel_per_day_3N_2N.append(Day_3N.iloc[c,13]/Day_2N.iloc[c,13])
-            f_d_3N_2N.append(Day_2N.iloc[c,0])
-        if Day_4N.iloc[c,13] > 0 and Day_3N.iloc[c,13]  > 0:
-            Fuel_per_day_4N_3N.append(Day_4N.iloc[c,13]/Day_3N.iloc[c,13])
-            f_d_4N_3N.append(Day_3N.iloc[c,0])
-        if Day_4N.iloc[c,13] > 0 and Day_2N.iloc[c,13]  > 0:
-            Fuel_per_day_4N_2N.append(Day_4N.iloc[c,13]/Day_2N.iloc[c,13])
-            f_d_4N_2N.append(Day_4N.iloc[c,0])
+        if len(Fuel_per_day_per_adult_2N) <= c and len(Fuel_per_day_per_adult_1N) <= c:
+            if Day_1N.iloc[c,13] > 0 and Day_2N.iloc[c,13]  > 0 and Day_1N.iloc[c,0] == Day_2N.iloc[c,0]:
+                Fuel_per_day_per_adult_2N_1N.append(Fuel_per_day_per_adult_2N[c]/Fuel_per_day_per_adult_1N[c])
+                f_d_a_2N_1N.append(Day_1N.iloc[c,0])
+        if len(Fuel_per_day_per_adult_3N) <= c and len(Fuel_per_day_per_adult_1N) <= c:
+            if Day_3N.iloc[c,13] > 0 and Day_1N.iloc[c,13]  > 0 and Day_3N.iloc[c,0] == Day_1N.iloc[c,0]:
+                Fuel_per_day_per_adult_3N_1N.append(Fuel_per_day_per_adult_3N[c]/Fuel_per_day_per_adult_1N[c])
+                f_d_a_3N_1N.append(Day_1N.iloc[c,0])
+        if len(Fuel_per_day_per_adult_4N) <= c and len(Fuel_per_day_per_adult_1N) <= c:
+            if Day_4N.iloc[c,13] > 0 and Day_1N.iloc[c,13]  > 0 and Day_4N.iloc[c,0] == Day_1N.iloc[c,0]:
+                #print('fuel per day 4n ____ this is bull shit', Fuel_per_day_per_adult_4N[0:6])
+                #Fuel_per_day_per_adult_4N_1N.append(Fuel_per_day_per_adult_4N[c]/Fuel_per_day_per_adult_1N[c])
+                f_d_a_4N_1N.append(Day_1N.iloc[c,0])
+        if len(Fuel_per_day_per_adult_3N) <= c and len(Fuel_per_day_per_adult_2N) <= c:
+            if Day_3N.iloc[c,13] > 0 and Day_2N.iloc[c,13]  > 0 and Day_3N.iloc[c,0] == Day_2N.iloc[c,0]:
+                Fuel_per_day_per_adult_3N_2N.append(Fuel_per_day_per_adult_3N[c]/Fuel_per_day_per_adult_2N[c])
+                f_d_a_3N_2N.append(Day_2N.iloc[c,0])
+        if len(Fuel_per_day_per_adult_4N) <= c and len(Fuel_per_day_per_adult_3N) <= c:
+            if Day_4N.iloc[c,13] > 0 and Day_3N.iloc[c,13]  > 0 and Day_4N.iloc[c,0] == Day_3N.iloc[c,0]:
+                Fuel_per_day_per_adult_4N_3N.append(Fuel_per_day_per_adult_4N[c]/Fuel_per_day_per_adult_3N[c])
+                f_d_a_4N_3N.append(Day_3N.iloc[c,0])
+        if len(Fuel_per_day_per_adult_4N) <= c and len(Fuel_per_day_per_adult_2N) <= c:
+            if Day_4N.iloc[c,13] > 0 and Day_2N.iloc[c,13]  > 0 and Day_4N.iloc[c,0] == Day_2N.iloc[c,0]:
+                Fuel_per_day_per_adult_4N_2N.append(Fuel_per_day_per_adult_4N[c]/Fuel_per_day_per_adult_2N[c])
+                f_d_a_4N_2N.append(Day_4N.iloc[c,0])
     
     
     
@@ -329,8 +336,12 @@ if Hood_or_no == 'no_hood':
     for v,a in enumerate(Fuel_per_day_per_adult_1N):
         if a > Top_lim_1_1N or a < Low_lim_1_1N:
             plt.text(1,a,f_d_a_1N[v])
-    plt.text(1,0.1,'1N',color='b')
-        
+    plt.text(1,0.1,'1N',color='r')
+
+
+    plt.xlim(0,7)
+    plt.ylim(-0.25, 2.5)
+    plt.show()
     #2N    
     quant_1_2N = np.percentile(Fuel_per_day_per_adult_2N, [25,75])
     Top_lim_1_2N = quant_1_2N[1] + 1.5*(quant_1_2N[1] - quant_1_2N[0])
@@ -373,9 +384,23 @@ if Hood_or_no == 'no_hood':
     plt.ylim(0,2.3)
     
     plt.show()
-    #% change of fuel per day between each phase
+
+
+
+    # % change of fuel per day per adult between each phase
     fig_2, ax = plt.subplot()
-    plt.title('% Change from )
+    plt.title('% Change from Fuel per Day per Adult' )
+    #plt.hold(True)
+    #2N to 1N
+    quant_1_2N_1N = np.percentile(Fuel_per_day_per_adult_2N_1N, [25,75])
+    Top_lim_1_2N_1N = quant_1_2N_1N[1] + 1.5*(quant_1_2N_1N[1]-quant_1_2N_1N[0])
+    Low_lim_1_2N_1N = quant_1_2N_1N[0] - 1.5*(quant_1_2N_1N[1]-quant_1_2N_1N[0])
+
+    bp_1_1 = plt.boxplot(Fuel_per_day_per_adult_2N_1N, positions=[1], widths= 0.6)
+    for v,a in enumerate(Fuel_per_day_per_adult_2N_1N):
+        if a > Top_lim_1_2N_1N or a < Low_lim_1_2N_1N:
+            plt.text(1, a, f_d_a_2N_1N[v])
+    plt.text(1, 0.1, '2N / 1N', color= 'b')
 
 print ('-------------------Fuel per Day per Adult Hood Phse -------------------')
 
@@ -468,7 +493,7 @@ if Hood_or_no == 'hood':
     
     fig_2, ax_2 = plt.subplots()
     plt.title('Hood Fuel per Day per Adult')
-    plt.hold(True)
+    #plt.hold(True)
     
     quant_1_1H = np.percentile(Fuel_per_day_per_adult_1H, [25,75])
     Top_lim_1_1H = quant_1_1H[1] + 1.5*(quant_1_1H[1] - quant_1_1H[0])

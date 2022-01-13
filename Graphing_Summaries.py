@@ -11,7 +11,7 @@ import seaborn as sns
 # Is this a personal or work computer
 # Are you graphing for hood or no hood
 
-Computer = 'personal' #or 'personal' or 'work'
+Computer = 'work' #or 'personal' or 'work'
 Hood_or_no = 'no_hood' # 'no_hood' or 'hood'
 #what household do you want to remove make sure it is in ascending order
 # if there is nothing, then put a placeholder of 1045 or higher
@@ -249,28 +249,27 @@ if Hood_or_no == 'no_hood':
             if count == len(Household_removal):
                 count = 0
             continue
-        if len(Fuel_per_day_per_adult_2N) <= c and len(Fuel_per_day_per_adult_1N) <= c:
+        if (len(Fuel_per_day_per_adult_2N)-1) >= c and (len(Fuel_per_day_per_adult_1N)-1) >= c:
             if Day_1N.iloc[c,13] > 0 and Day_2N.iloc[c,13]  > 0 and Day_1N.iloc[c,0] == Day_2N.iloc[c,0]:
                 Fuel_per_day_per_adult_2N_1N.append(Fuel_per_day_per_adult_2N[c]/Fuel_per_day_per_adult_1N[c])
                 f_d_a_2N_1N.append(Day_1N.iloc[c,0])
-        if len(Fuel_per_day_per_adult_3N) <= c and len(Fuel_per_day_per_adult_1N) <= c:
+        if (len(Fuel_per_day_per_adult_3N)-1) >= c and (len(Fuel_per_day_per_adult_1N)-1) >= c:
             if Day_3N.iloc[c,13] > 0 and Day_1N.iloc[c,13]  > 0 and Day_3N.iloc[c,0] == Day_1N.iloc[c,0]:
                 Fuel_per_day_per_adult_3N_1N.append(Fuel_per_day_per_adult_3N[c]/Fuel_per_day_per_adult_1N[c])
                 f_d_a_3N_1N.append(Day_1N.iloc[c,0])
-        if len(Fuel_per_day_per_adult_4N) <= c and len(Fuel_per_day_per_adult_1N) <= c:
+        if (len(Fuel_per_day_per_adult_4N)-1) >= c and (len(Fuel_per_day_per_adult_1N)-1) >= c:
             if Day_4N.iloc[c,13] > 0 and Day_1N.iloc[c,13]  > 0 and Day_4N.iloc[c,0] == Day_1N.iloc[c,0]:
-                #print('fuel per day 4n ____ this is bull shit', Fuel_per_day_per_adult_4N[0:6])
-                #Fuel_per_day_per_adult_4N_1N.append(Fuel_per_day_per_adult_4N[c]/Fuel_per_day_per_adult_1N[c])
+                Fuel_per_day_per_adult_4N_1N.append(Fuel_per_day_per_adult_4N[c]/Fuel_per_day_per_adult_1N[c])
                 f_d_a_4N_1N.append(Day_1N.iloc[c,0])
-        if len(Fuel_per_day_per_adult_3N) <= c and len(Fuel_per_day_per_adult_2N) <= c:
+        if (len(Fuel_per_day_per_adult_3N)-1) >= c and (len(Fuel_per_day_per_adult_2N)-1) >= c:
             if Day_3N.iloc[c,13] > 0 and Day_2N.iloc[c,13]  > 0 and Day_3N.iloc[c,0] == Day_2N.iloc[c,0]:
                 Fuel_per_day_per_adult_3N_2N.append(Fuel_per_day_per_adult_3N[c]/Fuel_per_day_per_adult_2N[c])
                 f_d_a_3N_2N.append(Day_2N.iloc[c,0])
-        if len(Fuel_per_day_per_adult_4N) <= c and len(Fuel_per_day_per_adult_3N) <= c:
+        if (len(Fuel_per_day_per_adult_4N)-1) >= c and (len(Fuel_per_day_per_adult_3N)-1) >= c:
             if Day_4N.iloc[c,13] > 0 and Day_3N.iloc[c,13]  > 0 and Day_4N.iloc[c,0] == Day_3N.iloc[c,0]:
                 Fuel_per_day_per_adult_4N_3N.append(Fuel_per_day_per_adult_4N[c]/Fuel_per_day_per_adult_3N[c])
                 f_d_a_4N_3N.append(Day_3N.iloc[c,0])
-        if len(Fuel_per_day_per_adult_4N) <= c and len(Fuel_per_day_per_adult_2N) <= c:
+        if (len(Fuel_per_day_per_adult_4N)-1) >= c and (len(Fuel_per_day_per_adult_2N)-1) >= c:
             if Day_4N.iloc[c,13] > 0 and Day_2N.iloc[c,13]  > 0 and Day_4N.iloc[c,0] == Day_2N.iloc[c,0]:
                 Fuel_per_day_per_adult_4N_2N.append(Fuel_per_day_per_adult_4N[c]/Fuel_per_day_per_adult_2N[c])
                 f_d_a_4N_2N.append(Day_4N.iloc[c,0])
@@ -388,7 +387,7 @@ if Hood_or_no == 'no_hood':
 
 
     # % change of fuel per day per adult between each phase
-    fig_2, ax = plt.subplot()
+    fig_2, ax2 = plt.subplots()
     plt.title('% Change from Fuel per Day per Adult' )
     #plt.hold(True)
     #2N to 1N
@@ -401,7 +400,9 @@ if Hood_or_no == 'no_hood':
         if a > Top_lim_1_2N_1N or a < Low_lim_1_2N_1N:
             plt.text(1, a, f_d_a_2N_1N[v])
     plt.text(1, 0.1, '2N / 1N', color= 'b')
-
+    
+    plt.show()
+# add more
 print ('-------------------Fuel per Day per Adult Hood Phse -------------------')
 
 if Hood_or_no == 'hood':

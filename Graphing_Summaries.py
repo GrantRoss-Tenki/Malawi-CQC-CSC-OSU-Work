@@ -2,10 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 #from pylab import plot, show, xlim,figure,hold, ylim,legend, boxplot, setup, axes
-import os
-import glob
-import itertools
-import csv
+
 import seaborn as sns
 
 # Is this a personal or work computer
@@ -17,6 +14,14 @@ Hood_or_no = 'no_hood'   # 'no_hood' or 'hood'
 # if there is nothing, then put a placeholder of 1045 or higher
 Household_removal = [1045]
 #Household_removal = Household_removal.sort(reverse=False)
+Household_removal_NO_Hood_fuel_day_adult = [1045]
+Household_removal_Hood_fuel_day_adult = [2020]
+
+Household_removal_NO_Hood_PM = [1045]
+Household_removal_Hood_PM = [2020]
+
+
+
 if Hood_or_no == 'hood':
     C_Place_holder = 2001
 else:
@@ -207,12 +212,18 @@ if Hood_or_no == 'no_hood':
     f_d_a_3N = []
     Fuel_per_day_per_adult_4N = []
     f_d_a_4N =[]
-    count = 0
+    count_t = 0
+    count_f = 0
     for c in NO_hood_counter:
-        if c == (Household_removal[count] - C_Place_holder):
-            count = count + 1
-            if count == len(Household_removal):
-                count = 0
+        if c == (Household_removal[count_t] - C_Place_holder):
+            count_t = count_t + 1
+            if count_t == len(Household_removal):
+                count_t = 0
+            continue
+        if c == (Household_removal_NO_Hood_fuel_day_adult[count_f] - C_Place_holder):
+            count_f = count_f + 1
+            if count_f == len(Household_removal_NO_Hood_fuel_day_adult):
+                count_f = 0
             continue
         if Day_1N.iloc[c,13] != -1.00:
             Fuel_per_day_per_adult_1N.append(Day_1N.iloc[c,13]/Survey_1N.iloc[c,7])
@@ -242,12 +253,18 @@ if Hood_or_no == 'no_hood':
     f_d_a_4N_2N = []
     print('-------- what is out of index 4N------', Fuel_per_day_per_adult_4N[32])
     print('-------- what is out of index 1N------', Fuel_per_day_per_adult_1N[32])
-    count = 0
+    count_t = 0
+    count_f = 0
     for c in NO_hood_counter:
-        if c == (Household_removal[count] - C_Place_holder):
-            count = count + 1
-            if count == len(Household_removal):
-                count = 0
+        if c == (Household_removal[count_t] - C_Place_holder):
+            count_t = count_t + 1
+            if count_t == len(Household_removal):
+                count_t = 0
+            continue
+        if c == (Household_removal_NO_Hood_fuel_day_adult[count_f] - C_Place_holder):
+            count_f = count_f + 1
+            if count_f == len(Household_removal_NO_Hood_fuel_day_adult):
+                count_f = 0
             continue
         if (len(Fuel_per_day_per_adult_2N)-1) >= c and (len(Fuel_per_day_per_adult_1N)-1) >= c:
             if Day_1N.iloc[c,13] > 0 and Day_2N.iloc[c,13]  > 0 and Day_1N.iloc[c,0] == Day_2N.iloc[c,0]:
@@ -466,7 +483,7 @@ if Hood_or_no == 'no_hood':
     F_D_A_50_percent_change_no_hood = pd.DataFrame(data=D_50_quant_percent_f_d_a)
 
 # add more
-print ('-------------------Fuel per Day per Adult Hood Phse -------------------')
+print ('-------------------Fuel per Day per Adult Hood Phase -------------------')
 
 if Hood_or_no == 'hood':
     Fuel_per_day_per_adult_1H = []
@@ -476,12 +493,18 @@ if Hood_or_no == 'hood':
     Fuel_per_day_per_adult_3H = []
     f_d_a_3H = []
     
-    count = 0
+    count_t = 0
+    count_f = 0
     for c in hood_counter:
-        if c == (Household_removal[count] - C_Place_holder):
-            count = count + 1
-            if count == len(Household_removal):
-                count = 0
+        if c == (Household_removal[count_t] - C_Place_holder):
+            count_t = count_t + 1
+            if count_t == len(Household_removal):
+                count_t = 0
+            continue
+        if c == (Household_removal_Hood_fuel_day_adult[count_f] - C_Place_holder):
+            count_f = count_f + 1
+            if count_f == len(Household_removal_Hood_fuel_day_adult):
+                count_f = 0
             continue
         if Day_1H.iloc[c,13] != -1.00:
             Fuel_per_day_per_adult_1H.append(Day_1H.iloc[c,13]/Survey_1H.iloc[c,7])
@@ -503,12 +526,18 @@ if Hood_or_no == 'hood':
     Fuel_per_day_per_adult_3H_2H = []
     f_d_a_3H_2H = []
     
-    count = 0
-    for c in NO_hood_counter:
-        if c == (Household_removal[count] - C_Place_holder):
-            count = count + 1
-            if count == len(Household_removal):
-                count = 0
+    count_t = 0
+    count_f = 0
+    for c in hood_counter:
+        if c == (Household_removal[count_t] - C_Place_holder):
+            count_t = count_t + 1
+            if count_t == len(Household_removal):
+                count_t = 0
+            continue
+        if c == (Household_removal_Hood_fuel_day_adult[count_f] - C_Place_holder):
+            count_f = count_f + 1
+            if count_f == len(Household_removal_Hood_fuel_day_adult):
+                count_f = 0
             continue
         if (len(Fuel_per_day_per_adult_2H)-1) >= c and (len(Fuel_per_day_per_adult_1H)-1) >= c:
             if Day_1H.iloc[c,13] > 0 and Day_2H.iloc[c,13]  > 0 and Day_1H.iloc[c,0] == Day_2H.iloc[c,0]:
@@ -671,12 +700,18 @@ if Hood_or_no == 'no_hood':
     K_PM_D_3N = []
     Kit_PM_per_day_4N = []
     K_PM_D_4N = []
-    count = 0
+    count_t = 0
+    count_pm = 0
     for c in NO_hood_counter:
-        if c == (Household_removal[count] - C_Place_holder):
-            count = count + 1
-            if count == len(Household_removal):
-                count = 0
+        if c == (Household_removal[count_t] - C_Place_holder):
+            count_t = count_t + 1
+            if count_t == len(Household_removal):
+                count_t = 0
+            continue
+        if c == (Household_removal_NO_Hood_PM[count_pm] - C_Place_holder):
+            count_pm = count_pm + 1
+            if count_pm == len(Household_removal_NO_Hood_PM):
+                count_pm = 0
             continue
         if Day_1N.iloc[c,7] != -1.00:
             Kit_PM_per_day_1N.append(Day_1N.iloc[c,7]/Day_1N.iloc[c,1])
@@ -707,12 +742,18 @@ if Hood_or_no == 'no_hood':
     Kit_per_day_4N_2N = []
     K_PM_D_4N_2N = []
 
-    count = 0
+    count_t = 0
+    count_pm = 0
     for c in NO_hood_counter:
-        if c == (Household_removal[count] - C_Place_holder):
-            count = count + 1
-            if count == len(Household_removal):
-                count = 0
+        if c == (Household_removal[count_t] - C_Place_holder):
+            count_t = count_t + 1
+            if count_t == len(Household_removal):
+                count_t = 0
+            continue
+        if c == (Household_removal_NO_Hood_PM[count_pm] - C_Place_holder):
+            count_pm = count_pm + 1
+            if count_pm == len(Household_removal_NO_Hood_PM):
+                count_pm = 0
             continue
         if (len(Kit_PM_per_day_2N)-1) >= c and (len(Kit_PM_per_day_1N)-1) >= c:
             if Day_1N.iloc[c,7] > 0 and Day_2N.iloc[c,7]  > 0 and Day_1N.iloc[c,0] == Day_2N.iloc[c,0]:
@@ -854,7 +895,7 @@ if Hood_or_no == 'no_hood':
                 plt.text(3,a,K_PM_D_3N[v],ha='left', va='top')
             else:
                 plt.text(3,a,K_PM_D_3N[v],ha='right', va='bottom')
-    plt.text(3,0.1,'3N---', color='r')        
+    plt.text(3,0.1,'3N', color='r')        
     
     #4N
     quant_1_4N = np.percentile(Kit_PM_per_day_4N, [25,50,75])
@@ -946,47 +987,223 @@ if Hood_or_no == 'no_hood':
     
     
     plt.xlim(0,7)
-    plt.ylim(-0.5,4)
+    plt.ylim(-0.5,5)
     plt.show()
-#    
-#    D_50_quant_phase_f_d_a = {'Percentile %': [25,50,75], '1N': quant_1_1N, '2N': quant_1_2N,'3N' : quant_1_3N,'4N': quant_1_4N}
-#    F_D_A_50_phase_no_hood = pd.DataFrame(data=D_50_quant_phase_f_d_a)
-#    D_50_quant_percent_f_d_a ={'Percentile %': [25,50,75],'2N / 1N': quant_1_2N_1N,'3N / 1N': quant_1_3N_1N,'4N / 1N': quant_1_4N_1N,
-#                               '3N / 2N': quant_1_3N_2N,'4N / 3N': quant_1_4N_3N,'4N / 2N': quant_1_4N_2N}
-#    F_D_A_50_percent_change_no_hood = pd.DataFrame(data=D_50_quant_percent_f_d_a)
+    
+    D_50_quant_phase_PM_d = {'Percentile %': [25,50,75], '1N': quant_1_1N, '2N': quant_1_2N,'3N' : quant_1_3N,'4N': quant_1_4N}
+    PM_D_50_phase_no_hood = pd.DataFrame(data=D_50_quant_phase_PM_d)
+    D_50_quant_percent_PM_d ={'Percentile %': [25,50,75],'2N / 1N': quant_1_2N_1N,'3N / 1N': quant_1_3N_1N,'4N / 1N': quant_1_4N_1N,
+                               '3N / 2N': quant_1_3N_2N,'4N / 3N': quant_1_4N_3N,'4N / 2N': quant_1_4N_2N}
+    PM_D_50_percent_change_no_hood = pd.DataFrame(data=D_50_quant_percent_PM_d)
 
     
+# hood Pm per day
+if Hood_or_no == 'hood':
+    Kit_PM_per_day_1H = []
+    K_PM_D_1H = []
+    Kit_PM_per_day_2H = []
+    K_PM_D_2H = []
+    Kit_PM_per_day_3H = []
+    K_PM_D_3H = []
+
+    count_t = 0
+    count_pm = 0
+    for c in hood_counter:
+        if c == (Household_removal[count_t] - C_Place_holder):
+            count_t = count_t + 1
+            if count_t == len(Household_removal):
+                count_t = 0
+            continue
+        if c == (Household_removal_Hood_PM[count_pm] - C_Place_holder):
+            count_pm = count_pm + 1
+            if count_pm == len(Household_removal_Hood_PM):
+                count_pm = 0
+            continue
+        if Day_1H.iloc[c,7] != -1.00:
+            Kit_PM_per_day_1H.append(Day_1H.iloc[c,7]/Day_1H.iloc[c,1])
+            K_PM_D_1H.append(Day_1H.iloc[c,0])
+        if Day_2H.iloc[c, 7] != -1.00:
+            Kit_PM_per_day_2H.append(Day_2H.iloc[c,7]/Day_2H.iloc[c,1])
+            K_PM_D_2H.append(Day_2H.iloc[c,0])
+        if Day_3H.iloc[c, 7] != -1.00:
+            Kit_PM_per_day_3H.append(Day_3H.iloc[c,7]/Day_3H.iloc[c,1])
+            K_PM_D_3H.append(Day_3H.iloc[c, 0])
+            
+     
+    # percentages Between Phases of kitchen PM per day
+    Kit_per_day_2H_1H = []
+    K_PM_D_2H_1H = []
+    Kit_per_day_3H_1H = []
+    K_PM_D_3H_1H = []
+    Kit_per_day_3H_2H = []
+    K_PM_D_3H_2H = []
+
+
+    count_t = 0
+    count_pm = 0
+    for c in NO_hood_counter:
+        if c == (Household_removal[count_t] - C_Place_holder):
+            count_t = count_t + 1
+            if count_t == len(Household_removal):
+                count_t = 0
+            continue
+        if c == (Household_removal_Hood_PM[count_pm] - C_Place_holder):
+            count_pm = count_pm + 1
+            if count_pm == len(Household_removal_Hood_PM):
+                count_pm = 0
+            continue
+        if (len(Kit_PM_per_day_2H)-1) >= c and (len(Kit_PM_per_day_1H)-1) >= c:
+            if Day_1H.iloc[c,7] > 0 and Day_2H.iloc[c,7]  > 0 and Day_1H.iloc[c,0] == Day_2H.iloc[c,0]:
+                Kit_per_day_2H_1H.append(Kit_PM_per_day_2H[c]/Kit_PM_per_day_1H[c])
+                K_PM_D_2H_1H.append(Day_1H.iloc[c,0])
+        if (len(Kit_PM_per_day_3H)-1) >= c and (len(Kit_PM_per_day_1H)-1) >= c:
+            if Day_3H.iloc[c,7] > 0 and Day_1H.iloc[c,7]  > 0 and Day_3H.iloc[c,0] == Day_1H.iloc[c,0]:
+                Kit_per_day_3H_1H.append(Kit_PM_per_day_3H[c]/Kit_PM_per_day_1H[c])
+                K_PM_D_3H_1H.append(Day_1H.iloc[c,0])
+        if (len(Kit_PM_per_day_3H)-1) >= c and (len(Kit_PM_per_day_2H)-1) >= c:
+            if Day_3H.iloc[c,7] > 0 and Day_2H.iloc[c,7]  > 0 and Day_3H.iloc[c,0] == Day_2H.iloc[c,0]:
+                Kit_per_day_3H_2H.append(Kit_PM_per_day_3H[c]/Kit_PM_per_day_2H[c])
+                K_PM_D_3H_2H.append(Day_2H.iloc[c,0])
+
+      
+    # now for box plotting for Kitchen PM per day percent changes
     
-#if Hood_or_no == 'hood':
+    #2H to 1H
+    sns.set(style="ticks")
+    f, (ax_box, ax_hist) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios": (0.15, 0.85)})
+    sns.boxplot(Kit_per_day_2H_1H, ax=ax_box, color='g')
+    sns.distplot(Kit_per_day_2H_1H, ax=ax_hist, color='g')
+    ax_box.set(yticks=[])
+    sns.despine(ax=ax_hist)
+    sns.despine(ax=ax_box, left=True)
+    plt.title('% 2H/1H (Kitchen PM per Day)')
+    plt.ylim(top=1)
+    plt.ylim(bottom = 0)
+    
+    #3H to 1H  
+    sns.set(style="ticks")
+    f, (ax_box, ax_hist) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios": (0.15, 0.85)})
+    sns.boxplot(Kit_per_day_3H_1H, ax=ax_box, color='r')
+    sns.distplot(Kit_per_day_3H_1H, ax=ax_hist, color='r')
+    ax_box.set(yticks=[])
+    sns.despine(ax=ax_hist)
+    sns.despine(ax=ax_box, left=True)
+    plt.title('% 3H/1H (Kitchen PM per Day)')
+    plt.ylim(top=1.5)
+    plt.ylim(bottom = 0)
+    
+    #3H to 2H 
+    sns.set(style="ticks")
+    f, (ax_box, ax_hist) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios": (0.15, 0.85)})
+    sns.boxplot(Kit_per_day_3H_2H, ax=ax_box, color='m')
+    sns.distplot(Kit_per_day_3H_2H, ax=ax_hist, color='m')
+    ax_box.set(yticks=[])
+    sns.despine(ax=ax_hist)
+    sns.despine(ax=ax_box, left=True)
+    plt.title('% 3H/2H (Kitchen PM per Day)')
+    plt.ylim(top=1)
+    plt.ylim(bottom = 0)
+    
+    
+    #Plotting on the same graph
+    fig, ax = plt.subplots()
+    plt.title('Hood Kitchen PM per day')
+    #1H
+    quant_1_1H = np.percentile(Kit_PM_per_day_1H, [25,50,75])
+    Top_lim_1_1H = quant_1_1H[2] + 1.5*(quant_1_1H[2] - quant_1_1H[0])
+    Low_lim_1_1H = quant_1_1H[0] - 1.5*(quant_1_1H[2] - quant_1_1H[0])
+    
+    bp_1 = plt.boxplot(Kit_PM_per_day_1H, positions = [1], widths = 0.6)
+    for v,a in enumerate(Kit_PM_per_day_1H):
+        if a > Top_lim_1_1H or a < Low_lim_1_1H:
+            plt.text(1,a,K_PM_D_1H[v])
+    plt.text(0.5,0.1,'1H',color='b')
 
+    #2N    
+    quant_1_2H = np.percentile(Kit_PM_per_day_2H, [25,50,75])
+    Top_lim_1_2N = quant_1_2H[2] + 1.5*(quant_1_2H[2] - quant_1_2H[0])
+    Low_lim_1_2N = quant_1_2H[0] - 1.5*(quant_1_2H[2] - quant_1_2H[0])
+    
+    bp_1 = plt.boxplot(Kit_PM_per_day_2H,positions = [2], widths = 0.6)
+    for v,a in enumerate(Kit_PM_per_day_2H):
+        if a > Top_lim_1_2N or a < Low_lim_1_2N:
+            plt.text(2,a,K_PM_D_2H[v])
+    plt.text(1.5,0.1,'2H', color= 'g')
+    #3H
+    quant_1_3H = np.percentile(Kit_PM_per_day_3H, [25,50,75])
+    Top_lim_1_3N = quant_1_3H[2] + 1.5*(quant_1_3H[2] - quant_1_3H[0])
+    Low_lim_1_3N = quant_1_3H[0] - 1.5*(quant_1_3H[2] - quant_1_3H[0])
+    kitchen_3H_outlier = []
+    bp_1 = plt.boxplot(Kit_PM_per_day_3H,positions = [3], widths = 0.6)
+    count = 0
+    for v,a in enumerate(Kit_PM_per_day_3H):
+        if a > Top_lim_1_3N or a < Low_lim_1_3N:
+            plt.text(3,a,K_PM_D_3H[v])
+#            kitchen_3N_outlier.append(K_PM_D_3N[v])
+#            count = count + 1
+#            if count == (3):
+#                plt.text(3,a,K_PM_D_3N[v],ha='left', va='bottom')
+#            if count == (1):
+#                plt.text(3,a,K_PM_D_3N[v],ha='left', va='top')
+#            else:
+#                plt.text(3,a,K_PM_D_3N[v],ha='right', va='bottom')
+    plt.text(2.5,0.1,'3H', color='r')        
+    plt.xlim(0,4)
+    plt.ylim(0,1200000)
+    plt.show()
+    #print('3N had these values as outliers   ' , kitchen_3N_outlier)
 
+    # % change of PM per day 
 
+    fig_2, ax2 = plt.subplots()
+    plt.title('% hood PM per Day Change' )
+    #plt.hold(True)
+    #2H to 1H
+    quant_1_2N_1N = np.percentile(Kit_per_day_2H_1H, [25,50,75])
+    Top_lim_1_2N_1N = quant_1_2N_1N[2] + 1.5*(quant_1_2N_1N[2]-quant_1_2N_1N[0])
+    Low_lim_1_2N_1N = quant_1_2N_1N[0] - 1.5*(quant_1_2N_1N[2]-quant_1_2N_1N[0])
 
+    bp_1_1 = plt.boxplot(Kit_per_day_2H_1H, positions=[1], widths= 0.6)
+    for v,a in enumerate(Kit_per_day_2H_1H):
+        if a > Top_lim_1_2N_1N or a < Low_lim_1_2N_1N:
+            plt.text(1, a, K_PM_D_2H_1H[v])
+    plt.text(0.75, -0.25, '2H / 1H', color= 'g')
+    
+    #3H to 1H
+    quant_1_3N_1N = np.percentile(Kit_per_day_3H_1H, [25,50,75])
+    Top_lim_1_3N_1N = quant_1_3N_1N[2] + 1.5*(quant_1_3N_1N[2]-quant_1_3N_1N[0])
+    Low_lim_1_3N_1N = quant_1_3N_1N[0] - 1.5*(quant_1_3N_1N[2]-quant_1_3N_1N[0])
 
+    bp_1_1 = plt.boxplot(Kit_per_day_3H_1H, positions=[2], widths= 0.6)
+    for v,a in enumerate(Kit_per_day_3H_1H):
+        if a > Top_lim_1_3N_1N or a < Low_lim_1_3N_1N:
+            plt.text(2, a, K_PM_D_3H_1H[v])
+    plt.text(1.75, -0.25, '3H / 1H', color= 'r')
+    
 
+    
+    #3H to 2H
+    quant_1_3N_2N = np.percentile(Kit_per_day_3H_2H, [25,50,75])
+    Top_lim_1_3N_2N = quant_1_3N_2N[2] + 1.5*(quant_1_3N_2N[2]-quant_1_3N_2N[0])
+    Low_lim_1_3N_2N = quant_1_3N_2N[0] - 1.5*(quant_1_3N_2N[2]-quant_1_3N_2N[0])
 
+    bp_1_1 = plt.boxplot(Kit_per_day_3H_2H, positions=[3], widths= 0.6)
+    for v,a in enumerate(Kit_per_day_3H_2H):
+        if a > Top_lim_1_3N_2N or a < Low_lim_1_3N_2N:
+            plt.text(3, a, K_PM_D_3H_2H[v])
+    plt.text(2.75, -0.25, '3H / 2H', color= 'm')
 
+    plt.xlim(0,4)
+    plt.ylim(-0.5,5)
+    plt.show()
+    
+    D_50_quant_phase_PM_D_hood = {'Percentile %': [25,50,75], '1H': quant_1_1H, '2H': quant_1_2H,'3H' : quant_1_3H}
+    PM_D_50_phase_hood = pd.DataFrame(data=D_50_quant_phase_PM_D_hood)
+    
+    D_50_quant_percent_PM_D_hood ={'Percentile %': [25,50,75],'2H / 1H': quant_1_2H_1H,'3H / 1H': quant_1_3H_1H,'3H / 2H': quant_1_3H_2H}
+    PM_D_50_percent_change_hood = pd.DataFrame(data=D_50_quant_percent_PM_D_hood)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# when i am ready to transfer to a data frame and get the differences
 
 
 

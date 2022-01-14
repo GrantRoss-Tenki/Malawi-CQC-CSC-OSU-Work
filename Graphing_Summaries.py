@@ -9,7 +9,7 @@ import seaborn as sns
 # Are you graphing for hood or no hood
 
 Computer = 'personal' #or 'personal' or 'work'
-Hood_or_no = 'hood'   # 'no_hood' or 'hood'
+Hood_or_no = 'no_hood'   # 'no_hood' or 'hood'
 #what household do you want to remove make sure it is in ascending order
 # if there is nothing, then put a placeholder of 1045 or higher
 Household_removal = [1045]
@@ -251,8 +251,7 @@ if Hood_or_no == 'no_hood':
     f_d_a_4N_3N = []
     Fuel_per_day_per_adult_4N_2N = []
     f_d_a_4N_2N = []
-    print('-------- what is out of index 4N------', Fuel_per_day_per_adult_4N[32])
-    print('-------- what is out of index 1N------', Fuel_per_day_per_adult_1N[32])
+
     count_t = 0
     count_f = 0
     for c in NO_hood_counter:

@@ -508,7 +508,8 @@ if Hood_or_no == 'no_hood':
     D_50_quant_percent_f_d_a ={'Percentile %': [25,50,75],'2N / 1N': quant_1_2N_1N,'3N / 1N': quant_1_3N_1N,'4N / 1N': quant_1_4N_1N,
                                '3N / 2N': quant_1_3N_2N,'4N / 3N': quant_1_4N_3N,'4N / 2N': quant_1_4N_2N}
     F_D_A_50_percent_change_no_hood = pd.DataFrame(data=D_50_quant_percent_f_d_a)
-
+    print(F_D_A_50_phase_no_hood)
+    print(F_D_A_50_percent_change_no_hood)
 # add more
 print ('-------------------Fuel per Day per Adult Hood Phase -------------------')
 
@@ -732,7 +733,8 @@ if Hood_or_no == 'hood':
     
     D_50_quant_percent_f_d_a_hood ={'Percentile %': [25,50,75],'2H / 1H': quant_1_2H_1H,'3H / 1H': quant_1_3H_1H,'3H / 2H': quant_1_3H_2H}
     F_D_A_50_percent_change_hood = pd.DataFrame(data=D_50_quant_percent_f_d_a_hood)
-
+    print('hood fuel', F_D_A_50_phase_hood)
+    print('hood fuel', F_D_A_50_percent_change_hood)
 
 print('----------------------- Kitchen PM per Day -----------------------------')
 if Hood_or_no == 'no_hood':
@@ -1067,7 +1069,8 @@ if Hood_or_no == 'no_hood':
     D_50_quant_percent_PM_d ={'Percentile %': [25,50,75],'2N / 1N': quant_1_2N_1N,'3N / 1N': quant_1_3N_1N,'4N / 1N': quant_1_4N_1N,
                                '3N / 2N': quant_1_3N_2N,'4N / 3N': quant_1_4N_3N,'4N / 2N': quant_1_4N_2N}
     PM_D_50_percent_change_no_hood = pd.DataFrame(data=D_50_quant_percent_PM_d)
-
+    print('No hood PM', PM_D_50_phase_no_hood)
+    print('No hood PM', PM_D_50_percent_change_no_hood)
     
 # hood Pm per day
 if Hood_or_no == 'hood':
@@ -1291,6 +1294,8 @@ if Hood_or_no == 'hood':
     D_50_quant_percent_PM_D_hood ={'Percentile %': [25,50,75],'2H / 1H': quant_1_2H_1H,'3H / 1H': quant_1_3H_1H,'3H / 2H': quant_1_3H_2H}
     PM_D_50_percent_change_hood = pd.DataFrame(data=D_50_quant_percent_PM_D_hood)
 
+    print('hood PM', PM_D_50_phase_hood)
+    print('hood PM', PM_D_50_percent_change_hood)
 # when i am ready to transfer to a data frame and get the differences
 
 

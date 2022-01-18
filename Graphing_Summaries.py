@@ -8,7 +8,7 @@ import seaborn as sns
 # Is this a personal or work computer
 # Are you graphing for hood or no hood
 
-Computer = 'work' #or 'personal' or 'work'
+Computer = 'personal' #or 'personal' or 'work'
 Hood_or_no = 'no_hood'   # 'no_hood' or 'hood'
 #what household do you want to remove make sure it is in ascending order
 # if there is nothing, then put a placeholder of 1045 or higher
@@ -251,8 +251,7 @@ if Hood_or_no == 'no_hood':
     f_d_a_4N_3N = []
     Fuel_per_day_per_adult_4N_2N = []
     f_d_a_4N_2N = []
-    print('-------- what is out of index 4N------', Fuel_per_day_per_adult_4N[32])
-    print('-------- what is out of index 1N------', Fuel_per_day_per_adult_1N[32])
+
     count_t = 0
     count_f = 0
     for c in NO_hood_counter:
@@ -344,15 +343,17 @@ if Hood_or_no == 'no_hood':
     #Plotting on the same graph
     fig, ax = plt.subplots()
     plt.title('No-Hood Fuel per Day per Adult')
-    plt.hold(True)
+    #plt.hold(True)
     #1N
     quant_1_1N = np.percentile(Fuel_per_day_per_adult_1N, [25,50,75])
     Top_lim_1_1N = quant_1_1N[2] + 1.5*(quant_1_1N[2] - quant_1_1N[0])
     Low_lim_1_1N = quant_1_1N[0] - 1.5*(quant_1_1N[2] - quant_1_1N[0])
     
     bp_1 = plt.boxplot(Fuel_per_day_per_adult_1N, positions = [1], widths = 0.6)
+    Fuel_D_A_1N_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_1N):
         if a > Top_lim_1_1N or a < Low_lim_1_1N:
+            Fuel_D_A_1N_outlier.append(f_d_a_1N[v])
             plt.text(1,a,f_d_a_1N[v])
     plt.text(1,0.1,'1N',color='b')
 
@@ -362,8 +363,10 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_2N = quant_1_2N[0] - 1.5*(quant_1_2N[2] - quant_1_2N[0])
     
     bp_1 = plt.boxplot(Fuel_per_day_per_adult_2N,positions = [2], widths = 0.6)
+    Fuel_D_A_2N_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_2N):
         if a > Top_lim_1_2N or a < Low_lim_1_2N:
+            Fuel_D_A_2N_outlier.append(f_d_a_2N[v])
             plt.text(2,a,f_d_a_2N[v])
     plt.text(2,0.1,'2N', color= 'g')
     #3N
@@ -373,9 +376,10 @@ if Hood_or_no == 'no_hood':
     
     bp_1 = plt.boxplot(Fuel_per_day_per_adult_3N,positions = [3], widths = 0.6)
     count = 0
+    Fuel_D_A_3N_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_3N):
-        
         if a > Top_lim_1_3N or a < Low_lim_1_3N:
+            Fuel_D_A_3N_outlier.append(f_d_a_3N[v])
             count = count + 1
             if count == 2:
                 plt.text(3,a,f_d_a_3N[v],ha='left',va='bottom')
@@ -389,14 +393,19 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_4N = quant_1_4N[0] - 1.5*(quant_1_4N[2] - quant_1_4N[0])
     
     bp_1 = plt.boxplot(Fuel_per_day_per_adult_4N,positions = [4], widths = 0.6)
+    Fuel_D_A_4N_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_4N):
         if a > Top_lim_1_4N or a < Low_lim_1_4N:
+            Fuel_D_A_4N_outlier.append(f_d_a_4N[v])
             plt.text(4,a,f_d_a_4N[v])
     plt.text(4,0.1,'4N', color='y')        
             
     plt.xlim(0,5)
     plt.ylim(0,2.3)
-    
+    print('Fuel/Day/Adult 1N had these values as outliers   ', Fuel_D_A_1N_outlier)
+    print('Fuel/Day/Adult 2N had these values as outliers   ', Fuel_D_A_2N_outlier)
+    print('Fuel/Day/Adult 3N had these values as outliers   ', Fuel_D_A_3N_outlier)
+    print('Fuel/Day/Adult 4N had these values as outliers   ', Fuel_D_A_4N_outlier)
     plt.show()
 
 
@@ -411,8 +420,10 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_2N_1N = quant_1_2N_1N[0] - 1.5*(quant_1_2N_1N[2]-quant_1_2N_1N[0])
 
     bp_1_1 = plt.boxplot(Fuel_per_day_per_adult_2N_1N, positions=[1], widths= 0.6)
+    Fuel_D_A_2N_1N_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_2N_1N):
         if a > Top_lim_1_2N_1N or a < Low_lim_1_2N_1N:
+            Fuel_D_A_2N_1N_outlier.append(f_d_a_2N_1N[v])
             plt.text(1, a, f_d_a_2N_1N[v])
     plt.text(0.5, 0, '2N / 1N', color= 'g')
     
@@ -422,8 +433,10 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_3N_1N = quant_1_3N_1N[0] - 1.5*(quant_1_3N_1N[2]-quant_1_3N_1N[0])
 
     bp_1_1 = plt.boxplot(Fuel_per_day_per_adult_3N_1N, positions=[2], widths= 0.6)
+    Fuel_D_A_3N_1N_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_3N_1N):
         if a > Top_lim_1_3N_1N or a < Low_lim_1_3N_1N:
+            Fuel_D_A_3N_1N_outlier.append(f_d_a_3N_1N[v])
             plt.text(2, a, f_d_a_3N_1N[v])
     plt.text(1.5, 0, '3N / 1N', color= 'r')
     
@@ -433,8 +446,10 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_4N_1N = quant_1_4N_1N[0] - 1.5*(quant_1_4N_1N[2]-quant_1_4N_1N[0])
 
     bp_1_1 = plt.boxplot(Fuel_per_day_per_adult_4N_1N, positions=[3], widths= 0.6)
+    Fuel_D_A_4N_1N_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_4N_1N):
         if a > Top_lim_1_4N_1N or a < Low_lim_1_4N_1N:
+            Fuel_D_A_4N_1N_outlier.append(f_d_a_4N_1N[v])
             plt.text(3, a, f_d_a_4N_1N[v])
     plt.text(2.5, 0, '4N / 1N', color= 'y')
     
@@ -444,8 +459,10 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_3N_2N = quant_1_3N_2N[0] - 1.5*(quant_1_3N_2N[2]-quant_1_3N_2N[0])
 
     bp_1_1 = plt.boxplot(Fuel_per_day_per_adult_3N_2N, positions=[4], widths= 0.6)
+    Fuel_D_A_3N_2N_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_3N_2N):
         if a > Top_lim_1_3N_2N or a < Low_lim_1_3N_2N:
+            Fuel_D_A_3N_2N_outlier.append(f_d_a_3N_2N[v])
             plt.text(4, a, f_d_a_3N_2N[v])
     plt.text(3.5, 0, '3N / 2N', color= 'm')
     
@@ -455,8 +472,10 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_4N_3N = quant_1_4N_3N[0] - 1.5*(quant_1_4N_3N[2]-quant_1_4N_3N[0])
 
     bp_1_1 = plt.boxplot(Fuel_per_day_per_adult_4N_3N, positions=[5], widths= 0.6)
+    Fuel_D_A_4N_3N_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_4N_3N):
         if a > Top_lim_1_4N_3N or a < Low_lim_1_4N_3N:
+            Fuel_D_A_4N_3N_outlier.append(f_d_a_4N_3N[v])
             plt.text(5, a, f_d_a_4N_3N[v])
     plt.text(4.5, 0, '4N / 3N', color= 'k')
     
@@ -466,14 +485,22 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_4N_2N = quant_1_4N_2N[0] - 1.5*(quant_1_4N_2N[2]-quant_1_4N_2N[0])
 
     bp_1_1 = plt.boxplot(Fuel_per_day_per_adult_4N_2N, positions=[6], widths= 0.6)
+    Fuel_D_A_4N_2N_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_4N_2N):
         if a > Top_lim_1_4N_2N or a < Low_lim_1_4N_2N:
+            Fuel_D_A_4N_2N_outlier.append(f_d_a_4N_2N[v])
             plt.text(6, a, f_d_a_4N_2N[v])
     plt.text(5.5, 0, '4N / 2N', color= 'tab:orange')
     
     
     plt.xlim(0,7)
     plt.ylim(-0.5,4)
+    print('Fuel/Day/Adult 2N/1N had these values as outliers   ', Fuel_D_A_2N_1N_outlier)
+    print('Fuel/Day/Adult 3N/1N had these values as outliers   ', Fuel_D_A_3N_1N_outlier)
+    print('Fuel/Day/Adult 4N/1N had these values as outliers   ', Fuel_D_A_4N_1N_outlier)
+    print('Fuel/Day/Adult 3N/2N had these values as outliers   ', Fuel_D_A_3N_2N_outlier)
+    print('Fuel/Day/Adult 4N/3N had these values as outliers   ', Fuel_D_A_4N_3N_outlier)
+    print('Fuel/Day/Adult 4N/2N had these values as outliers   ', Fuel_D_A_4N_2N_outlier)
     plt.show()
     
     D_50_quant_phase_f_d_a = {'Percentile %': [25,50,75], '1N': quant_1_1N, '2N': quant_1_2N,'3N' : quant_1_3N,'4N': quant_1_4N}
@@ -481,7 +508,8 @@ if Hood_or_no == 'no_hood':
     D_50_quant_percent_f_d_a ={'Percentile %': [25,50,75],'2N / 1N': quant_1_2N_1N,'3N / 1N': quant_1_3N_1N,'4N / 1N': quant_1_4N_1N,
                                '3N / 2N': quant_1_3N_2N,'4N / 3N': quant_1_4N_3N,'4N / 2N': quant_1_4N_2N}
     F_D_A_50_percent_change_no_hood = pd.DataFrame(data=D_50_quant_percent_f_d_a)
-
+    print(F_D_A_50_phase_no_hood)
+    print(F_D_A_50_percent_change_no_hood)
 # add more
 print ('-------------------Fuel per Day per Adult Hood Phase -------------------')
 
@@ -598,8 +626,10 @@ if Hood_or_no == 'hood':
     Low_lim_1_1H = quant_1_1H[0] - 1.5*(quant_1_1H[2] - quant_1_1H[0])
     
     bp_1 = plt.boxplot(Fuel_per_day_per_adult_1H, positions = [1], widths = 0.6)
+    Fuel_D_A_1H_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_1H):
         if a > Top_lim_1_1H or a < Low_lim_1_1H:
+            Fuel_D_A_1H_outlier.append(f_d_a_1H[v])
             plt.text(1,a,f_d_a_1H[v])
     plt.text(1,0,'1H',color='b')
         
@@ -610,8 +640,10 @@ if Hood_or_no == 'hood':
     
     bp_1 = plt.boxplot(Fuel_per_day_per_adult_2H,positions = [2], widths = 0.6)
     count = 0
+    Fuel_D_A_2H_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_2H):
         if a > Top_lim_1_2H or a < Low_lim_1_2H:
+            Fuel_D_A_2H_outlier.append(f_d_a_2H[v])
             count = count + 1
             if count == 1:
                 plt.text(2,a,f_d_a_2H[v],ha='left',va='bottom')
@@ -625,8 +657,10 @@ if Hood_or_no == 'hood':
     
     bp_1 = plt.boxplot(Fuel_per_day_per_adult_3H,positions = [3], widths = 0.6)
     count = 0
+    Fuel_D_A_3H_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_3H):
         if a > Top_lim_1_3H or a < Low_lim_1_3H:
+            Fuel_D_A_3H_outlier.append(f_d_a_3H[v])
             count = count + 1
             if count == 3:
                 plt.text(3,a,f_d_a_3H[v],ha='left',va='bottom')
@@ -637,7 +671,9 @@ if Hood_or_no == 'hood':
     
     plt.xlim(-0,4)
     plt.ylim(-0.25,2.5)
-    
+    print('Fuel/Day/Adult 1H had these values as outliers   ', Fuel_D_A_1H_outlier)
+    print('Fuel/Day/Adult 2H had these values as outliers   ', Fuel_D_A_2H_outlier)
+    print('Fuel/Day/Adult 3H had these values as outliers   ', Fuel_D_A_3H_outlier)
     plt.show()
     
     
@@ -651,8 +687,10 @@ if Hood_or_no == 'hood':
     Low_lim_1_2H_1H = quant_1_2H_1H[0] - 1.5*(quant_1_2H_1H[2]-quant_1_2H_1H[0])
 
     bp_1_1 = plt.boxplot(Fuel_per_day_per_adult_2H_1H, positions=[1], widths= 0.6)
+    Fuel_D_A_2H_1H_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_2H_1H):
         if a > Top_lim_1_2H_1H or a < Low_lim_1_2H_1H:
+            Fuel_D_A_2H_1H_outlier.append(f_d_a_2H_1H[v])
             plt.text(1, a, f_d_a_2H_1H[v])
     plt.text(0.75, -0.25, '2H / 1H', color= 'g')
     
@@ -662,8 +700,10 @@ if Hood_or_no == 'hood':
     Low_lim_1_3H_1H = quant_1_3H_1H[0] - 1.5*(quant_1_3H_1H[2]-quant_1_3H_1H[0])
 
     bp_1_1 = plt.boxplot(Fuel_per_day_per_adult_3H_1H, positions=[2], widths= 0.6)
+    Fuel_D_A_3H_1H_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_3H_1H):
         if a > Top_lim_1_3H_1H or a < Low_lim_1_3H_1H:
+            Fuel_D_A_3H_1H_outlier.append(f_d_a_3H_1H[v])
             plt.text(2, a, f_d_a_3H_1H[v])
     plt.text(1.75, -0.25, '3H / 1H', color= 'r')
     
@@ -673,13 +713,18 @@ if Hood_or_no == 'hood':
     Low_lim_1_3H_2H = quant_1_3H_2H[0] - 1.5*(quant_1_3H_2H[2]-quant_1_3H_2H[0])
 
     bp_1_1 = plt.boxplot(Fuel_per_day_per_adult_3H_2H, positions=[3], widths= 0.6)
+    Fuel_D_A_3H_2H_outlier = []
     for v,a in enumerate(Fuel_per_day_per_adult_3H_2H):
         if a > Top_lim_1_3H_2H or a < Low_lim_1_3H_2H:
+            Fuel_D_A_3H_2H_outlier.append(f_d_a_3H_2H[v])
             plt.text(3, a, f_d_a_3H_2H[v])
     plt.text(2.75, -0.25, '2H / 1H', color= 'm')
     
     plt.xlim(-0,4)
     plt.ylim(-0.25,6)
+    print('Fuel/Day/Adult 2H/1H had these values as outliers   ', Fuel_D_A_2H_1H_outlier)
+    print('Fuel/Day/Adult 3H/1H had these values as outliers   ', Fuel_D_A_3H_1H_outlier)
+    print('Fuel/Day/Adult 3H/2H had these values as outliers   ', Fuel_D_A_3H_2H_outlier)
     plt.show()
     
     
@@ -688,7 +733,8 @@ if Hood_or_no == 'hood':
     
     D_50_quant_percent_f_d_a_hood ={'Percentile %': [25,50,75],'2H / 1H': quant_1_2H_1H,'3H / 1H': quant_1_3H_1H,'3H / 2H': quant_1_3H_2H}
     F_D_A_50_percent_change_hood = pd.DataFrame(data=D_50_quant_percent_f_d_a_hood)
-
+    print('hood fuel', F_D_A_50_phase_hood)
+    print('hood fuel', F_D_A_50_percent_change_hood)
 
 print('----------------------- Kitchen PM per Day -----------------------------')
 if Hood_or_no == 'no_hood':
@@ -856,15 +902,17 @@ if Hood_or_no == 'no_hood':
     #Plotting on the same graph
     fig, ax = plt.subplots()
     plt.title('No-Hood Kitchen PM per day')
-    plt.hold(True)
+    #plt.hold()
     #1N
     quant_1_1N = np.percentile(Kit_PM_per_day_1N, [25,50,75])
     Top_lim_1_1N = quant_1_1N[2] + 1.5*(quant_1_1N[2] - quant_1_1N[0])
     Low_lim_1_1N = quant_1_1N[0] - 1.5*(quant_1_1N[2] - quant_1_1N[0])
     
     bp_1 = plt.boxplot(Kit_PM_per_day_1N, positions = [1], widths = 0.6)
+    kitchen_pm_1N_outlier = []
     for v,a in enumerate(Kit_PM_per_day_1N):
         if a > Top_lim_1_1N or a < Low_lim_1_1N:
+            kitchen_pm_1N_outlier.append(K_PM_D_1N[v])
             plt.text(1,a,K_PM_D_1N[v])
     plt.text(1,0.1,'1N',color='b')
 
@@ -874,20 +922,22 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_2N = quant_1_2N[0] - 1.5*(quant_1_2N[2] - quant_1_2N[0])
     
     bp_1 = plt.boxplot(Kit_PM_per_day_2N,positions = [2], widths = 0.6)
+    kitchen_pm_2N_outlier = []
     for v,a in enumerate(Kit_PM_per_day_2N):
         if a > Top_lim_1_2N or a < Low_lim_1_2N:
+            kitchen_pm_2N_outlier.append(K_PM_D_2N[v])
             plt.text(2,a,K_PM_D_2N[v])
     plt.text(2,0.1,'2N', color= 'g')
     #3N
     quant_1_3N = np.percentile(Kit_PM_per_day_3N, [25,50,75])
     Top_lim_1_3N = quant_1_3N[2] + 1.5*(quant_1_3N[2] - quant_1_3N[0])
     Low_lim_1_3N = quant_1_3N[0] - 1.5*(quant_1_3N[2] - quant_1_3N[0])
-    kitchen_3N_outlier = []
+    kitchen_pm_3N_outlier = []
     bp_1 = plt.boxplot(Kit_PM_per_day_3N,positions = [3], widths = 0.6)
     count = 0
     for v,a in enumerate(Kit_PM_per_day_3N):
         if a > Top_lim_1_3N or a < Low_lim_1_3N:
-            kitchen_3N_outlier.append(K_PM_D_3N[v])
+            kitchen_pm_3N_outlier.append(K_PM_D_3N[v])
             count = count + 1
             if count == (3):
                 plt.text(3,a,K_PM_D_3N[v],ha='left', va='bottom')
@@ -903,16 +953,21 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_4N = quant_1_4N[0] - 1.5*(quant_1_4N[2] - quant_1_4N[0])
     
     bp_1 = plt.boxplot(Kit_PM_per_day_4N,positions = [4], widths = 0.6)
+    kitchen_pm_4N_outlier = []
     for v,a in enumerate(Kit_PM_per_day_4N):
         if a > Top_lim_1_4N or a < Low_lim_1_4N:
+            kitchen_pm_4N_outlier.append(K_PM_D_4N[v])
             plt.text(4,a,K_PM_D_4N[v])
     plt.text(4,0.1,'4N', color='y')        
             
     plt.xlim(0,5)
     plt.ylim(0,2000000)
-    
+    print('Kitchen PM 1N had these values as outliers   ', kitchen_pm_1N_outlier)
+    print('Kitchen PM 2N had these values as outliers   ', kitchen_pm_2N_outlier)
+    print('Kitchen PM 3N had these values as outliers   ', kitchen_pm_3N_outlier)
+    print('Kitchen PM 4N had these values as outliers   ', kitchen_pm_4N_outlier)
     plt.show()
-    print('3N had these values as outliers   ' , kitchen_3N_outlier)
+
 
     # % change of PM per day 
 
@@ -925,10 +980,12 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_2N_1N = quant_1_2N_1N[0] - 1.5*(quant_1_2N_1N[2]-quant_1_2N_1N[0])
 
     bp_1_1 = plt.boxplot(Kit_per_day_2N_1N, positions=[1], widths= 0.6)
+    kitchen_pm_2N_1N_outlier = []
     for v,a in enumerate(Kit_per_day_2N_1N):
         if a > Top_lim_1_2N_1N or a < Low_lim_1_2N_1N:
+            kitchen_pm_2N_1N_outlier.append(K_PM_D_2N_1N[v])
             plt.text(1, a, K_PM_D_2N_1N[v])
-    plt.text(0.5, 0, '2N / 1N', color= 'g')
+    plt.text(0.5, -0.25, '2N / 1N', color= 'g')
     
     #3N to 1N
     quant_1_3N_1N = np.percentile(Kit_per_day_3N_1N, [25,50,75])
@@ -936,10 +993,12 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_3N_1N = quant_1_3N_1N[0] - 1.5*(quant_1_3N_1N[2]-quant_1_3N_1N[0])
 
     bp_1_1 = plt.boxplot(Kit_per_day_3N_1N, positions=[2], widths= 0.6)
+    kitchen_pm_3N_1N_outlier = []
     for v,a in enumerate(Kit_per_day_3N_1N):
         if a > Top_lim_1_3N_1N or a < Low_lim_1_3N_1N:
+            kitchen_pm_3N_1N_outlier.append(K_PM_D_3N_1N[v])
             plt.text(2, a, K_PM_D_3N_1N[v])
-    plt.text(1.5, 0, '3N / 1N', color= 'r')
+    plt.text(1.5, -0.25, '3N / 1N', color= 'r')
     
     #4N to 1N
     quant_1_4N_1N = np.percentile(Kit_per_day_4N_1N, [25,50,75])
@@ -947,10 +1006,12 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_4N_1N = quant_1_4N_1N[0] - 1.5*(quant_1_4N_1N[2]-quant_1_4N_1N[0])
 
     bp_1_1 = plt.boxplot(Kit_per_day_4N_1N, positions=[3], widths= 0.6)
+    kitchen_pm_4N_1N_outlier = []
     for v,a in enumerate(Kit_per_day_4N_1N):
         if a > Top_lim_1_4N_1N or a < Low_lim_1_4N_1N:
+            kitchen_pm_4N_1N_outlier.append(K_PM_D_4N_1N[v])
             plt.text(3, a, K_PM_D_4N_1N[v])
-    plt.text(2.5, 0, '4N / 1N', color= 'y')
+    plt.text(2.5, -0.25, '4N / 1N', color= 'y')
     
     #3N to 2N
     quant_1_3N_2N = np.percentile(Kit_per_day_3N_2N, [25,50,75])
@@ -958,10 +1019,12 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_3N_2N = quant_1_3N_2N[0] - 1.5*(quant_1_3N_2N[2]-quant_1_3N_2N[0])
 
     bp_1_1 = plt.boxplot(Kit_per_day_3N_2N, positions=[4], widths= 0.6)
+    kitchen_pm_3N_2N_outlier = []
     for v,a in enumerate(Kit_per_day_3N_2N):
         if a > Top_lim_1_3N_2N or a < Low_lim_1_3N_2N:
+            kitchen_pm_3N_2N_outlier.append(K_PM_D_3N_2N[v])
             plt.text(4, a, K_PM_D_3N_2N[v])
-    plt.text(3.5, 0, '3N / 2N', color= 'm')
+    plt.text(3.5, -0.25, '3N / 2N', color= 'm')
     
     #4N to 3N
     quant_1_4N_3N = np.percentile(Kit_per_day_4N_3N, [25,50,75])
@@ -969,10 +1032,12 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_4N_3N = quant_1_4N_3N[0] - 1.5*(quant_1_4N_3N[2]-quant_1_4N_3N[0])
 
     bp_1_1 = plt.boxplot(Kit_per_day_4N_3N, positions=[5], widths= 0.6)
+    kitchen_pm_4N_3N_outlier = []
     for v,a in enumerate(Kit_per_day_4N_3N):
         if a > Top_lim_1_4N_3N or a < Low_lim_1_4N_3N:
+            kitchen_pm_4N_3N_outlier.append(K_PM_D_4N_3N[v])
             plt.text(5, a, K_PM_D_4N_3N[v])
-    plt.text(4.5, 0, '4N / 3N', color= 'k')
+    plt.text(4.5, -0.25, '4N / 3N', color= 'k')
     
     #4N to 2N
     quant_1_4N_2N = np.percentile(Kit_per_day_4N_2N, [25,50,75])
@@ -980,14 +1045,23 @@ if Hood_or_no == 'no_hood':
     Low_lim_1_4N_2N = quant_1_4N_2N[0] - 1.5*(quant_1_4N_2N[2]-quant_1_4N_2N[0])
 
     bp_1_1 = plt.boxplot(Kit_per_day_4N_2N, positions=[6], widths= 0.6)
+    kitchen_pm_4N_2N_outlier = []
     for v,a in enumerate(Kit_per_day_4N_2N):
         if a > Top_lim_1_4N_2N or a < Low_lim_1_4N_2N:
+            kitchen_pm_4N_2N_outlier.append(K_PM_D_4N_2N[v])
             plt.text(6, a, K_PM_D_4N_2N[v])
-    plt.text(5.5, 0, '4N / 2N', color= 'tab:orange')
+    plt.text(5.5, -0.25, '4N / 2N', color= 'tab:orange')
     
-    
+
     plt.xlim(0,7)
     plt.ylim(-0.5,5)
+
+    print('Kitchen PM 2N/1N had these values as outliers   ', kitchen_pm_2N_1N_outlier)
+    print('Kitchen PM 3N/1N had these values as outliers   ', kitchen_pm_3N_1N_outlier)
+    print('Kitchen PM 4N/1N had these values as outliers   ', kitchen_pm_4N_1N_outlier)
+    print('Kitchen PM 3N/2N had these values as outliers   ', kitchen_pm_3N_2N_outlier)
+    print('Kitchen PM 4N/3N had these values as outliers   ', kitchen_pm_4N_3N_outlier)
+    print('Kitchen PM 4N/2N had these values as outliers   ', kitchen_pm_4N_2N_outlier)
     plt.show()
     
     D_50_quant_phase_PM_d = {'Percentile %': [25,50,75], '1N': quant_1_1N, '2N': quant_1_2N,'3N' : quant_1_3N,'4N': quant_1_4N}
@@ -995,7 +1069,8 @@ if Hood_or_no == 'no_hood':
     D_50_quant_percent_PM_d ={'Percentile %': [25,50,75],'2N / 1N': quant_1_2N_1N,'3N / 1N': quant_1_3N_1N,'4N / 1N': quant_1_4N_1N,
                                '3N / 2N': quant_1_3N_2N,'4N / 3N': quant_1_4N_3N,'4N / 2N': quant_1_4N_2N}
     PM_D_50_percent_change_no_hood = pd.DataFrame(data=D_50_quant_percent_PM_d)
-
+    print('No hood PM', PM_D_50_phase_no_hood)
+    print('No hood PM', PM_D_50_percent_change_no_hood)
     
 # hood Pm per day
 if Hood_or_no == 'hood':
@@ -1114,8 +1189,10 @@ if Hood_or_no == 'hood':
     Low_lim_1_1H = quant_1_1H[0] - 1.5*(quant_1_1H[2] - quant_1_1H[0])
     
     bp_1 = plt.boxplot(Kit_PM_per_day_1H, positions = [1], widths = 0.6)
+    kitchen_pm_1H_outlier = []
     for v,a in enumerate(Kit_PM_per_day_1H):
         if a > Top_lim_1_1H or a < Low_lim_1_1H:
+            kitchen_pm_1H_outlier.append(K_PM_D_1H[v])
             plt.text(1,a,K_PM_D_1H[v])
     plt.text(0.5,0.1,'1H',color='b')
 
@@ -1125,8 +1202,10 @@ if Hood_or_no == 'hood':
     Low_lim_1_2N = quant_1_2H[0] - 1.5*(quant_1_2H[2] - quant_1_2H[0])
     
     bp_1 = plt.boxplot(Kit_PM_per_day_2H,positions = [2], widths = 0.6)
+    kitchen_pm_2H_outlier = []
     for v,a in enumerate(Kit_PM_per_day_2H):
         if a > Top_lim_1_2N or a < Low_lim_1_2N:
+            kitchen_pm_2H_outlier.append(K_PM_D_2H[v])
             plt.text(2,a,K_PM_D_2H[v])
     plt.text(1.5,0.1,'2H', color= 'g')
     #3H
@@ -1136,8 +1215,10 @@ if Hood_or_no == 'hood':
     kitchen_3H_outlier = []
     bp_1 = plt.boxplot(Kit_PM_per_day_3H,positions = [3], widths = 0.6)
     count = 0
+    kitchen_pm_3H_outlier = []
     for v,a in enumerate(Kit_PM_per_day_3H):
         if a > Top_lim_1_3N or a < Low_lim_1_3N:
+            kitchen_pm_3H_outlier.append(K_PM_D_3H[v])
             plt.text(3,a,K_PM_D_3H[v])
 #            kitchen_3N_outlier.append(K_PM_D_3N[v])
 #            count = count + 1
@@ -1150,6 +1231,9 @@ if Hood_or_no == 'hood':
     plt.text(2.5,0.1,'3H', color='r')        
     plt.xlim(0,4)
     plt.ylim(0,1200000)
+    print('Kitchen PM 1H had these values as outliers   ', kitchen_pm_1H_outlier)
+    print('Kitchen PM 2H had these values as outliers   ', kitchen_pm_2H_outlier)
+    print('Kitchen PM 3H had these values as outliers   ', kitchen_pm_3H_outlier)
     plt.show()
     #print('3N had these values as outliers   ' , kitchen_3N_outlier)
 
@@ -1159,42 +1243,49 @@ if Hood_or_no == 'hood':
     plt.title('% hood PM per Day Change' )
     #plt.hold(True)
     #2H to 1H
-    quant_1_2N_1N = np.percentile(Kit_per_day_2H_1H, [25,50,75])
-    Top_lim_1_2N_1N = quant_1_2N_1N[2] + 1.5*(quant_1_2N_1N[2]-quant_1_2N_1N[0])
-    Low_lim_1_2N_1N = quant_1_2N_1N[0] - 1.5*(quant_1_2N_1N[2]-quant_1_2N_1N[0])
+    quant_1_2H_1H = np.percentile(Kit_per_day_2H_1H, [25,50,75])
+    Top_lim_1_2N_1N = quant_1_2H_1H[2] + 1.5*(quant_1_2H_1H[2]-quant_1_2H_1H[0])
+    Low_lim_1_2N_1N = quant_1_2H_1H[0] - 1.5*(quant_1_2H_1H[2]-quant_1_2H_1H[0])
 
     bp_1_1 = plt.boxplot(Kit_per_day_2H_1H, positions=[1], widths= 0.6)
+    kitchen_pm_2H_1H_outlier = []
     for v,a in enumerate(Kit_per_day_2H_1H):
         if a > Top_lim_1_2N_1N or a < Low_lim_1_2N_1N:
+            kitchen_pm_2H_1H_outlier.append(K_PM_D_2H_1H[v])
             plt.text(1, a, K_PM_D_2H_1H[v])
     plt.text(0.75, -0.25, '2H / 1H', color= 'g')
     
     #3H to 1H
-    quant_1_3N_1N = np.percentile(Kit_per_day_3H_1H, [25,50,75])
-    Top_lim_1_3N_1N = quant_1_3N_1N[2] + 1.5*(quant_1_3N_1N[2]-quant_1_3N_1N[0])
-    Low_lim_1_3N_1N = quant_1_3N_1N[0] - 1.5*(quant_1_3N_1N[2]-quant_1_3N_1N[0])
+    quant_1_3H_1H = np.percentile(Kit_per_day_3H_1H, [25,50,75])
+    Top_lim_1_3N_1N = quant_1_3H_1H[2] + 1.5*(quant_1_3H_1H[2]-quant_1_3H_1H[0])
+    Low_lim_1_3N_1N = quant_1_3H_1H[0] - 1.5*(quant_1_3H_1H[2]-quant_1_3H_1H[0])
 
     bp_1_1 = plt.boxplot(Kit_per_day_3H_1H, positions=[2], widths= 0.6)
+    kitchen_pm_3H_1H_outlier = []
     for v,a in enumerate(Kit_per_day_3H_1H):
         if a > Top_lim_1_3N_1N or a < Low_lim_1_3N_1N:
+            kitchen_pm_3H_1H_outlier.append(K_PM_D_3H_1H[v])
             plt.text(2, a, K_PM_D_3H_1H[v])
     plt.text(1.75, -0.25, '3H / 1H', color= 'r')
-    
 
-    
     #3H to 2H
-    quant_1_3N_2N = np.percentile(Kit_per_day_3H_2H, [25,50,75])
-    Top_lim_1_3N_2N = quant_1_3N_2N[2] + 1.5*(quant_1_3N_2N[2]-quant_1_3N_2N[0])
-    Low_lim_1_3N_2N = quant_1_3N_2N[0] - 1.5*(quant_1_3N_2N[2]-quant_1_3N_2N[0])
+    quant_1_3H_2H = np.percentile(Kit_per_day_3H_2H, [25,50,75])
+    Top_lim_1_3N_2N = quant_1_3H_2H[2] + 1.5*(quant_1_3H_2H[2]-quant_1_3H_2H[0])
+    Low_lim_1_3N_2N = quant_1_3H_2H[0] - 1.5*(quant_1_3H_2H[2]-quant_1_3H_2H[0])
 
     bp_1_1 = plt.boxplot(Kit_per_day_3H_2H, positions=[3], widths= 0.6)
+    kitchen_pm_3H_2H_outlier = []
     for v,a in enumerate(Kit_per_day_3H_2H):
         if a > Top_lim_1_3N_2N or a < Low_lim_1_3N_2N:
+            kitchen_pm_3H_2H_outlier.append(K_PM_D_3H_2H[v])
             plt.text(3, a, K_PM_D_3H_2H[v])
     plt.text(2.75, -0.25, '3H / 2H', color= 'm')
 
     plt.xlim(0,4)
     plt.ylim(-0.5,5)
+    print('Kitchen PM 2H/1H had these values as outliers   ', kitchen_pm_2H_1H_outlier)
+    print('Kitchen PM 3H/1H had these values as outliers   ', kitchen_pm_3H_1H_outlier)
+    print('Kitchen PM 3H/2H had these values as outliers   ', kitchen_pm_3H_2H_outlier)
     plt.show()
     
     D_50_quant_phase_PM_D_hood = {'Percentile %': [25,50,75], '1H': quant_1_1H, '2H': quant_1_2H,'3H' : quant_1_3H}
@@ -1203,6 +1294,8 @@ if Hood_or_no == 'hood':
     D_50_quant_percent_PM_D_hood ={'Percentile %': [25,50,75],'2H / 1H': quant_1_2H_1H,'3H / 1H': quant_1_3H_1H,'3H / 2H': quant_1_3H_2H}
     PM_D_50_percent_change_hood = pd.DataFrame(data=D_50_quant_percent_PM_D_hood)
 
+    print('hood PM', PM_D_50_phase_hood)
+    print('hood PM', PM_D_50_percent_change_hood)
 # when i am ready to transfer to a data frame and get the differences
 
 

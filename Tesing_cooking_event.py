@@ -756,7 +756,12 @@ for q in Two_exact:
             filler_value.append(-1)
         ## Cooking Characteristics
         if No_fuel == 0:
-            fuel_per_day = list(set([a for a in KG_burned[ds:Day_end[tv]]]))
+            for val, a in  enumerate(KG_burned[ds:Day_end[tv]]):
+                if val+1 == len(KG_burned[ds:Day_end[tv]]):
+                    continue
+                elif a != KG_burned[val+1]:
+                    fuel_per_day = a
+            #fuel_per_day = list(set([a for a in KG_burned[ds:Day_end[tv]]]))
             D_Fuel_Used.append((int((sum(fuel_per_day))*1000)/1000))
             Raw_D_Fuel.extend(Fuel_KG_nf[ds:Day_end[tv]])
             Raw_D_Fuel_removed.extend(KG_burned[ds:Day_end[tv]])

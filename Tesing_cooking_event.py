@@ -12,11 +12,11 @@ from itertools import islice, cycle
 from io import StringIO
 import matplotlib.pyplot as plt
 
-Phase = "3H"
+Phase = "1N"
 print('Phase Number', Phase)
 
-#datafile_path ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2H/Collection/Clean_HH_2015_2021-11-07_16-54-12.csv"
-datafile_path ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3H/Collection/Clean_HH_2006_2021-11-29_09-58-09.csv"
+datafile_path ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/1N/Collection/Clean_HH_1001_2021-10-01_12-36-06.csv"
+#datafile_path ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3H/Collection/Clean_HH_2002_2021-11-29_10-17-02.csv"
 
 Second_Exact = 0
 
@@ -755,12 +755,15 @@ for q in Two_exact:
         for v in Value:
             filler_value.append(-1)
         ## Cooking Characteristics
+        fuel_per_day = []
         if No_fuel == 0:
             for val, a in  enumerate(KG_burned[ds:Day_end[tv]]):
                 if val+1 == len(KG_burned[ds:Day_end[tv]]):
+                    fuel_per_day.append(a)
+                    print('bababababaoooooiieeieieieieieiee')
                     continue
-                elif a != KG_burned[val+1]:
-                    fuel_per_day = a
+                elif a != KG_burned[ds + val + 1]:
+                    fuel_per_day.append(a)
             #fuel_per_day = list(set([a for a in KG_burned[ds:Day_end[tv]]]))
             D_Fuel_Used.append((int((sum(fuel_per_day))*1000)/1000))
             Raw_D_Fuel.extend(Fuel_KG_nf[ds:Day_end[tv]])

@@ -760,7 +760,6 @@ for q in Two_exact:
             for val, a in  enumerate(KG_burned[ds:Day_end[tv]]):
                 if val+1 == len(KG_burned[ds:Day_end[tv]]):
                     fuel_per_day.append(a)
-                    print('bababababaoooooiieeieieieieieiee')
                     continue
                 elif a != KG_burned[ds + val + 1]:
                     fuel_per_day.append(a)

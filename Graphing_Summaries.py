@@ -8,7 +8,7 @@ import seaborn as sns
 # Is this a personal or work computer
 # Are you graphing for hood or no hood
 
-Computer = 'personal' #or 'personal' or 'work'
+Computer = 'work' #or 'personal' or 'work'
 Hood_or_no = 'no_hood'   # 'no_hood' or 'hood'
 #what household do you want to remove make sure it is in ascending order
 # if there is nothing, then put a placeholder of 1045 or higher
@@ -544,12 +544,26 @@ if Hood_or_no == 'no_hood':
     print('Fuel/Day/Adult 4N/3N had these values as outliers   ', Fuel_D_A_4N_3N_outlier)
     print('Fuel/Day/Adult 4N/2N had these values as outliers   ', Fuel_D_A_4N_2N_outlier)
     plt.show()
+    #adding averages to the tables
+    quant_1_1N = np.append(quant_1_1N, np.average(Fuel_per_day_per_adult_1N))
+    quant_1_2N = np.append(quant_1_2N, np.average(Fuel_per_day_per_adult_2N))
+    quant_1_3N = np.append(quant_1_3N, np.average(Fuel_per_day_per_adult_3N))
+    quant_1_4N = np.append(quant_1_4N, np.average(Fuel_per_day_per_adult_4N))
     
-    D_50_quant_phase_f_d_a = {'Percentile %': [25,50,75], '1N': quant_1_1N, '2N': quant_1_2N,'3N' : quant_1_3N,'4N': quant_1_4N}
-    F_D_A_50_phase_no_hood = pd.DataFrame(data=D_50_quant_phase_f_d_a)
-    D_50_quant_percent_f_d_a ={'Percentile %': [25,50,75],'2N / 1N': quant_1_2N_1N,'3N / 1N': quant_1_3N_1N,'4N / 1N': quant_1_4N_1N,
+    D_50_quant_phase_f_d_a = {'Percentile %': ['25','50','75', 'Avg'], '1N': quant_1_1N, '2N': quant_1_2N,'3N' : quant_1_3N,'4N': quant_1_4N}
+    F_D_A_50_phase_no_hood = pd.DataFrame(data=D_50_quant_phase_f_d_a, columns=['Percentile %','1N', '2N', '3N','4N'])
+    
+    quant_1_2N_1N = np.append(quant_1_2N_1N , np.average(Fuel_per_day_per_adult_2N_1N))
+    quant_1_3N_1N = np.append(quant_1_3N_1N , np.average(Fuel_per_day_per_adult_3N_1N))
+    quant_1_4N_1N = np.append(quant_1_4N_1N , np.average(Fuel_per_day_per_adult_4N_1N))
+    quant_1_3N_2N = np.append(quant_1_3N_2N , np.average(Fuel_per_day_per_adult_3N_2N))
+    quant_1_4N_3N = np.append(quant_1_4N_3N , np.average(Fuel_per_day_per_adult_4N_3N))
+    quant_1_4N_2N = np.append(quant_1_4N_2N , np.average(Fuel_per_day_per_adult_4N_2N))
+        
+    D_50_quant_percent_f_d_a ={'Percentile %': ['25','50','75', 'Avg'],'2N / 1N': quant_1_2N_1N,'3N / 1N': quant_1_3N_1N,'4N / 1N': quant_1_4N_1N,
                                '3N / 2N': quant_1_3N_2N,'4N / 3N': quant_1_4N_3N,'4N / 2N': quant_1_4N_2N}
-    F_D_A_50_percent_change_no_hood = pd.DataFrame(data=D_50_quant_percent_f_d_a)
+    F_D_A_50_percent_change_no_hood = pd.DataFrame(data=D_50_quant_percent_f_d_a, columns=['Percentile %','2N / 1N','3N / 1N', '4N / 1N'
+                                                                                           ,'3N / 2N','4N / 3N','4N / 2N'])
     print(F_D_A_50_phase_no_hood)
     print(F_D_A_50_percent_change_no_hood)
 # add more
@@ -769,14 +783,20 @@ if Hood_or_no == 'hood':
     print('Fuel/Day/Adult 3H/2H had these values as outliers   ', Fuel_D_A_3H_2H_outlier)
     plt.show()
     
+    quant_1_1H = np.append(quant_1_1H, np.average(Fuel_per_day_per_adult_1H))
+    quant_1_2H = np.append(quant_1_2H, np.average(Fuel_per_day_per_adult_2H))
+    quant_1_3H = np.append(quant_1_3H, np.average(Fuel_per_day_per_adult_3H))
+
     
-    D_50_quant_phase_f_d_a_hood = {'Percentile %': [25,50,75], '1H': quant_1_1H, '2H': quant_1_2H,'3H' : quant_1_3H}
-    F_D_A_50_phase_hood = pd.DataFrame(data=D_50_quant_phase_f_d_a_hood)
+    D_50_quant_phase_f_d_a_hood = {'Percentile %': ['25','50','75', 'Avg'], '1H': quant_1_1H, '2H': quant_1_2H,'3H' : quant_1_3H}
+    F_D_A_50_phase_hood = pd.DataFrame(data=D_50_quant_phase_f_d_a_hood, columns=['Percentile %','1H', '2H','3H'] )
     
-    D_50_quant_percent_f_d_a_hood ={'Percentile %': [25,50,75],'2H / 1H': quant_1_2H_1H,'3H / 1H': quant_1_3H_1H,'3H / 2H': quant_1_3H_2H}
-    F_D_A_50_percent_change_hood = pd.DataFrame(data=D_50_quant_percent_f_d_a_hood)
-    print('hood fuel', F_D_A_50_phase_hood)
-    print('hood fuel', F_D_A_50_percent_change_hood)
+    quant_1_2H_1H = np.append(quant_1_2H_1H , np.average(Fuel_per_day_per_adult_2H_1H))
+    quant_1_3H_1H = np.append(quant_1_3H_1H , np.average(Fuel_per_day_per_adult_3H_1H))
+    quant_1_3H_2H = np.append(quant_1_3H_2H , np.average(Fuel_per_day_per_adult_3H_2H))
+    
+    D_50_quant_percent_f_d_a_hood ={'Percentile %': ['25','50','75', 'Avg'],'2H / 1H': quant_1_2H_1H,'3H / 1H': quant_1_3H_1H,'3H / 2H': quant_1_3H_2H}
+    F_D_A_50_percent_change_hood = pd.DataFrame(data=D_50_quant_percent_f_d_a_hood, columns=['Percentile %','2H / 1H','3H / 1H','3H / 2H'])
 
 print('----------------------- Kitchen PM per Day -----------------------------')
 if Hood_or_no == 'no_hood':
@@ -1127,13 +1147,18 @@ if Hood_or_no == 'no_hood':
     print('Kitchen PM 4N/2N had these values as outliers   ', kitchen_pm_4N_2N_outlier)
     plt.show()
     
+    
+    
     D_50_quant_phase_PM_d = {'Percentile %': [25,50,75], '1N': quant_1_1N, '2N': quant_1_2N,'3N' : quant_1_3N,'4N': quant_1_4N}
-    PM_D_50_phase_no_hood = pd.DataFrame(data=D_50_quant_phase_PM_d)
+    PM_D_50_phase_no_hood = pd.DataFrame(data=D_50_quant_phase_PM_d,columns=['Percentile %','1N', '2N', '3N','4N'])
     D_50_quant_percent_PM_d ={'Percentile %': [25,50,75],'2N / 1N': quant_1_2N_1N,'3N / 1N': quant_1_3N_1N,'4N / 1N': quant_1_4N_1N,
                                '3N / 2N': quant_1_3N_2N,'4N / 3N': quant_1_4N_3N,'4N / 2N': quant_1_4N_2N}
-    PM_D_50_percent_change_no_hood = pd.DataFrame(data=D_50_quant_percent_PM_d)
-    print('No hood PM', PM_D_50_phase_no_hood)
-    print('No hood PM', PM_D_50_percent_change_no_hood)
+    PM_D_50_percent_change_no_hood = pd.DataFrame(data=D_50_quant_percent_PM_d, columns=['Percentile %','2N / 1N','3N / 1N', '4N / 1N'
+                                                                                           ,'3N / 2N','4N / 3N','4N / 2N'])
+
+    
+    print(PM_D_50_phase_no_hood)
+    print(PM_D_50_percent_change_no_hood)
     
 # hood Pm per day
 if Hood_or_no == 'hood':
@@ -1366,13 +1391,13 @@ if Hood_or_no == 'hood':
     plt.show()
     
     D_50_quant_phase_PM_D_hood = {'Percentile %': [25,50,75], '1H': quant_1_1H, '2H': quant_1_2H,'3H' : quant_1_3H}
-    PM_D_50_phase_hood = pd.DataFrame(data=D_50_quant_phase_PM_D_hood)
+    PM_D_50_phase_hood = pd.DataFrame(data=D_50_quant_phase_PM_D_hood, columns= ['Percentile %','1H','2H','3H' ])
     
     D_50_quant_percent_PM_D_hood ={'Percentile %': [25,50,75],'2H / 1H': quant_1_2H_1H,'3H / 1H': quant_1_3H_1H,'3H / 2H': quant_1_3H_2H}
-    PM_D_50_percent_change_hood = pd.DataFrame(data=D_50_quant_percent_PM_D_hood)
+    PM_D_50_percent_change_hood = pd.DataFrame(data=D_50_quant_percent_PM_D_hood, columns=['Percentile %','2H / 1H','3H / 1H','3H / 2H'])
 
-    print('hood PM', PM_D_50_phase_hood)
-    print('hood PM', PM_D_50_percent_change_hood)
+    print(PM_D_50_phase_hood)
+    print(PM_D_50_percent_change_hood)
 # when i am ready to transfer to a data frame and get the differences
 
 

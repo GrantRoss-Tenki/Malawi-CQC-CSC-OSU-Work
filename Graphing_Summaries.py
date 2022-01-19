@@ -8,7 +8,7 @@ import seaborn as sns
 # Is this a personal or work computer
 # Are you graphing for hood or no hood
 
-Computer = 'personal' #or 'personal' or 'work'
+Computer = 'work' #or 'personal' or 'work'
 Hood_or_no = 'hood'   # 'no_hood' or 'hood'
 #what household do you want to remove make sure it is in ascending order
 # if there is nothing, then put a placeholder of 1045 or higher
@@ -39,6 +39,9 @@ if Computer == 'personal' and Hood_or_no == 'no_hood':
     Filter_1n_survey = pd.read_csv(datafile_path_survey_1N, skiprows=0)
     #print(Filter_1n_survey.iloc[0:40, :])
     Survey_1N = Filter_1n_survey.iloc[0:40,:]
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_1N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/1N/1N_24_hour_Kitchen_PM.csv"
+    Kit_PM_1N_24hr = pd.read_csv(data_file_path_24_PM_1N, skiprows=0)
     
     #2N
     datafile_path_day_2N ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2N/2N_Summary_Day_1_exact.csv"
@@ -51,6 +54,9 @@ if Computer == 'personal' and Hood_or_no == 'no_hood':
     #2N Survey
     datafile_path_survey_2N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2N/2N_Survey_summary_.csv"
     Survey_2N = pd.read_csv(datafile_path_survey_2N, skiprows=0)
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_2N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2N/2N_24_hour_Kitchen_PM.csv"
+    Kit_PM_2N_24hr = pd.read_csv(data_file_path_24_PM_2N, skiprows=0)
     
     #3N
     datafile_path_day_3N ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3N/3N_Summary_Day_1_exact.csv"
@@ -63,6 +69,9 @@ if Computer == 'personal' and Hood_or_no == 'no_hood':
     #3N Survey 
     datafile_path_survey_3N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3N/3N_Survey_summary_.csv"
     Survey_3N = pd.read_csv(datafile_path_survey_3N, skiprows=0)
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_3N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3N/3N_24_hour_Kitchen_PM.csv"
+    Kit_PM_3N_24hr = pd.read_csv(data_file_path_24_PM_3N, skiprows=0)
     
     #4N
     datafile_path_day_4N ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/4N/4N_Summary_Day_1_exact.csv"
@@ -75,6 +84,9 @@ if Computer == 'personal' and Hood_or_no == 'no_hood':
     #4N Survey 
     datafile_path_survey_4N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/4N/4N_Survey_summary_.csv"
     Survey_4N = pd.read_csv(datafile_path_survey_4N, skiprows=0)
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_4N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/4N/4N_24_hour_Kitchen_PM.csv"
+    Kit_PM_4N_24hr = pd.read_csv(data_file_path_24_PM_4N, skiprows=0)
     
 elif Computer == 'personal' and Hood_or_no == 'hood':
     #1H
@@ -86,6 +98,9 @@ elif Computer == 'personal' and Hood_or_no == 'hood':
     #1H Survey (row 40 or so afterward is Hood portion column 1 is houshold number)
     datafile_path_survey_1H = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/1N/1N_1H_Survey_summary_.csv"
     Survey_1H = pd.read_csv(datafile_path_survey_1H, skiprows=40)
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_1H = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/1H/1H_24_hour_Kitchen_PM.csv"
+    Kit_PM_1H_24hr = pd.read_csv(data_file_path_24_PM_1H, skiprows=0)
     
     #2H
     datafile_path_day_2H ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2H/2H_Summary_Day_1_exact.csv"
@@ -98,6 +113,9 @@ elif Computer == 'personal' and Hood_or_no == 'hood':
     #2H survey 
     datafile_path_survey_2H = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2H/2H_Survey_summary_.csv"
     Survey_2H = pd.read_csv(datafile_path_survey_2H, skiprows=0)
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_2H = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2H/2H_24_hour_Kitchen_PM.csv"
+    Kit_PM_2H_24hr = pd.read_csv(data_file_path_24_PM_2H, skiprows=0)
     
     #3H
     datafile_path_day_3H ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3H/3H_Summary_Day_1_exact.csv"
@@ -110,6 +128,9 @@ elif Computer == 'personal' and Hood_or_no == 'hood':
     #3H survey 
     datafile_path_survey_3H = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3H/3H_Survey_summary_.csv"
     Survey_3H = pd.read_csv(datafile_path_survey_3H, skiprows=0)
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_3H = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3H/3H_24_hour_Kitchen_PM.csv"
+    Kit_PM_3H_24hr = pd.read_csv(data_file_path_24_PM_3H, skiprows=0)
     
     #work uses box information and not local data
 elif Computer == 'work' and Hood_or_no == 'no_hood':
@@ -124,6 +145,9 @@ elif Computer == 'work' and Hood_or_no == 'no_hood':
     Filter_1n_survey = pd.read_csv(datafile_path_survey_1N, skiprows=0)
     #print(Filter_1n_survey.iloc[0:40, :])
     Survey_1N = Filter_1n_survey.iloc[0:40,:]
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_1N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/1N/1N_24_hour_Kitchen_PM.csv"
+    Kit_PM_1N_24hr = pd.read_csv(data_file_path_24_PM_1N, skiprows=0)
     
     #2N
     datafile_path_day_2N ="C:/Users/rossgra/Box/OSU, CSC, CQC Project files/2N/2N_Summary_Day_1_exact.csv"
@@ -136,6 +160,9 @@ elif Computer == 'work' and Hood_or_no == 'no_hood':
     #2N Survey
     datafile_path_survey_2N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/2N/2N_Survey_summary_.csv"
     Survey_2N = pd.read_csv(datafile_path_survey_2N, skiprows=0)
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_2N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/2N/2N_24_hour_Kitchen_PM.csv"
+    Kit_PM_2N_24hr = pd.read_csv(data_file_path_24_PM_2N, skiprows=0)
     
     #3N
     datafile_path_day_3N ="C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3N/3N_Summary_Day_1_exact.csv"
@@ -148,6 +175,9 @@ elif Computer == 'work' and Hood_or_no == 'no_hood':
     #3N survey
     datafile_path_survey_3N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3N/3N_Survey_summary_.csv"
     Survey_3N = pd.read_csv(datafile_path_survey_3N, skiprows=0)
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_3N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3N/3N_24_hour_Kitchen_PM.csv"
+    Kit_PM_3N_24hr = pd.read_csv(data_file_path_24_PM_3N, skiprows=0)
     
     #4N
     datafile_path_day_4N ="C:/Users/rossgra/Box/OSU, CSC, CQC Project files/4N/4N_Summary_Day_1_exact.csv"
@@ -160,6 +190,10 @@ elif Computer == 'work' and Hood_or_no == 'no_hood':
     #4N Survey 
     datafile_path_survey_4N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/4N/4N_Survey_summary_.csv"
     Survey_4N = pd.read_csv(datafile_path_survey_4N, skiprows=0)
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_4N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/4N/4N_24_hour_Kitchen_PM.csv"
+    Kit_PM_4N_24hr = pd.read_csv(data_file_path_24_PM_4N, skiprows=0)
+    
 else:
     #1H
     datafile_path_day_1H ="C:/Users/rossgra/Box/OSU, CSC, CQC Project files/1H/1H_Summary_Day_1_exact.csv"
@@ -170,6 +204,9 @@ else:
     #1H Survey (row 40 or so afterward is Hood portion column 1 is houshold number)
     datafile_path_survey_1H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/1N/1N_1H_Survey_summary_.csv"
     Survey_1H = pd.read_csv(datafile_path_survey_1H, skiprows=40)
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_1H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/1H/1H_24_hour_Kitchen_PM.csv"
+    Kit_PM_1H_24hr = pd.read_csv(data_file_path_24_PM_1H, skiprows=0)
     
     #2H
     datafile_path_day_2H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/2H/2H_Summary_Day_1_exact.csv"
@@ -182,6 +219,9 @@ else:
     #2H survey 
     datafile_path_survey_2H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/2H/2H_Survey_summary_.csv"
     Survey_2H = pd.read_csv(datafile_path_survey_2H, skiprows=0)
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_2H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/2H/2H_24_hour_Kitchen_PM.csv"
+    Kit_PM_2H_24hr = pd.read_csv(data_file_path_24_PM_2H, skiprows=0)
     
     #3H
     datafile_path_day_3H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3H/3H_Summary_Day_1_exact.csv"
@@ -194,6 +234,9 @@ else:
     #3H survey 
     datafile_path_survey_3H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3H/3H_Survey_summary_.csv"
     Survey_3H = pd.read_csv(datafile_path_survey_3H, skiprows=0)
+    #24 hour Kitchen pm breakdown
+    data_file_path_24_PM_3H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3H/3H_24_hour_Kitchen_PM.csv"
+    Kit_PM_3H_24hr = pd.read_csv(data_file_path_24_PM_3H, skiprows=0)
     
 #time to start ploting fun things 
 #1st starting with the fuel per day per adult histogram and box plot

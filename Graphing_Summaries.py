@@ -8,8 +8,8 @@ import seaborn as sns
 # Is this a personal or work computer
 # Are you graphing for hood or no hood
 
-Computer = 'work' #or 'personal' or 'work'
-Hood_or_no = 'hood'   # 'no_hood' or 'hood'
+Computer = 'personal' #or 'personal' or 'work'
+Hood_or_no = 'no_hood'   # 'no_hood' or 'hood'
 #what household do you want to remove make sure it is in ascending order
 # if there is nothing, then put a placeholder of 1045 or higher
 Household_removal = [1045]
@@ -42,7 +42,6 @@ if Computer == 'personal' and Hood_or_no == 'no_hood':
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_1N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/1N/1N_24_hour_Kitchen_PM.csv"
     Kit_PM_1N_24hr = pd.read_csv(data_file_path_24_PM_1N, skiprows=0)
-    
     #2N
     datafile_path_day_2N ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2N/2N_Summary_Day_1_exact.csv"
     Day_2N = pd.read_csv(datafile_path_day_2N, skiprows=2)
@@ -802,19 +801,30 @@ if Hood_or_no == 'no_hood':
             if count_pm == len(Household_removal_NO_Hood_PM):
                 count_pm = 0
             continue
-        if Day_1N.iloc[c,7] != -1.00:
-            Kit_PM_per_day_1N.append(Day_1N.iloc[c,7]/Day_1N.iloc[c,1])
-            K_PM_D_1N.append(Day_1N.iloc[c,0])
-        if Day_2N.iloc[c, 7] != -1.00:
-            Kit_PM_per_day_2N.append(Day_2N.iloc[c,7]/Day_2N.iloc[c,1])
-            K_PM_D_2N.append(Day_2N.iloc[c,0])
-        if Day_3N.iloc[c, 7] != -1.00:
-            Kit_PM_per_day_3N.append(Day_3N.iloc[c,7]/Day_3N.iloc[c,1])
-            K_PM_D_3N.append(Day_3N.iloc[c, 0])
-        if Day_4N.iloc[c, 7] != -1.00:
-            Kit_PM_per_day_4N.append(Day_4N.iloc[c,7]/Day_4N.iloc[c,1])
-            K_PM_D_4N.append(Day_4N.iloc[c, 0])
-            
+        # if Day_1N.iloc[c,7] != -1.00:
+        #     Kit_PM_per_day_1N.append(Day_1N.iloc[c,7]/Day_1N.iloc[c,1])
+        #     K_PM_D_1N.append(Day_1N.iloc[c,0])
+        if Kit_PM_1N_24hr.iloc[c,6] != -1.00:
+            Kit_PM_per_day_1N.append(Kit_PM_1N_24hr.iloc[c,6])
+            K_PM_D_1N.append(Kit_PM_1N_24hr.iloc[c, 0])
+        #if Day_2N.iloc[c, 7] != -1.00:
+        #    Kit_PM_per_day_2N.append(Day_2N.iloc[c,7]/Day_2N.iloc[c,1])
+        #    K_PM_D_2N.append(Day_2N.iloc[c,0])
+        if Kit_PM_2N_24hr.iloc[c, 6] != -1.00:
+            Kit_PM_per_day_2N.append(Kit_PM_2N_24hr.iloc[c, 6])
+            K_PM_D_2N.append(Kit_PM_2N_24hr.iloc[c, 0])
+        # if Day_3N.iloc[c, 7] != -1.00:
+        #     Kit_PM_per_day_3N.append(Day_3N.iloc[c,7]/Day_3N.iloc[c,1])
+        #     K_PM_D_3N.append(Day_3N.iloc[c, 0])
+        if Kit_PM_3N_24hr.iloc[c, 6] != -1.00:
+            Kit_PM_per_day_3N.append(Kit_PM_3N_24hr.iloc[c, 6])
+            K_PM_D_3N.append(Kit_PM_3N_24hr.iloc[c, 0])
+        # if Day_4N.iloc[c, 7] != -1.00:
+        #     Kit_PM_per_day_4N.append(Day_4N.iloc[c,7]/Day_4N.iloc[c,1])
+        #     K_PM_D_4N.append(Day_4N.iloc[c, 0])
+        if Kit_PM_4N_24hr.iloc[c, 6] != -1.00:
+            Kit_PM_per_day_4N.append(Kit_PM_4N_24hr.iloc[c, 6])
+            K_PM_D_4N.append(Kit_PM_4N_24hr.iloc[c, 0])
      
     # percentages Between Phases of kitchen PM per day
     Kit_per_day_2N_1N = []
@@ -845,28 +855,38 @@ if Hood_or_no == 'no_hood':
                 count_pm = 0
             continue
         if (len(Kit_PM_per_day_2N)-1) >= c and (len(Kit_PM_per_day_1N)-1) >= c:
-            if Day_1N.iloc[c,7] > 0 and Day_2N.iloc[c,7]  > 0 and Day_1N.iloc[c,0] == Day_2N.iloc[c,0]:
+            #if Day_1N.iloc[c,7] > 0 and Day_2N.iloc[c,7]  > 0 and Day_1N.iloc[c,0] == Day_2N.iloc[c,0]:
+            if  Kit_PM_1N_24hr.iloc[c,6] > 0 and Kit_PM_2N_24hr.iloc[c,6]  > 0 and Kit_PM_1N_24hr.iloc[c,0] == Kit_PM_2N_24hr.iloc[c,0]:
                 Kit_per_day_2N_1N.append(Kit_PM_per_day_2N[c]/Kit_PM_per_day_1N[c])
                 K_PM_D_2N_1N.append(Day_1N.iloc[c,0])
         if (len(Kit_PM_per_day_3N)-1) >= c and (len(Kit_PM_per_day_1N)-1) >= c:
-            if Day_3N.iloc[c,7] > 0 and Day_1N.iloc[c,7]  > 0 and Day_3N.iloc[c,0] == Day_1N.iloc[c,0]:
+            #if Day_3N.iloc[c,7] > 0 and Day_1N.iloc[c,7]  > 0 and Day_3N.iloc[c,0] == Day_1N.iloc[c,0]:
+            if Kit_PM_3N_24hr.iloc[c, 6] > 0 and Kit_PM_1N_24hr.iloc[c, 6] > 0 and Kit_PM_3N_24hr.iloc[c, 0] == \
+                    Kit_PM_1N_24hr.iloc[c, 0]:
                 Kit_per_day_3N_1N.append(Kit_PM_per_day_3N[c]/Kit_PM_per_day_1N[c])
                 K_PM_D_3N_1N.append(Day_1N.iloc[c,0])
         if (len(Kit_PM_per_day_4N)-1) >= c and (len(Kit_PM_per_day_1N)-1) >= c:
-            if Day_4N.iloc[c,7] > 0 and Day_1N.iloc[c,7]  > 0 and Day_4N.iloc[c,0] == Day_1N.iloc[c,0]:
+            #if Day_4N.iloc[c,7] > 0 and Day_1N.iloc[c,7]  > 0 and Day_4N.iloc[c,0] == Day_1N.iloc[c,0]:
+            if Kit_PM_4N_24hr.iloc[c, 6] > 0 and Kit_PM_1N_24hr.iloc[c, 6] > 0 and Kit_PM_4N_24hr.iloc[c, 0] == \
+                    Kit_PM_1N_24hr.iloc[c, 0]:
                 Kit_per_day_4N_1N.append(Kit_PM_per_day_4N[c]/Kit_PM_per_day_1N[c])
                 K_PM_D_4N_1N.append(Day_1N.iloc[c,0])
-        
         if (len(Kit_PM_per_day_3N)-1) >= c and (len(Kit_PM_per_day_2N)-1) >= c:
-            if Day_3N.iloc[c,7] > 0 and Day_2N.iloc[c,7]  > 0 and Day_3N.iloc[c,0] == Day_2N.iloc[c,0]:
+            #if Day_3N.iloc[c,7] > 0 and Day_2N.iloc[c,7]  > 0 and Day_3N.iloc[c,0] == Day_2N.iloc[c,0]:
+            if Kit_PM_3N_24hr.iloc[c, 6] > 0 and Kit_PM_2N_24hr.iloc[c, 6] > 0 and Kit_PM_3N_24hr.iloc[c, 0] == \
+                    Kit_PM_2N_24hr.iloc[c, 0]:
                 Kit_per_day_3N_2N.append(Kit_PM_per_day_3N[c]/Kit_PM_per_day_2N[c])
                 K_PM_D_3N_2N.append(Day_2N.iloc[c,0])
         if (len(Kit_PM_per_day_4N)-1) >= c and (len(Kit_PM_per_day_3N)-1) >= c:
-            if Day_4N.iloc[c,7] > 0 and Day_3N.iloc[c,7]  > 0 and Day_4N.iloc[c,0] == Day_3N.iloc[c,0]:
+            #if Day_4N.iloc[c,7] > 0 and Day_3N.iloc[c,7]  > 0 and Day_4N.iloc[c,0] == Day_3N.iloc[c,0]:
+            if Kit_PM_4N_24hr.iloc[c, 6] > 0 and Kit_PM_3N_24hr.iloc[c, 6] > 0 and Kit_PM_3N_24hr.iloc[c, 0] == \
+                    Kit_PM_4N_24hr.iloc[c, 0]:
                 Kit_per_day_4N_3N.append(Kit_PM_per_day_4N[c]/Kit_PM_per_day_3N[c])
                 K_PM_D_4N_3N.append(Day_3N.iloc[c,0])
         if (len(Kit_PM_per_day_4N)-1) >= c and (len(Kit_PM_per_day_2N)-1) >= c:
-            if Day_4N.iloc[c,7] > 0 and Day_2N.iloc[c,7]  > 0 and Day_4N.iloc[c,0] == Day_2N.iloc[c,0]:
+            #if Day_4N.iloc[c,7] > 0 and Day_2N.iloc[c,7]  > 0 and Day_4N.iloc[c,0] == Day_2N.iloc[c,0]:
+            if Kit_PM_4N_24hr.iloc[c, 6] > 0 and Kit_PM_4N_24hr.iloc[c, 6] > 0 and Kit_PM_4N_24hr.iloc[c, 0] == \
+                    Kit_PM_2N_24hr.iloc[c, 0]:
                 Kit_per_day_4N_2N.append(Kit_PM_per_day_4N[c]/Kit_PM_per_day_2N[c])
                 K_PM_D_4N_2N.append(Day_4N.iloc[c,0])
       
@@ -1004,7 +1024,7 @@ if Hood_or_no == 'no_hood':
     plt.text(4,0.1,'4N', color='y')        
             
     plt.xlim(0,5)
-    plt.ylim(0,2000000)
+    plt.ylim(0,1200)
     print('Kitchen PM 1N had these values as outliers   ', kitchen_pm_1N_outlier)
     print('Kitchen PM 2N had these values as outliers   ', kitchen_pm_2N_outlier)
     print('Kitchen PM 3N had these values as outliers   ', kitchen_pm_3N_outlier)
@@ -1137,15 +1157,24 @@ if Hood_or_no == 'hood':
             if count_pm == len(Household_removal_Hood_PM):
                 count_pm = 0
             continue
-        if Day_1H.iloc[c,7] != -1.00:
-            Kit_PM_per_day_1H.append(Day_1H.iloc[c,7]/Day_1H.iloc[c,1])
-            K_PM_D_1H.append(Day_1H.iloc[c,0])
-        if Day_2H.iloc[c, 7] != -1.00:
-            Kit_PM_per_day_2H.append(Day_2H.iloc[c,7]/Day_2H.iloc[c,1])
-            K_PM_D_2H.append(Day_2H.iloc[c,0])
-        if Day_3H.iloc[c, 7] != -1.00:
-            Kit_PM_per_day_3H.append(Day_3H.iloc[c,7]/Day_3H.iloc[c,1])
-            K_PM_D_3H.append(Day_3H.iloc[c, 0])
+        # if Day_1H.iloc[c,7] != -1.00:
+        #     Kit_PM_per_day_1H.append(Day_1H.iloc[c,7]/Day_1H.iloc[c,1])
+        #     K_PM_D_1H.append(Day_1H.iloc[c,0])
+        if Kit_PM_1H_24hr.iloc[c, 6] != -1.00:
+            Kit_PM_per_day_1H.append(Kit_PM_1H_24hr.iloc[c,6])
+            K_PM_D_1H.append(Kit_PM_1H_24hr.iloc[c,0])
+        # if Day_2H.iloc[c, 7] != -1.00:
+        #     Kit_PM_per_day_2H.append(Day_2H.iloc[c,7]/Day_2H.iloc[c,1])
+        #     K_PM_D_2H.append(Day_2H.iloc[c,0])
+        if Kit_PM_2H_24hr.iloc[c, 6] != -1.00:
+            Kit_PM_per_day_2H.append(Kit_PM_2H_24hr.iloc[c,6])
+            K_PM_D_2H.append(Kit_PM_2H_24hr.iloc[c,0])
+        # if Day_3H.iloc[c, 7] != -1.00:
+        #     Kit_PM_per_day_3H.append(Day_3H.iloc[c,7]/Day_3H.iloc[c,1])
+        #     K_PM_D_3H.append(Day_3H.iloc[c, 0])
+        if Kit_PM_3H_24hr.iloc[c, 6] != -1.00:
+            Kit_PM_per_day_3H.append(Kit_PM_3H_24hr.iloc[c,6])
+            K_PM_D_3H.append(Kit_PM_3H_24hr.iloc[c,0])
             
      
     # percentages Between Phases of kitchen PM per day
@@ -1171,15 +1200,20 @@ if Hood_or_no == 'hood':
                 count_pm = 0
             continue
         if (len(Kit_PM_per_day_2H)-1) >= c and (len(Kit_PM_per_day_1H)-1) >= c:
-            if Day_1H.iloc[c,7] > 0 and Day_2H.iloc[c,7]  > 0 and Day_1H.iloc[c,0] == Day_2H.iloc[c,0]:
+            #if Day_1H.iloc[c,7] > 0 and Day_2H.iloc[c,7]  > 0 and Day_1H.iloc[c,0] == Day_2H.iloc[c,0]:
+            if Kit_PM_1H_24hr.iloc[c, 6] > 0 and Kit_PM_2H_24hr.iloc[c, 6] > 0 and Kit_PM_1H_24hr.iloc[c, 0] == Kit_PM_2H_24hr.iloc[c, 0]:
                 Kit_per_day_2H_1H.append(Kit_PM_per_day_2H[c]/Kit_PM_per_day_1H[c])
                 K_PM_D_2H_1H.append(Day_1H.iloc[c,0])
         if (len(Kit_PM_per_day_3H)-1) >= c and (len(Kit_PM_per_day_1H)-1) >= c:
-            if Day_3H.iloc[c,7] > 0 and Day_1H.iloc[c,7]  > 0 and Day_3H.iloc[c,0] == Day_1H.iloc[c,0]:
+            #if Day_3H.iloc[c,7] > 0 and Day_1H.iloc[c,7]  > 0 and Day_3H.iloc[c,0] == Day_1H.iloc[c,0]:
+            if Kit_PM_3H_24hr.iloc[c, 6] > 0 and Kit_PM_1H_24hr.iloc[c, 6] > 0 and Kit_PM_1H_24hr.iloc[c, 0] == \
+                    Kit_PM_3H_24hr.iloc[c, 0]:
                 Kit_per_day_3H_1H.append(Kit_PM_per_day_3H[c]/Kit_PM_per_day_1H[c])
                 K_PM_D_3H_1H.append(Day_1H.iloc[c,0])
         if (len(Kit_PM_per_day_3H)-1) >= c and (len(Kit_PM_per_day_2H)-1) >= c:
-            if Day_3H.iloc[c,7] > 0 and Day_2H.iloc[c,7]  > 0 and Day_3H.iloc[c,0] == Day_2H.iloc[c,0]:
+            #if Day_3H.iloc[c,7] > 0 and Day_2H.iloc[c,7]  > 0 and Day_3H.iloc[c,0] == Day_2H.iloc[c,0]:
+            if Kit_PM_3H_24hr.iloc[c, 6] > 0 and Kit_PM_2H_24hr.iloc[c, 6] > 0 and Kit_PM_3H_24hr.iloc[c, 0] == \
+                    Kit_PM_2H_24hr.iloc[c, 0]:
                 Kit_per_day_3H_2H.append(Kit_PM_per_day_3H[c]/Kit_PM_per_day_2H[c])
                 K_PM_D_3H_2H.append(Day_2H.iloc[c,0])
 
@@ -1273,7 +1307,7 @@ if Hood_or_no == 'hood':
 #                plt.text(3,a,K_PM_D_3N[v],ha='right', va='bottom')
     plt.text(2.5,0.1,'3H', color='r')        
     plt.xlim(0,4)
-    plt.ylim(0,1200000)
+    plt.ylim(0,1200)
     print('Kitchen PM 1H had these values as outliers   ', kitchen_pm_1H_outlier)
     print('Kitchen PM 2H had these values as outliers   ', kitchen_pm_2H_outlier)
     print('Kitchen PM 3H had these values as outliers   ', kitchen_pm_3H_outlier)

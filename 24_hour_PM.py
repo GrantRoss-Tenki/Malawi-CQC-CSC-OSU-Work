@@ -11,8 +11,8 @@ import os
 import glob
 
 
-Phase = "3N"
-Computer = "work" 
+Phase = "3H"
+Computer = "personal"
 # THis file is for gathering 24 hour averages 
 #Work computer
 #colecting metrics for each household comparison
@@ -78,25 +78,24 @@ for file in Kit_csv_open:
     if Sensor_Data.iloc[0, 4] != 'NO KITCHEN': 
         Kitchen_usage = Sensor_Data.iloc[:, 4]
         Kitchen_PM = Sensor_Data.iloc[:, 5]
-        
+        Time = Sensor_Data.iloc[:,0]
         day_arange = np.arange(0,number_of_days+1)
         Day_Average_PM =[]
         complete_24_Hour_SUM = []
         day_count = 0
         for smoke in day_arange:
-            if smoke == 0:
+            if smoke == 0.0:
                 #I am negating the first 7 minutes of collection time
                 Day_Average_PM.append(np.average(Kitchen_PM.iloc[5:((24*60)+5)]))
                 day_end_time_value = ((24*60)+5)
                 day_count = day_count + 1
                 
-            elif (smoke != 0) and ((day_end_time_value + (60*24)) <= len(Kitchen_PM)):
+            elif (smoke != 0) and ((day_end_time_value + (60*24)) <= len(Kitchen_PM)-1):
                 Day_Average_PM.append(np.average(Kitchen_PM.iloc[day_end_time_value:(day_end_time_value + (24*60))]))
                 day_end_time_value = (day_end_time_value + (24*60))
                 day_count = day_count + 1
             
         complete_phase_24_Hour_SUM = (sum(Kitchen_PM.iloc[5:day_end_time_value]))/(day_count*24*60)
-
         HH_NUMBER.append(id_number)
         DAYS_O.append(day_count)
         TIME_START.append(Sensor_Data.iloc[5,0])

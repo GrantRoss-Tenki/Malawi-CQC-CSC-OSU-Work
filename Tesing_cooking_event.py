@@ -186,30 +186,6 @@ if No_exact == 0:
                         start_cooking = []
                     ISCOOKING = False
                     CE_time = 0
-            #
-            # print('FireFinder start', ff_start)
-            # print('Firefinder end' , ff_end)
-            # remove_f_start = []
-            # remove_f_end = []
-            # for num, burn in enumerate(ff_start):
-            #     if num == len(ff_start):
-            #         break
-            #     elif abs(burn - ff_end[num-1]) <= 5:
-            #         #remove_f_start.append(burn)
-            #         #remove_f_start.append(ff_end[num-1])
-            #         count = 0
-            #         while abs(ff_start[num + count] - ff_end[num+count-1]) <= 5:
-            #             remove_f_start.append(ff_start[num + count])
-            #             remove_f_end.append(ff_end[num+count-1])
-            #             count = count +1
-
-            # remove_f_start = list(set(remove_f_start))
-            # remove_f_end = list(set(remove_f_end))
-            # for start in remove_f_start:
-            #     ff_start.remove(start)
-            #
-            # for end in remove_f_end:
-            #     ff_end.remove(end)
 
             Fire_start = ff_start
             Fire_end = ff_end
@@ -230,79 +206,7 @@ if No_exact == 0:
     print('Fire start',Fire_start_1)
     print('Fire end', Fire_end_1)
 
-# plt.plot(Testing_end_thresh, Is_thresh_good)
-# plt.xscale('linear')
-# plt.yscale('linear')
-# xlab = 'Variations'
-# ylab = 'Number of Events'
-#
-# plt.xlabel(xlab)
-# plt.ylabel(ylab)
-# plt.show()
 
-
-
-
-#Start of my own filtering techniques to further find cooking event
-#fire finder did not work in final determination
-# F_start = []
-# F_end = []
-# for t,fil in enumerate(Usage):
-#     if t +1 == len(Usage):
-#         break
-#     elif t == 0 and fil == 1:
-#         pass
-# #filtering out start and end to the fire looking at one before and one after from the usage
-#     elif fil == 1 and (Usage[t-1] == 0) and (Usage[t+1] == 1):
-#         if (Usage[t-1] != 1) and (Usage[t+1] != 0):
-#             F_start.append(t)
-#     elif fil == 1 and (Usage[t-1] == 1) and (Usage[t+1] == 0):
-#         if (Usage[t-1] != 0) and (Usage[t+1] != 1):
-#             F_end.append(t)
-#
-# to_five = np.arange(1,6,1)
-# filter_start = []
-# for z in F_start:
-#     memory_l = []
-#     memory_h = []
-#     for five in to_five:
-#         memory_h.append(Usage[z+five])
-#         memory_l.append(Usage[z - five])
-# #looking at five minute difference between events
-#     if sum(memory_h) == len(to_five):
-# #memory L is for values for before fire start. Sum has to be less than 3 meaning there should not
-# # be too many usages before fire is started and temperature is increased
-#
-#         if sum(memory_l) <= 3:
-#             filter_start.append(z)
-# print('Filter Start', filter_start)
-# filter_end = []
-# for z in F_end:
-#     memory_l = []
-#     memory_h =[]
-#     for five in to_five:
-#         memory_l.append(Usage[z-five])
-#         memory_h.append(Usage[z+five])
-#     if sum(memory_l) == len(to_five):
-#         if sum(memory_h) <= 3:
-#             filter_end.append(z)
-# print('Filter End', filter_end)
-# close_times_end = []
-# close_times_start = []
-#
-# for val,n in enumerate(filter_start):
-#     if val == len(filter_start):
-#         break
-#     elif (filter_end[val] - n) < 6:
-#         filter_end.remove(filter_end[val])
-#         filter_start.remove(n)
-#
-#
-# if len(filter_start) != len(filter_end):
-#     print("This program is trying another way")
-# #can maybe try an while loop to fix my algorithm
-# Fire_start = filter_start
-# Fire_end = filter_end
 
 ### next going to solve for the fuel change, this method was delivered by Heather Miller and her thesis
 print('Fuel removal Algorithm')
@@ -766,7 +670,7 @@ for q in Two_exact:
             #fuel_per_day = list(set([a for a in KG_burned[ds:Day_end[tv]]]))
             D_Fuel_Used.append((int((sum(fuel_per_day))*1000)/1000))
             Raw_D_Fuel.extend(Fuel_KG_nf[ds:Day_end[tv]])
-            Raw_D_Fuel_removed.extend(KG_burned[ds:Day_end[tv]])
+            Raw_D_Fuel_removed.extend(KG_burned[ds:Day_end[tv]+1])
         else:
             D_Fuel_Used.append(-1)
             Raw_D_Fuel.extend(filler_value)

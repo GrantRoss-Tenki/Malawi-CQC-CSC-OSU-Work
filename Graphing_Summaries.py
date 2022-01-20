@@ -21,6 +21,9 @@ Household_removal_NO_Hood_PM = [1045]
 Household_removal_Hood_PM = [2020]
 
 
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
 
 if Hood_or_no == 'hood':
     C_Place_holder = 2001
@@ -798,6 +801,8 @@ if Hood_or_no == 'hood':
     D_50_quant_percent_f_d_a_hood ={'Percentile %': ['25','50','75', 'Avg'],'2H / 1H': quant_1_2H_1H,'3H / 1H': quant_1_3H_1H,'3H / 2H': quant_1_3H_2H}
     F_D_A_50_percent_change_hood = pd.DataFrame(data=D_50_quant_percent_f_d_a_hood, columns=['Percentile %','2H / 1H','3H / 1H','3H / 2H'])
 
+    print(F_D_A_50_phase_hood)
+    print(F_D_A_50_percent_change_hood)
 print('----------------------- Kitchen PM per Day -----------------------------')
 if Hood_or_no == 'no_hood':
     Kit_PM_per_day_1N = []
@@ -921,7 +926,7 @@ if Hood_or_no == 'no_hood':
     sns.despine(ax=ax_hist)
     sns.despine(ax=ax_box, left=True)
     plt.title('% 2N/1N (Kitchen PM per Day)')
-    plt.ylim(top=1)
+    plt.ylim(top=2)
     plt.ylim(bottom = 0)
     
     #3N to 1N  
@@ -933,7 +938,7 @@ if Hood_or_no == 'no_hood':
     sns.despine(ax=ax_hist)
     sns.despine(ax=ax_box, left=True)
     plt.title('% 3N/1N (Kitchen PM per Day)')
-    plt.ylim(top=1.5)
+    plt.ylim(top=2)
     plt.ylim(bottom = 0)
     #4N to 1N
     sns.set(style="ticks")
@@ -944,7 +949,7 @@ if Hood_or_no == 'no_hood':
     sns.despine(ax=ax_hist)
     sns.despine(ax=ax_box, left=True)
     plt.title('% 4N/1N (Kitchen PM per Day)')
-    plt.ylim(top=1.5)
+    plt.ylim(top=2)
     plt.ylim(bottom = 0)
     
     #3N to 2N 
@@ -956,7 +961,7 @@ if Hood_or_no == 'no_hood':
     sns.despine(ax=ax_hist)
     sns.despine(ax=ax_box, left=True)
     plt.title('% 3N/2N (Kitchen PM per Day)')
-    plt.ylim(top=1)
+    plt.ylim(top=2)
     plt.ylim(bottom = 0)
     #4N to 3N 
     sns.set(style="ticks")
@@ -967,7 +972,7 @@ if Hood_or_no == 'no_hood':
     sns.despine(ax=ax_hist)
     sns.despine(ax=ax_box, left=True)
     plt.title('% 4N/3N (Kitchen PM per Day)')
-    plt.ylim(top=0.5)
+    plt.ylim(top=2)
     plt.ylim(bottom = 0)
     #4N to 2N 
     sns.set(style="ticks")
@@ -978,7 +983,7 @@ if Hood_or_no == 'no_hood':
     sns.despine(ax=ax_hist)
     sns.despine(ax=ax_box, left=True)
     plt.title('% 4N/2N (Kitchen PM per Day)')
-    plt.ylim(top=0.75)
+    plt.ylim(top=2)
     plt.ylim(bottom = 0)
     
     
@@ -1147,11 +1152,23 @@ if Hood_or_no == 'no_hood':
     print('Kitchen PM 4N/2N had these values as outliers   ', kitchen_pm_4N_2N_outlier)
     plt.show()
     
+    #adding averages to the tables
+    quant_1_1N = np.append(quant_1_1N, np.average(Kit_PM_per_day_1N))
+    quant_1_2N = np.append(quant_1_2N, np.average(Kit_PM_per_day_2N))
+    quant_1_3N = np.append(quant_1_3N, np.average(Kit_PM_per_day_3N))
+    quant_1_4N = np.append(quant_1_4N, np.average(Kit_PM_per_day_4N))
     
-    
-    D_50_quant_phase_PM_d = {'Percentile %': [25,50,75], '1N': quant_1_1N, '2N': quant_1_2N,'3N' : quant_1_3N,'4N': quant_1_4N}
+    D_50_quant_phase_PM_d = {'Percentile %': ['25','50','75', 'Avg'], '1N': quant_1_1N, '2N': quant_1_2N,'3N' : quant_1_3N,'4N': quant_1_4N}
     PM_D_50_phase_no_hood = pd.DataFrame(data=D_50_quant_phase_PM_d,columns=['Percentile %','1N', '2N', '3N','4N'])
-    D_50_quant_percent_PM_d ={'Percentile %': [25,50,75],'2N / 1N': quant_1_2N_1N,'3N / 1N': quant_1_3N_1N,'4N / 1N': quant_1_4N_1N,
+    
+    quant_1_2N_1N = np.append(quant_1_2N_1N , np.average(Kit_per_day_2N_1N))
+    quant_1_3N_1N = np.append(quant_1_3N_1N , np.average(Kit_per_day_3N_1N))
+    quant_1_4N_1N = np.append(quant_1_4N_1N , np.average(Kit_per_day_4N_1N))
+    quant_1_3N_2N = np.append(quant_1_3N_2N , np.average(Kit_per_day_3N_2N))
+    quant_1_4N_3N = np.append(quant_1_4N_3N , np.average(Kit_per_day_4N_3N))
+    quant_1_4N_2N = np.append(quant_1_4N_2N , np.average(Kit_per_day_4N_2N))
+    
+    D_50_quant_percent_PM_d ={'Percentile %': ['25','50','75', 'Avg'],'2N / 1N': quant_1_2N_1N,'3N / 1N': quant_1_3N_1N,'4N / 1N': quant_1_4N_1N,
                                '3N / 2N': quant_1_3N_2N,'4N / 3N': quant_1_4N_3N,'4N / 2N': quant_1_4N_2N}
     PM_D_50_percent_change_no_hood = pd.DataFrame(data=D_50_quant_percent_PM_d, columns=['Percentile %','2N / 1N','3N / 1N', '4N / 1N'
                                                                                            ,'3N / 2N','4N / 3N','4N / 2N'])
@@ -1254,7 +1271,7 @@ if Hood_or_no == 'hood':
     sns.despine(ax=ax_hist)
     sns.despine(ax=ax_box, left=True)
     plt.title('% 2H/1H (Kitchen PM per Day)')
-    plt.ylim(top=1)
+    plt.ylim(top=1.5)
     plt.ylim(bottom = 0)
     
     #3H to 1H  
@@ -1266,7 +1283,7 @@ if Hood_or_no == 'hood':
     sns.despine(ax=ax_hist)
     sns.despine(ax=ax_box, left=True)
     plt.title('% 3H/1H (Kitchen PM per Day)')
-    plt.ylim(top=1.5)
+    plt.ylim(top=2)
     plt.ylim(bottom = 0)
     
     #3H to 2H 
@@ -1278,7 +1295,7 @@ if Hood_or_no == 'hood':
     sns.despine(ax=ax_hist)
     sns.despine(ax=ax_box, left=True)
     plt.title('% 3H/2H (Kitchen PM per Day)')
-    plt.ylim(top=1)
+    plt.ylim(top=2)
     plt.ylim(bottom = 0)
     
     
@@ -1390,10 +1407,19 @@ if Hood_or_no == 'hood':
     print('Kitchen PM 3H/2H had these values as outliers   ', kitchen_pm_3H_2H_outlier)
     plt.show()
     
-    D_50_quant_phase_PM_D_hood = {'Percentile %': [25,50,75], '1H': quant_1_1H, '2H': quant_1_2H,'3H' : quant_1_3H}
+    quant_1_1H = np.append(quant_1_1H, np.average(Kit_PM_per_day_1H))
+    quant_1_2H = np.append(quant_1_2H, np.average(Kit_PM_per_day_2H))
+    quant_1_3H = np.append(quant_1_3H, np.average(Kit_PM_per_day_3H))
+    
+    D_50_quant_phase_PM_D_hood = {'Percentile %':  ['25','50','75', 'Avg'], '1H': quant_1_1H, '2H': quant_1_2H,'3H' : quant_1_3H}
     PM_D_50_phase_hood = pd.DataFrame(data=D_50_quant_phase_PM_D_hood, columns= ['Percentile %','1H','2H','3H' ])
     
-    D_50_quant_percent_PM_D_hood ={'Percentile %': [25,50,75],'2H / 1H': quant_1_2H_1H,'3H / 1H': quant_1_3H_1H,'3H / 2H': quant_1_3H_2H}
+    quant_1_2H_1H = np.append(quant_1_2H_1H , np.average(Kit_per_day_2H_1H))
+    quant_1_3H_1H = np.append(quant_1_3H_1H , np.average(Kit_per_day_3H_1H))
+    quant_1_3H_2H = np.append(quant_1_3H_2H , np.average(Kit_per_day_3H_2H))
+    
+    
+    D_50_quant_percent_PM_D_hood ={'Percentile %':  ['25','50','75', 'Avg'],'2H / 1H': quant_1_2H_1H,'3H / 1H': quant_1_3H_1H,'3H / 2H': quant_1_3H_2H}
     PM_D_50_percent_change_hood = pd.DataFrame(data=D_50_quant_percent_PM_D_hood, columns=['Percentile %','2H / 1H','3H / 1H','3H / 2H'])
 
     print(PM_D_50_phase_hood)

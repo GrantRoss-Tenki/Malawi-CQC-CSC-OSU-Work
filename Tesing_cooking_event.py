@@ -46,12 +46,12 @@ with open(datafile_path, 'r') as f:
 # this is so far from heather and her "Data Processing Instructions" Using fire Finder algorithm
 
 sensor_data = pd.read_csv(datafile_path, skiprows=data_start)
-print('Type of fuel used:  ',Fueltype)
-print('Type of exact used:  ',Exact)
-print('Type of Kitchen Hapex:  ',(K_hapex))
-print('Type of Cook Hapex:  ',(C_hapex))
+#print('Type of fuel used:  ',Fueltype)
+#print('Type of exact used:  ',Exact)
+#print('Type of Kitchen Hapex:  ',(K_hapex))
+#print('Type of Cook Hapex:  ',(C_hapex))
 print('The household ID number is:  ',  (id_number))
-print('this is the exact row ', Exact)
+#print('this is the exact row ', Exact)
 No_fuel = 0
 No_exact = 0
 No_kitchen = 0
@@ -77,7 +77,6 @@ if No_exact == 0:
         Two_exact.append(2)
 
     for q in Two_exact:
-        print('this is q =', q)
         if q == 1:
             Usage = sensor_data.iloc[:,2]
             temp = sensor_data.iloc[:,3]
@@ -125,8 +124,7 @@ if No_exact == 0:
 
                 elif neg_slope > length_decrease:
                     Usage[t - length_decrease] = 0
-            print('negative slope', neg_slope)
-            print('this is temp slope', Temp_slope[220])
+
 
             for t,s in enumerate(Temp_slope):
                 if s <= end_threshold and temp[t] <= cooking_threshold:
@@ -194,8 +192,6 @@ if No_exact == 0:
             if Second_Exact == 1 and q == 2:
                 Fire_start_2 = Fire_start
                 Fire_end_2 = Fire_end
-                print('two Exact, fire start_2', Fire_start_2)
-                print('two Exact, fire end_2', Fire_end_2)
                 break
             elif Second_Exact == 0 or q == 1:
                 Fire_start_1 = Fire_start
@@ -203,13 +199,12 @@ if No_exact == 0:
             else:
                 count = count + 1
 
-    print('Fire start',Fire_start_1)
-    print('Fire end', Fire_end_1)
+
 
 
 
 ### next going to solve for the fuel change, this method was delivered by Heather Miller and her thesis
-print('Fuel removal Algorithm')
+
 if No_fuel == 0:
     Fuel_KG_nf = sensor_data.iloc[:,1]
 
@@ -271,9 +266,6 @@ if No_fuel == 0:
             insert_kg.append(Fuel_KG[v] - weight)
     v = 0
 
-    print('Removing the fuel at this timestamp value' , remove)
-    print('Removing the fuel for this many kgs at remove timevalue' , remove_kg)
-    print('inserting the fuel at this timestamp value' , insert)
 
     kg = np.arange(0, len(Fuel_KG_nf),1)
     count = 0
@@ -319,8 +311,7 @@ if No_fuel == 0:
         else:
             Fuel_removal_countdown.append(count)
         count = count + 1
-    print(len(Fuel_removal_countdown))
-    print(len(Fuel_KG_nf))
+
     Fuel_insert_countdown = []
     count = insert[0]
     start = 0
@@ -340,7 +331,6 @@ if No_fuel == 0:
             Fuel_insert_countdown.append(insert[start]- insert[start-1] - count)
         count = count + 1
 
-print('Timestamp')
 # #finaly start to get metrics
 # # gathering hapex informaion (was previously filtered through Climate solutions website)
 TimeStamp = (sensor_data.iloc[:,0])
@@ -522,7 +512,6 @@ for q in Two_exact:
 
     #if No_exact == 0:
     Event_num = np.arange(1,len(E_Event_length)+1,1)
-    print('data frame length test__________', len(E_Avg_Cook_PM))
 
     Data_event = {'| Event Number |' : Event_num,
                       '| Event Start |' : E_Time_Start,
@@ -570,9 +559,6 @@ for q in Two_exact:
                  'Kitchen Compliance': Raw_E_Kit_Comp,
                  'Cook PM': Raw_E_Cook_PM, 'Kitchen PM': Raw_E_Kit_PM}
 
-    print('raw_spread cook', len(Raw_Spread_Cook))
-    print('raw_spread Kitchen', len(Raw_Spread_Kit))
-    print('is there no Kitchen Hapex', No_kitchen)
     RAW_Spread_PM = {'10 minutes spread (Cook PM)': Raw_Spread_Cook,'10 minutes spread (Kitchen PM)': Raw_Spread_Kit}
 
     Df_raw_event = pd.DataFrame(RAW_event)
@@ -597,7 +583,7 @@ for q in Two_exact:
                         'Cook HAPEx' : C_hapex}
 
     Df_sensor = pd.DataFrame(Sensors_used, index=index_sensors)
-    print(Df_sensor)
+
 
     ### iterate over the day
 
@@ -605,7 +591,7 @@ for q in Two_exact:
     Day_end = []
     Date_day = []
     count = 0
-    print(day[-1])
+
     for stamp in day:
         if count +1 == len(day):
             Day_end.append(((len(day))-1))

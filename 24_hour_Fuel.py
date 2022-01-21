@@ -146,6 +146,7 @@ for file in FUEL_csv_open:
         DAY_OF_HIGHEST_Fuel.append(time_vlaue_frame.iloc[((max_fuel_day[0])*24*60), 0])
 
     else:
+        day_average_fuel = [-1]
         HH_NUMBER.append(id_number)
         DAYS_O.append(-1)
         TIME_START.append(-1)

@@ -314,17 +314,17 @@ if Hood_or_no == 'no_hood':
             if count_f == len(Household_removal_NO_Hood_fuel_day_adult):
                 count_f = 0
             continue
-        if Day_1N.iloc[c,13] != -1.00:
-            Fuel_per_day_per_adult_1N.append(Day_1N.iloc[c,13]/Survey_1N.iloc[c,7])
+        if Fuel_remove_1N_24hr.iloc[c,6]!= -1.00:
+            Fuel_per_day_per_adult_1N.append(Fuel_remove_1N_24hr.iloc[c,6]/Survey_1N.iloc[c,7])
             f_d_a_1N.append(Day_1N.iloc[c,0])
-        if Day_2N.iloc[c, 13] != -1.00:
-            Fuel_per_day_per_adult_2N.append(Day_2N.iloc[c, 13] / Survey_2N.iloc[c, 7])
+        if Fuel_remove_2N_24hr.iloc[c,6] != -1.00:
+            Fuel_per_day_per_adult_2N.append(Fuel_remove_2N_24hr.iloc[c,6] / Survey_2N.iloc[c, 7])
             f_d_a_2N.append(Day_2N.iloc[c,0])
-        if Day_3N.iloc[c, 13] != -1.00:
-            Fuel_per_day_per_adult_3N.append(Day_3N.iloc[c, 13] / Survey_3N.iloc[c, 7])
+        if Fuel_remove_3N_24hr.iloc[c,6] != -1.00:
+            Fuel_per_day_per_adult_3N.append(Fuel_remove_3N_24hr.iloc[c,6]/ Survey_3N.iloc[c, 7])
             f_d_a_3N.append(Day_3N.iloc[c, 0])
-        if Day_4N.iloc[c, 13] != -1.00:
-            Fuel_per_day_per_adult_4N.append(Day_4N.iloc[c, 13] / Survey_4N.iloc[c, 7])
+        if Fuel_remove_4N_24hr.iloc[c,6]  != -1.00:
+            Fuel_per_day_per_adult_4N.append(Fuel_remove_4N_24hr.iloc[c,6] / Survey_4N.iloc[c, 7])
             f_d_a_4N.append(Day_3N.iloc[c, 0])
     # percentage Change of Fuel per day between the phases
     Fuel_per_day_per_adult_2N_1N = []
@@ -637,16 +637,16 @@ if Hood_or_no == 'hood':
             if count_f == len(Household_removal_Hood_fuel_day_adult):
                 count_f = 0
             continue
-        if Day_1H.iloc[c,13] != -1.00:
-            Fuel_per_day_per_adult_1H.append(Day_1H.iloc[c,13]/Survey_1H.iloc[c,7])
+        if Fuel_remove_1H_24hr.iloc[c,6] != -1.00:
+            Fuel_per_day_per_adult_1H.append(Fuel_remove_1H_24hr.iloc[c,6]/Survey_1H.iloc[c,7])
             f_d_a_1H.append(Day_1H.iloc[c,0])
             
-        if Day_2H.iloc[c, 13] != -1.00:
-            Fuel_per_day_per_adult_2H.append(Day_2H.iloc[c, 13] / Survey_2H.iloc[c, 7])
+        if Fuel_remove_2H_24hr.iloc[c,6] != -1.00:
+            Fuel_per_day_per_adult_2H.append(Fuel_remove_2H_24hr.iloc[c,6] / Survey_2H.iloc[c, 7])
             f_d_a_2H.append(Day_2H.iloc[c,0])
             
-        if Day_3H.iloc[c, 13] != -1.00:
-            Fuel_per_day_per_adult_3H.append(Day_3H.iloc[c, 13] / Survey_3H.iloc[c, 7])
+        if Fuel_remove_3H_24hr.iloc[c,6] != -1.00:
+            Fuel_per_day_per_adult_3H.append(Fuel_remove_3H_24hr.iloc[c,6]/ Survey_3H.iloc[c, 7])
             f_d_a_3H.append(Day_3H.iloc[c, 0])
     
     # percentage Change of Fuel per day between the phases

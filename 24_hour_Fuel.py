@@ -11,7 +11,7 @@ import csv
 import os
 import glob
 
-Phase = "1N"
+Phase = "3H"
 Computer = "personal"
 # THis file is for gathering 24 hour averages 
 #Work computer
@@ -141,8 +141,9 @@ for file in FUEL_csv_open:
 
         HIGHEST_Fuel_PER_DAY.append((int(max_fuel_value*100))/100)
         DAY_OF_HIGHEST_Fuel.append(time_vlaue_frame.iloc[((max_fuel_day[0])*24*60), 0])
-
+        print('day average fuel' , day_average_fuel)
     else:
+        day_average_fuel = [-1]
         HH_NUMBER.append(id_number)
         DAYS_O.append(-1)
         TIME_START.append(-1)

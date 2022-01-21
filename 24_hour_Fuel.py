@@ -11,8 +11,8 @@ import csv
 import os
 import glob
 
-Phase = "1N"
-Computer = "personal"
+Phase = "3H"
+Computer = "work"
 # THis file is for gathering 24 hour averages 
 #Work computer
 #colecting metrics for each household comparison
@@ -128,8 +128,9 @@ for file in FUEL_csv_open:
                 day_average_fuel.append(np.average(fuel_setting))
                 day_time_end_vlaue  = day_time_end_vlaue + ((24*60))
                 day_count = day_count +1
+                
 
-
+        #print(day_average_fuel)
         complete_phase_24_Fuel_Sum = (sum(Fuel_removal.iloc[5:day_time_end_vlaue]))/(day_count*24*60)
         HH_NUMBER.append(id_number)
         DAYS_O.append(day_count)
@@ -139,7 +140,9 @@ for file in FUEL_csv_open:
         max_fuel_value = max(day_average_fuel)
         max_fuel_day = [index for index, item in enumerate(day_average_fuel) if item == max_fuel_value]
 
-        HIGHEST_Fuel_PER_DAY.append((int(max_fuel_value*100))/100)
+        HIGHEST_Fuel_PER_DAY.append(max_fuel_value)
+        
+
         DAY_OF_HIGHEST_Fuel.append(time_vlaue_frame.iloc[((max_fuel_day[0])*24*60), 0])
 
     else:

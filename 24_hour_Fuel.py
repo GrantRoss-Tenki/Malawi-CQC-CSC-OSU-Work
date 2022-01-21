@@ -11,7 +11,7 @@ import csv
 import os
 import glob
 
-Phase = "2N"
+Phase = "4N"
 Computer = "work"
 # THis file is for gathering 24 hour averages 
 #Work computer
@@ -131,7 +131,7 @@ for file in FUEL_csv_open:
                 
 
         #print(day_average_fuel)
-        complete_phase_24_Fuel_Sum = (sum(Fuel_removal.iloc[5:day_time_end_vlaue]))/(day_count*24*60)
+        complete_phase_24_Fuel_Sum = (sum(Fuel_removal.iloc[5:day_time_end_vlaue]))/(day_count)
         HH_NUMBER.append(id_number)
         DAYS_O.append(day_count)
         TIME_START.append(time_vlaue_frame.iloc[6,0])

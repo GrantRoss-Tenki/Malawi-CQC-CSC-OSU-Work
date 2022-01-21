@@ -11,7 +11,7 @@ import csv
 import os
 import glob
 
-Phase = "3H"
+Phase = "2N"
 Computer = "work"
 # THis file is for gathering 24 hour averages 
 #Work computer
@@ -92,7 +92,7 @@ for file in FUEL_csv_open:
     time_vlaue_frame = pd.read_csv(Fuel_time_path)
     
     
-    if metric_day_data.iloc[0,1]!= -1:
+    if metric_day_data.iloc[5,1]!= -1:
         day_average_fuel = []
         day_count = 0
 

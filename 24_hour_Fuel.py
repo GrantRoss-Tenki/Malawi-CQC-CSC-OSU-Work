@@ -11,7 +11,7 @@ import csv
 import os
 import glob
 
-Phase = "4N"
+Phase = "3H"
 Computer = "work"
 # THis file is for gathering 24 hour averages 
 #Work computer
@@ -100,10 +100,10 @@ for file in FUEL_csv_open:
             fuel_setting = []
 
             if wood == 0:
-                dummy_Fuel = Fuel_removal[5:((24*60)+5)]
+                dummy_Fuel = Fuel_removal[5:((24*60)+6)]
                 #print(dummy_Fuel)
                 for tv, anything in enumerate(dummy_Fuel):
-                    if tv + 1 == len(dummy_Fuel)-6:
+                    if tv + 1 == len(dummy_Fuel)-1:
                         fuel_setting.append(anything)
 
                         break
@@ -112,7 +112,7 @@ for file in FUEL_csv_open:
 
                 #print('fuel setting after wood = 0', fuel_setting)
 
-                day_average_fuel.append(np.average(fuel_setting))
+                day_average_fuel.append(sum(fuel_setting))
                 day_time_end_vlaue  = ((24*60)+5)
                 day_count = day_count +1
                 
@@ -125,16 +125,16 @@ for file in FUEL_csv_open:
                         break
                     elif anything != dummy_Fuel[next_int]:
                         fuel_setting.append(anything)
-                day_average_fuel.append(np.average(fuel_setting))
+                day_average_fuel.append(sum(fuel_setting))
                 day_time_end_vlaue  = day_time_end_vlaue + ((24*60))
                 day_count = day_count +1
                 
 
         #print(day_average_fuel)
-        complete_phase_24_Fuel_Sum = (sum(Fuel_removal.iloc[5:day_time_end_vlaue]))/(day_count)
+        complete_phase_24_Fuel_Sum = (sum(day_average_fuel)/(day_count))
         HH_NUMBER.append(id_number)
         DAYS_O.append(day_count)
-        TIME_START.append(time_vlaue_frame.iloc[6,0])
+        TIME_START.append(time_vlaue_frame.iloc[5,0])
         TIME_END.append(time_vlaue_frame.iloc[day_time_end_vlaue,0])
         PHASE_24_HR_AVG.append(complete_phase_24_Fuel_Sum)
         max_fuel_value = max(day_average_fuel)
@@ -143,7 +143,14 @@ for file in FUEL_csv_open:
         HIGHEST_Fuel_PER_DAY.append(max_fuel_value)
         
 
-        DAY_OF_HIGHEST_Fuel.append(time_vlaue_frame.iloc[((max_fuel_day[0])), 0])
+        val_integer = max_fuel_day[0]
+
+        if val_integer != 0:
+            day_max_value = time_vlaue_frame.iloc[val_integer*24*60, 0]
+        else:
+            day_max_value = time_vlaue_frame.iloc[5,0]
+        
+        DAY_OF_HIGHEST_Fuel.append(day_max_value)
 
     else:
         day_average_fuel = [-1]

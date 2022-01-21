@@ -11,8 +11,8 @@ import os
 import glob
 
 
-Phase = "3H"
-Computer = "personal"
+Phase = "3N"
+Computer = "work"
 # THis file is for gathering 24 hour averages 
 #Work computer
 #colecting metrics for each household comparison
@@ -62,16 +62,7 @@ for file in Kit_csv_open:
                 K_hapex = row[5]
                 C_hapex = row[7]
                 data_start = idx
-#    
-#                if len(row) < 9:
-#                    print('There is no second exact')
-#                    break
-#                elif row[8] == 'Second EXACT Usage':
-#                    Exact_2 = row[9]
-#                    Usage_2 = row[8]
-#                    Second_Exact = 1
-#                    print('--------------Two EXACT-------------')
-#                break
+
 #            
 
     Sensor_Data = pd.read_csv(file, skiprows=data_start)
@@ -81,10 +72,9 @@ for file in Kit_csv_open:
         Time = Sensor_Data.iloc[:,0]
         day_arange = np.arange(0,number_of_days+1)
         Day_Average_PM =[]
-        complete_24_Hour_SUM = []
         day_count = 0
         for smoke in day_arange:
-            if smoke == 0.0:
+            if smoke == 0:
                 #I am negating the first 7 minutes of collection time
                 Day_Average_PM.append(np.average(Kitchen_PM.iloc[5:((24*60)+5)]))
                 day_end_time_value = ((24*60)+5)

@@ -45,6 +45,10 @@ if Computer == 'personal' and Hood_or_no == 'no_hood':
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_1N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/1N/1N_24_hour_Kitchen_PM.csv"
     Kit_PM_1N_24hr = pd.read_csv(data_file_path_24_PM_1N, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_Fuel_1N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/1N/1N_24_hour_Fuel_removal.csv"
+    Fuel_remove_1N_24hr = pd.read_csv(data_file_path_24_Fuel_1N, skiprows=0)
+    
     #2N
     datafile_path_day_2N ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2N/2N_Summary_Day_1_exact.csv"
     Day_2N = pd.read_csv(datafile_path_day_2N, skiprows=2)
@@ -59,6 +63,9 @@ if Computer == 'personal' and Hood_or_no == 'no_hood':
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_2N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2N/2N_24_hour_Kitchen_PM.csv"
     Kit_PM_2N_24hr = pd.read_csv(data_file_path_24_PM_2N, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_Fuel_2N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2N/2N_24_hour_Fuel_removal.csv"
+    Fuel_remove_2N_24hr = pd.read_csv(data_file_path_24_Fuel_2N, skiprows=0)
     
     #3N
     datafile_path_day_3N ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3N/3N_Summary_Day_1_exact.csv"
@@ -74,6 +81,9 @@ if Computer == 'personal' and Hood_or_no == 'no_hood':
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_3N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3N/3N_24_hour_Kitchen_PM.csv"
     Kit_PM_3N_24hr = pd.read_csv(data_file_path_24_PM_3N, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_Fuel_3N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3N/3N_24_hour_Fuel_removal.csv"
+    Fuel_remove_3N_24hr = pd.read_csv(data_file_path_24_Fuel_3N, skiprows=0)
     
     #4N
     datafile_path_day_4N ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/4N/4N_Summary_Day_1_exact.csv"
@@ -89,6 +99,9 @@ if Computer == 'personal' and Hood_or_no == 'no_hood':
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_4N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/4N/4N_24_hour_Kitchen_PM.csv"
     Kit_PM_4N_24hr = pd.read_csv(data_file_path_24_PM_4N, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_Fuel_4N = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/4N/4N_24_hour_Fuel_removal.csv"
+    Fuel_remove_4N_24hr = pd.read_csv(data_file_path_24_Fuel_4N, skiprows=0)
     
 elif Computer == 'personal' and Hood_or_no == 'hood':
     #1H
@@ -103,6 +116,10 @@ elif Computer == 'personal' and Hood_or_no == 'hood':
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_1H = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/1H/1H_24_hour_Kitchen_PM.csv"
     Kit_PM_1H_24hr = pd.read_csv(data_file_path_24_PM_1H, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_fuel_1H = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/1H/1H_24_hour_Fuel_removal.csv"
+    Fuel_remove_1H_24hr = pd.read_csv(data_file_path_24_fuel_1H, skiprows=0)
+    
     
     #2H
     datafile_path_day_2H ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2H/2H_Summary_Day_1_exact.csv"
@@ -118,6 +135,9 @@ elif Computer == 'personal' and Hood_or_no == 'hood':
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_2H = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2H/2H_24_hour_Kitchen_PM.csv"
     Kit_PM_2H_24hr = pd.read_csv(data_file_path_24_PM_2H, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_fuel_2H = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2H/2H_24_hour_Fuel_removal.csv"
+    Fuel_remove_2H_24hr = pd.read_csv(data_file_path_24_fuel_2H, skiprows=0)
     
     #3H
     datafile_path_day_3H ="C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3H/3H_Summary_Day_1_exact.csv"
@@ -133,6 +153,9 @@ elif Computer == 'personal' and Hood_or_no == 'hood':
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_3H = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3H/3H_24_hour_Kitchen_PM.csv"
     Kit_PM_3H_24hr = pd.read_csv(data_file_path_24_PM_3H, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_fuel_3H = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/3H/3H_24_hour_Fuel_removal.csv"
+    Fuel_remove_3H_24hr = pd.read_csv(data_file_path_24_fuel_3H, skiprows=0)
     
     #work uses box information and not local data
 elif Computer == 'work' and Hood_or_no == 'no_hood':
@@ -150,6 +173,9 @@ elif Computer == 'work' and Hood_or_no == 'no_hood':
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_1N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/1N/1N_24_hour_Kitchen_PM.csv"
     Kit_PM_1N_24hr = pd.read_csv(data_file_path_24_PM_1N, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_Fuel_1N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/1N/1N_24_hour_Fuel_removal.csv"
+    Fuel_remove_1N_24hr = pd.read_csv(data_file_path_24_Fuel_1N, skiprows=0)
     
     #2N
     datafile_path_day_2N ="C:/Users/rossgra/Box/OSU, CSC, CQC Project files/2N/2N_Summary_Day_1_exact.csv"
@@ -165,6 +191,9 @@ elif Computer == 'work' and Hood_or_no == 'no_hood':
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_2N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/2N/2N_24_hour_Kitchen_PM.csv"
     Kit_PM_2N_24hr = pd.read_csv(data_file_path_24_PM_2N, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_Fuel_2N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/2N/2N_24_hour_Fuel_removal.csv"
+    Fuel_remove_2N_24hr = pd.read_csv(data_file_path_24_Fuel_2N, skiprows=0)
     
     #3N
     datafile_path_day_3N ="C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3N/3N_Summary_Day_1_exact.csv"
@@ -180,6 +209,9 @@ elif Computer == 'work' and Hood_or_no == 'no_hood':
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_3N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3N/3N_24_hour_Kitchen_PM.csv"
     Kit_PM_3N_24hr = pd.read_csv(data_file_path_24_PM_3N, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_Fuel_3N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3N/3N_24_hour_Fuel_removal.csv"
+    Fuel_remove_3N_24hr = pd.read_csv(data_file_path_24_Fuel_3N, skiprows=0)
     
     #4N
     datafile_path_day_4N ="C:/Users/rossgra/Box/OSU, CSC, CQC Project files/4N/4N_Summary_Day_1_exact.csv"
@@ -195,6 +227,9 @@ elif Computer == 'work' and Hood_or_no == 'no_hood':
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_4N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/4N/4N_24_hour_Kitchen_PM.csv"
     Kit_PM_4N_24hr = pd.read_csv(data_file_path_24_PM_4N, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_Fuel_4N = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/4N/4N_24_hour_Fuel_removal.csv"
+    Fuel_remove_4N_24hr = pd.read_csv(data_file_path_24_Fuel_4N, skiprows=0)
     
 else:
     #1H
@@ -209,6 +244,9 @@ else:
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_1H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/1H/1H_24_hour_Kitchen_PM.csv"
     Kit_PM_1H_24hr = pd.read_csv(data_file_path_24_PM_1H, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_fuel_1H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/1H/1H_24_hour_Fuel_removal.csv"
+    Fuel_remove_1H_24hr = pd.read_csv(data_file_path_24_fuel_1H, skiprows=0)
     
     #2H
     datafile_path_day_2H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/2H/2H_Summary_Day_1_exact.csv"
@@ -224,6 +262,9 @@ else:
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_2H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/2H/2H_24_hour_Kitchen_PM.csv"
     Kit_PM_2H_24hr = pd.read_csv(data_file_path_24_PM_2H, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_fuel_2H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/2H/2H_24_hour_Fuel_removal.csv"
+    Fuel_remove_2H_24hr = pd.read_csv(data_file_path_24_fuel_2H, skiprows=0)
     
     #3H
     datafile_path_day_3H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3H/3H_Summary_Day_1_exact.csv"
@@ -239,6 +280,9 @@ else:
     #24 hour Kitchen pm breakdown
     data_file_path_24_PM_3H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3H/3H_24_hour_Kitchen_PM.csv"
     Kit_PM_3H_24hr = pd.read_csv(data_file_path_24_PM_3H, skiprows=0)
+    #24 hour Fuel Removal breakdown
+    data_file_path_24_fuel_3H = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/3H/3H_24_hour_Fuel_removal.csv"
+    Fuel_remove_3H_24hr = pd.read_csv(data_file_path_24_fuel_3H, skiprows=0)
     
 #time to start ploting fun things 
 #1st starting with the fuel per day per adult histogram and box plot
@@ -270,17 +314,17 @@ if Hood_or_no == 'no_hood':
             if count_f == len(Household_removal_NO_Hood_fuel_day_adult):
                 count_f = 0
             continue
-        if Day_1N.iloc[c,13] != -1.00:
-            Fuel_per_day_per_adult_1N.append(Day_1N.iloc[c,13]/Survey_1N.iloc[c,7])
+        if Fuel_remove_1N_24hr.iloc[c,6]!= -1.00:
+            Fuel_per_day_per_adult_1N.append(Fuel_remove_1N_24hr.iloc[c,6]/Survey_1N.iloc[c,7])
             f_d_a_1N.append(Day_1N.iloc[c,0])
-        if Day_2N.iloc[c, 13] != -1.00:
-            Fuel_per_day_per_adult_2N.append(Day_2N.iloc[c, 13] / Survey_2N.iloc[c, 7])
+        if Fuel_remove_2N_24hr.iloc[c,6] != -1.00:
+            Fuel_per_day_per_adult_2N.append(Fuel_remove_2N_24hr.iloc[c,6] / Survey_2N.iloc[c, 7])
             f_d_a_2N.append(Day_2N.iloc[c,0])
-        if Day_3N.iloc[c, 13] != -1.00:
-            Fuel_per_day_per_adult_3N.append(Day_3N.iloc[c, 13] / Survey_3N.iloc[c, 7])
+        if Fuel_remove_3N_24hr.iloc[c,6] != -1.00:
+            Fuel_per_day_per_adult_3N.append(Fuel_remove_3N_24hr.iloc[c,6]/ Survey_3N.iloc[c, 7])
             f_d_a_3N.append(Day_3N.iloc[c, 0])
-        if Day_4N.iloc[c, 13] != -1.00:
-            Fuel_per_day_per_adult_4N.append(Day_4N.iloc[c, 13] / Survey_4N.iloc[c, 7])
+        if Fuel_remove_4N_24hr.iloc[c,6]  != -1.00:
+            Fuel_per_day_per_adult_4N.append(Fuel_remove_4N_24hr.iloc[c,6] / Survey_4N.iloc[c, 7])
             f_d_a_4N.append(Day_3N.iloc[c, 0])
     # percentage Change of Fuel per day between the phases
     Fuel_per_day_per_adult_2N_1N = []
@@ -383,6 +427,11 @@ if Hood_or_no == 'no_hood':
     plt.title('4N Fuel per Day per Adult')
     plt.ylim(top=2)
     plt.ylim(bottom = 0)
+    
+    #plt.tilte('Histogram of Fuel per 24 Hours per Person' )
+    #plt.hist([Fuel_per_day_per_adult_1N, Fuel_per_day_per_adult_2N, Fuel_per_day_per_adult_3N, Fuel_per_day_per_adult_4N],
+    #         color=['b','g','r','y'], alpha=0.5)
+    #plt.show()
     
     
     #Plotting on the same graph
@@ -593,16 +642,16 @@ if Hood_or_no == 'hood':
             if count_f == len(Household_removal_Hood_fuel_day_adult):
                 count_f = 0
             continue
-        if Day_1H.iloc[c,13] != -1.00:
-            Fuel_per_day_per_adult_1H.append(Day_1H.iloc[c,13]/Survey_1H.iloc[c,7])
+        if Fuel_remove_1H_24hr.iloc[c,6] != -1.00:
+            Fuel_per_day_per_adult_1H.append(Fuel_remove_1H_24hr.iloc[c,6]/Survey_1H.iloc[c,7])
             f_d_a_1H.append(Day_1H.iloc[c,0])
             
-        if Day_2H.iloc[c, 13] != -1.00:
-            Fuel_per_day_per_adult_2H.append(Day_2H.iloc[c, 13] / Survey_2H.iloc[c, 7])
+        if Fuel_remove_2H_24hr.iloc[c,6] != -1.00:
+            Fuel_per_day_per_adult_2H.append(Fuel_remove_2H_24hr.iloc[c,6] / Survey_2H.iloc[c, 7])
             f_d_a_2H.append(Day_2H.iloc[c,0])
             
-        if Day_3H.iloc[c, 13] != -1.00:
-            Fuel_per_day_per_adult_3H.append(Day_3H.iloc[c, 13] / Survey_3H.iloc[c, 7])
+        if Fuel_remove_3H_24hr.iloc[c,6] != -1.00:
+            Fuel_per_day_per_adult_3H.append(Fuel_remove_3H_24hr.iloc[c,6]/ Survey_3H.iloc[c, 7])
             f_d_a_3H.append(Day_3H.iloc[c, 0])
     
     # percentage Change of Fuel per day between the phases

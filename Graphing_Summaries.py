@@ -9,7 +9,7 @@ import seaborn as sns
 # Are you graphing for hood or no hood
 
 Computer = 'work' #or 'personal' or 'work'
-Hood_or_no = 'hood'   # 'no_hood' or 'hood'
+Hood_or_no = 'no_hood'   # 'no_hood' or 'hood'
 #what household do you want to remove make sure it is in ascending order
 # if there is nothing, then put a placeholder of 1045 or higher
 Household_removal = [1045]
@@ -427,6 +427,11 @@ if Hood_or_no == 'no_hood':
     plt.title('4N Fuel per Day per Adult')
     plt.ylim(top=2)
     plt.ylim(bottom = 0)
+    
+    #plt.tilte('Histogram of Fuel per 24 Hours per Person' )
+    #plt.hist([Fuel_per_day_per_adult_1N, Fuel_per_day_per_adult_2N, Fuel_per_day_per_adult_3N, Fuel_per_day_per_adult_4N],
+    #         color=['b','g','r','y'], alpha=0.5)
+    #plt.show()
     
     
     #Plotting on the same graph

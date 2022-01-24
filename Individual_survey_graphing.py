@@ -9,7 +9,7 @@ import seaborn as sns
 # Are you graphing for hood or no hood
 
 Computer = 'personal'  # or 'personal' or 'work'
-Hood_or_no = 'hood'  # 'no_hood' or 'hood'
+Hood_or_no = 'no_hood'  # 'no_hood' or 'hood'
 # what household do you want to remove make sure it is in ascending order
 # if there is nothing, then put a placeholder of 1045 or higher
 Household_removal = [1045]
@@ -120,6 +120,7 @@ if Hood_or_no == 'no_hood':
     plt.hist([Survey_4N.iloc[:, 19]],
              color=['y'], alpha=0.5, label='4N')
     plt.legend(loc='upper right')
+    plt.xlabel('0 - Wood, 1 - AG Residue')
     plt.show()
 
 
@@ -142,4 +143,5 @@ if Hood_or_no == 'hood':
     plt.hist(Survey_3H.iloc[:,19],
              color=['r'], alpha=0.5, label='3H')
     plt.legend(loc='upper right')
+    plt.xlabel('0 - Wood, 1 - AG Residue')
     plt.show()

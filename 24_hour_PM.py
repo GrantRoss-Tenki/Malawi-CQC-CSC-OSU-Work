@@ -11,8 +11,8 @@ import os
 import glob
 
 
-Phase = "3N"
-Computer = "work"
+Phase = "3H"
+Computer = "personal"
 # THis file is for gathering 24 hour averages 
 #Work computer
 #colecting metrics for each household comparison

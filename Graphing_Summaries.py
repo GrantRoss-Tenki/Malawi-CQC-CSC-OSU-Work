@@ -8,7 +8,7 @@ import seaborn as sns
 # Is this a personal or work computer
 # Are you graphing for hood or no hood
 
-Computer = 'work' #or 'personal' or 'work'
+Computer = 'personal' #or 'personal' or 'work'
 Hood_or_no = 'no_hood'   # 'no_hood' or 'hood'
 #what household do you want to remove make sure it is in ascending order
 # if there is nothing, then put a placeholder of 1045 or higher
@@ -1425,6 +1425,51 @@ if Hood_or_no == 'hood':
     print(PM_D_50_phase_hood)
     print(PM_D_50_percent_change_hood)
 # when i am ready to transfer to a data frame and get the differences
+if Hood_or_no == 'no_hood':
+    plt.title('Histogram of Fuel per 24 Hours per Person - No Hood' )
+    plt.hist([Fuel_per_day_per_adult_1N],
+            color=['b'], alpha=0.5, label='1N')
+    plt.hist([Fuel_per_day_per_adult_2N],
+             color=['g'], alpha=0.5, label='2N')
+    plt.hist([Fuel_per_day_per_adult_3N],
+             color=['r'], alpha=0.5, label='3N')
+    plt.hist([Fuel_per_day_per_adult_4N],
+             color=['y'], alpha=0.5, label='4N')
+    plt.legend(loc='upper right')
+    plt.show()
 
+
+    plt.title('Histogram of Kitchen PM 24 Hours - No Hood' )
+    plt.hist([Kit_PM_per_day_1N],
+            color=['b'], alpha=0.5, label='1N')
+    plt.hist([Kit_PM_per_day_2N],
+             color=['g'], alpha=0.5, label='2N')
+    plt.hist([Kit_PM_per_day_3N],
+             color=['r'], alpha=0.5, label='3N')
+    plt.hist([Kit_PM_per_day_4N],
+             color=['y'], alpha=0.5, label='4N')
+    plt.legend(loc='upper right')
+    plt.show()
+
+if Hood_or_no == 'hood':
+    plt.title('Histogram of Fuel per 24 Hours per Person - Hood' )
+    plt.hist([Fuel_per_day_per_adult_1H],
+            color=['b'], alpha=0.5, label='1H')
+    plt.hist([Fuel_per_day_per_adult_2H],
+             color=['g'], alpha=0.5, label='2H')
+    plt.hist([Fuel_per_day_per_adult_3H],
+             color=['r'], alpha=0.5, label='3H')
+    plt.legend(loc='upper right')
+    plt.show()
+
+    plt.title('Histogram of Kitchen PM 24 Hours - Hood' )
+    plt.hist([Kit_PM_per_day_1H],
+            color=['b'], alpha=0.5, label='1H')
+    plt.hist([Kit_PM_per_day_2H],
+             color=['g'], alpha=0.5, label='2H')
+    plt.hist([Kit_PM_per_day_3H],
+             color=['r'], alpha=0.5, label='3H')
+    plt.legend(loc='upper right')
+    plt.show()
 
 

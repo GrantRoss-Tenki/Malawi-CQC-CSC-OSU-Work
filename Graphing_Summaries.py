@@ -9,7 +9,7 @@ import seaborn as sns
 # Are you graphing for hood or no hood
 
 Computer = 'personal' #or 'personal' or 'work'
-Hood_or_no = 'no_hood'   # 'no_hood' or 'hood'
+Hood_or_no = 'hood'   # 'no_hood' or 'hood'
 #what household do you want to remove make sure it is in ascending order
 # if there is nothing, then put a placeholder of 1045 or higher
 Household_removal = [1045]
@@ -495,7 +495,7 @@ if Hood_or_no == 'no_hood':
     plt.text(4,0.1,'4N', color='y')        
             
     plt.xlim(0,5)
-    plt.ylim(0,2.3)
+    plt.ylim(0,2.5)
     print('Fuel/Day/Adult 1N had these values as outliers   ', Fuel_D_A_1N_outlier)
     print('Fuel/Day/Adult 2N had these values as outliers   ', Fuel_D_A_2N_outlier)
     print('Fuel/Day/Adult 3N had these values as outliers   ', Fuel_D_A_3N_outlier)

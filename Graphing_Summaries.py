@@ -427,13 +427,7 @@ if Hood_or_no == 'no_hood':
     plt.title('4N Fuel per Day per Adult')
     plt.ylim(top=2)
     plt.ylim(bottom = 0)
-    
-    #plt.tilte('Histogram of Fuel per 24 Hours per Person' )
-    #plt.hist([Fuel_per_day_per_adult_1N, Fuel_per_day_per_adult_2N, Fuel_per_day_per_adult_3N, Fuel_per_day_per_adult_4N],
-    #         color=['b','g','r','y'], alpha=0.5)
-    #plt.show()
-    
-    
+   
     #Plotting on the same graph
     fig, ax = plt.subplots()
     plt.title('No-Hood Fuel per Day per Adult')
@@ -1475,5 +1469,15 @@ if Hood_or_no == 'hood':
     print(PM_D_50_percent_change_hood)
 # when i am ready to transfer to a data frame and get the differences
 
-
-
+#histograms for the comparison
+if Hood_or_no == 'no_hood':
+    
+    df_fuel_no_hood = pd.concat(axis=0, ignore_index=True, objs=[pd.DataFrame(Fuel_per_day_per_adult_1N),
+                                                                 pd.DataFrame(Fuel_per_day_per_adult_2N),
+                                                                 pd.DataFrame(Fuel_per_day_per_adult_3N),
+                                                                 pd.DataFrame(Fuel_per_day_per_adult_4N)])
+    
+    fig, ax = plt.subplots()
+    sns.histplot(
+            data=df_fuel_no_hood, color=['b', 'g','r','y'], ax=ax )
+    ax.set_xlim([0, 100])

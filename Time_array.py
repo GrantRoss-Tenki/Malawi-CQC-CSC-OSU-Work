@@ -11,8 +11,8 @@ import os
 import glob
 
 
-Phase = "2H"
-Computer = "work"
+Phase = "3H"
+Computer = "personal"
 if Computer == 'work':
     os.chdir("C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+Phase +"/Collection")
 

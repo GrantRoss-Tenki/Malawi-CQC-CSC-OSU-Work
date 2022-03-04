@@ -10,9 +10,10 @@ import numpy as np
 import csv
 import os
 import glob
+from pathlib import Path
 
-Phase = "3H"
-Computer = "work"
+Phase = "2N"
+Computer = "personal"
 # THis file is for gathering 24 hour averages 
 #Work computer
 #colecting metrics for each household comparison
@@ -42,21 +43,32 @@ visit_1 = []
 visit_2 = []
 visit_3 = []
 
-Moist_SAE_path = "D:/SAE_Moisture_Split/Moisture_SAE_split_"+Phase+"_.csv"
+Moist_SAE_path = "E:/SAE_Moisture_Split/Moisture_SAE_split_"+Phase+"_.csv"
 MOIST_SAE = pd.read_csv(Moist_SAE_path)
 
 if Computer == 'work':
     os.chdir("C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+Phase +"/Compiler_1_exact/Raw_Day/Raw_D_metrics")
 
 else:
-    os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_1_exact/Raw_Day/Raw_D_metrics")
+    os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_1_exact/Raw_D_metrics")
+
+
+Fuel_time_paths = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/Time_list"
 
 
 FUEL_sensor = os.getcwd()
 FUEL_csv_open = glob.glob(os.path.join(FUEL_sensor, "*.csv"))
 
-
-
+# second Exact Numbers
+exact_2_2N = [1007]
+exact_2_3N = [1001]
+exact_2_4N = [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1011, 1013, 1014, 1016, 1017, 1018, 1019, 1021, 1022, 1023, 1024, 1025, 1026, 1028, 1029, 1030, 1031, 1032, 1033, 1035, 1036, 1037, 1038, 1039]
+if Phase == "3N":
+    exac2= exact_2_3N
+if Phase == "2N":
+    exac2= exact_2_2N
+if Phase == "4N":
+    exac2= exact_2_4N
 
 HH_NUMBER = []
 DAYS_O = []
@@ -86,20 +98,31 @@ for file in FUEL_csv_open:
         for idx, row in enumerate(csv_reader_fuel):
             if idx == 1:
                 id_number = (row[1])
-                print('Household',id_number)
-
-    if Computer == 'work':
-        Fuel_time_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+Phase +"/Time_list/"+Phase+"_"+id_number+"_time_array.csv"
-
-    else:
-        Fuel_time_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/Time_list/"+Phase+"_"+id_number+"_time_array.csv"
-
-    metric_day_data = pd.read_csv(file, skiprows=2)
+                print('Household',id_number, type(id_number), str(id_number))
+            elif 'Fuel Raw Data' in row:
+                skippy = idx
+                break
+    second_exact = 0
+    metric_day_data = pd.read_csv(file, skiprows=skippy)
     Fuel_removal = metric_day_data.iloc[:,1]
     day_arange = np.arange(0, 14)
+    Fuel_time_path = Fuel_time_paths +Phase+"_"+id_number+"_time_array.csv"
+    Fuel_time_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/Time_list/"+Phase+"_"+id_number+"_time_array.csv"
+    FF_USage_path_1 = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/FIREFINDER/1 exact/"+id_number+"_FF_1.csv"
+    if Phase == "3N" or Phase == "2N" or Phase == "4N":
+        for hhhhhh in exac2:
+            if int(id_number) == hhhhhh:
+                print('babababaooiiiii')
+                FF_USage_path_2 = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/FIREFINDER/2 exact/"+id_number+"_FF_2.csv"
+                ff_use_2 = pd.read_csv(FF_USage_path_2)
+                second_exact = 1
+    
+    
     time_vlaue_frame = pd.read_csv(Fuel_time_path)
+    ff_use_1 = pd.read_csv(FF_USage_path_1)
     
-    
+    second_exact_usage = 0
+    second_exact_event = 0
     if metric_day_data.iloc[5,1]!= -1:
         day_average_fuel = []
         day_count = 0
@@ -138,10 +161,10 @@ for file in FUEL_csv_open:
                 day_count = day_count +1
                 
 
-        #print(day_average_fuel)
+        print('here is day count ---------', day_count-1,round(day_count/2) )
         complete_phase_24_Fuel_Sum = (sum(day_average_fuel)/(day_count))
         HH_NUMBER.append(id_number)
-        DAYS_O.append(day_count)
+        DAYS_O = (day_count)
         TIME_START.append(time_vlaue_frame.iloc[5,0])
         TIME_END.append(time_vlaue_frame.iloc[day_time_end_vlaue,0])
         PHASE_24_HR_AVG.append(complete_phase_24_Fuel_Sum)
@@ -163,7 +186,7 @@ for file in FUEL_csv_open:
     else:
         day_average_fuel = [-1]
         HH_NUMBER.append(id_number)
-        DAYS_O.append(-1)
+        DAYS_O = (-1)
         TIME_START.append(-1)
         TIME_END.append(-1)
         PHASE_24_HR_AVG.append(-1)
@@ -192,7 +215,7 @@ for file in FUEL_csv_open:
     day_13.append(day_average_fuel[12])
     day_14.append(day_average_fuel[13])
     
-#    
+    print('day o is this', int(DAYS_O))
 #    # Adding moisture and SAE
     Fuel_day_SAE_moist = []
     
@@ -224,11 +247,11 @@ for file in FUEL_csv_open:
                 fuel_calc = fuel / (1 + (MOIST_SAE.iloc[Household_count,3]/100))
                 if day <= (MOIST_SAE.iloc[Household_count,5] + MOIST_SAE.iloc[Household_count,7]): 
                     TOTAL_ref = fuel_calc / MOIST_SAE.iloc[Household_count,8]
-                    Fuel_day_SAE_moist.append(TOTAL_ref))
+                    Fuel_day_SAE_moist.append(TOTAL_ref)
                     
                 elif day <= (MOIST_SAE.iloc[Household_count,5] + MOIST_SAE.iloc[Household_count,7] + MOIST_SAE.iloc[Household_count,11]): 
                     TOTAL_ref = fuel_calc / MOIST_SAE.iloc[Household_count,12]
-                    Fuel_day_SAE_moist.append(TOTAL_ref))
+                    Fuel_day_SAE_moist.append(TOTAL_ref)
                     
                 elif day <= (MOIST_SAE.iloc[Household_count,5] + MOIST_SAE.iloc[Household_count,7] + MOIST_SAE.iloc[Household_count,11] + MOIST_SAE.iloc[Household_count,13]): 
                     TOTAL_ref = fuel_calc / MOIST_SAE.iloc[Household_count,14]
@@ -334,17 +357,17 @@ df_HH_fuel_SAE_Moist_breakdown = pd.DataFrame(HH_fuel_SAE_Moist,columns=['Househ
                                                                            'Day 9','Day 10','Day 11',
                                                                            'Day 12','Day 13','Day 14','Visit 1', 'Visit 2', 'Visit 3' ])
     
-if Computer == 'work':
-    Fuel_24_hour_file_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+ Phase +"/"+Phase+"_24_hour_Fuel_removal" +".csv"
-    HH_breakdown_file_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+ Phase +"/"+Phase+"_Household_Fuel_removal_breakdown" +".csv"
-    HH_SAE_moist_breakdown_file_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+ Phase +"/"+Phase+"_Household_SAE_Moist_breakdown" +".csv"
-else:
-    Fuel_24_hour_file_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/"+Phase+"_24_hour_Fuel_removal" +".csv"
-    HH_breakdown_file_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/"+Phase+"_Household_Fuel_removal_breakdown" +".csv"
-    HH_SAE_moist_breakdown_file_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/"+Phase+"_Household_SAE_Moist_breakdown" +".csv"
+#if Computer == 'work':
+#    Fuel_24_hour_file_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+ Phase +"/"+Phase+"_24_hour_Fuel_removal" +".csv"
+#    HH_breakdown_file_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+ Phase +"/"+Phase+"_Household_Fuel_removal_breakdown" +".csv"
+#    HH_SAE_moist_breakdown_file_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+ Phase +"/"+Phase+"_Household_SAE_Moist_breakdown" +".csv"
+#else:
+#    Fuel_24_hour_file_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/"+Phase+"_24_hour_Fuel_removal" +".csv"
+#    HH_breakdown_file_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/"+Phase+"_Household_Fuel_removal_breakdown" +".csv"
+#    HH_SAE_moist_breakdown_file_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/"+Phase+"_Household_SAE_Moist_breakdown" +".csv"
 
-df_Fuel_per_24_hour.to_csv(Fuel_24_hour_file_path,index=False,mode='a')
-df_HH_Fuel_breakdown.to_csv(HH_breakdown_file_path,index=False,mode='a')
-df_HH_fuel_SAE_Moist_breakdown.to_csv(HH_SAE_moist_breakdown_file_path, index=False,mode='a')
+#df_Fuel_per_24_hour.to_csv(Fuel_24_hour_file_path,index=False,mode='a')
+#df_HH_Fuel_breakdown.to_csv(HH_breakdown_file_path,index=False,mode='a')
+#df_HH_fuel_SAE_Moist_breakdown.to_csv(HH_SAE_moist_breakdown_file_path, index=False,mode='a')
 
 

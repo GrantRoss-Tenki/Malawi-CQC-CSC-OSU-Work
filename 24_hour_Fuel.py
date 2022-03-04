@@ -280,7 +280,7 @@ for file in FUEL_csv_open:
                 else:
                     Event_for_1 = (ff_use_1[day_time_end_vlaue])
                     Event_for_2 = (ff_use_2.iloc[day_time_end_vlaue])
-                    Event_for_sum2 = Event_for_2 +Event_for_1
+                    Event_for_sum2 = Event_for_2 + Event_for_1
                 count_event_count.append(Event_for_sum2) 
 
                 day_time_end_vlaue  = day_time_end_vlaue + ((24*60))

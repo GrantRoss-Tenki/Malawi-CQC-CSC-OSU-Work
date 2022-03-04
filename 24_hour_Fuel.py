@@ -12,6 +12,65 @@ import os
 import glob
 from pathlib import Path
 
+def FUEL_REMOVAL(Raw_fuel, Filter_Fuel, Thresold):
+        remove = []
+        remove_kg = []
+        insert = []
+        insert_kg = []
+        v = 0
+        for weight in Filter_Fuel:
+            v = v + 1
+            #print(weight)
+            if v+1 == (len(Raw_fuel)):
+                break
+            elif Filter_Fuel[v] <= 0 or weight <= 0:
+                if (abs(weight - Filter_Fuel[v]) > Thresold) or (abs(weight + Filter_Fuel[v]) > Thresold):
+                    if weight - Filter_Fuel[v] > Thresold:
+                        remove.append(v)
+                        kg_amount = weight - Filter_Fuel[v]
+                        remove_kg.append((int(kg_amount*1000))/1000)
+                    elif (weight + Filter_Fuel[v] > Thresold):
+                        insert.append(v)
+                        kg_amount = weight + Filter_Fuel[v]
+                        insert_kg.append((int(kg_amount*1000))/1000)
+                else:
+                    pass
+            elif (weight - Filter_Fuel[v]) > Thresold:
+                remove.append(v)
+                remove_kg.append((int((abs(Filter_Fuel[v] - weight))*1000)/1000))
+
+            elif (Filter_Fuel[v] - weight) > Thresold:
+                insert.append(v)
+                insert_kg.append(Filter_Fuel[v] - weight)
+        v = 0
+
+
+        kg = np.arange(0, len(Raw_fuel),1)
+        count = 0
+        KG_burned = []
+        
+        for wei in kg:
+            if (wei) == (len(Raw_fuel)-1):
+                KG_burned.append(KG_burned[-1])
+                break
+            elif remove[-1] == len(KG_burned)-2:
+                KG_burned.append(KG_burned[-1])
+                pass
+            elif wei == remove[count]:
+                KG_burned.append(remove_kg[count])
+                if remove[-1] == wei:
+                    end_bit = np.arange(wei, len(Raw_fuel),1)
+                    for a in end_bit:
+                        KG_burned.append(KG_burned[-1])
+                    break
+                count = count + 1
+            elif wei == 0 and remove_kg[wei] != 0:
+                KG_burned.append(0)
+            else:
+                KG_burned.append(KG_burned[-1])
+     
+        return KG_burned
+
 Phase = "2N"
 Computer = "personal"
 # THis file is for gathering 24 hour averages 
@@ -22,6 +81,8 @@ DAYS_O = []
 TIME_START = []
 TIME_END = []
 PHASE_24_HR_AVG = []
+Event_Count = []
+PHASE_24_HR_AVG_2 = []
 HIGHEST_Fuel_PER_DAY = []
 DAY_OF_HIGHEST_Fuel = []
 day_1 = []
@@ -71,6 +132,7 @@ if Phase == "4N":
     exac2= exact_2_4N
 
 HH_NUMBER = []
+HH_NUMBER_2 = []
 DAYS_O = []
 TIME_START = []
 TIME_END = []
@@ -119,36 +181,58 @@ for file in FUEL_csv_open:
     
     
     time_vlaue_frame = pd.read_csv(Fuel_time_path)
+
     ff_use_1 = pd.read_csv(FF_USage_path_1)
-    
+    Fuel_2_removal = pd.Series((FUEL_REMOVAL(metric_day_data.iloc[:,0],metric_day_data.iloc[:,3], 0.02)))
+    #print('are the types the same fucking asshole----------------', type(Fuel_2_removal),type(Fuel_removal) )
     second_exact_usage = 0
     second_exact_event = 0
     if metric_day_data.iloc[5,1]!= -1:
         day_average_fuel = []
+        day_average_fuel_2 = []
+        count_event_count = []
         day_count = 0
 
         for wood in day_arange:
             fuel_setting = []
-
+            fuel_setting_2 = []
             if wood == 0:
                 dummy_Fuel = Fuel_removal[5:((24*60)+6)]
-                #print(dummy_Fuel)
+                dummy_Fuel_2 = Fuel_2_removal[5:((24*60)+6)]
+                
+
                 for tv, anything in enumerate(dummy_Fuel):
                     if tv + 1 == len(dummy_Fuel)-1:
                         fuel_setting.append(anything)
-
                         break
                     elif anything != dummy_Fuel.iloc[tv + 1]:
                         fuel_setting.append(anything)
-
-                #print('fuel setting after wood = 0', fuel_setting)
-
                 day_average_fuel.append(sum(fuel_setting))
+                #now second Alg
+                for tv, anything in enumerate(dummy_Fuel_2):
+                    if tv + 1 == len(dummy_Fuel_2)-1:
+                        fuel_setting_2.append(anything)
+                        break
+                    elif anything != dummy_Fuel_2.iloc[tv + 1]:
+                        fuel_setting_2.append(anything)
+                day_average_fuel_2.append(sum(fuel_setting))
+                
                 day_time_end_vlaue  = ((24*60)+5)
                 day_count = day_count +1
-                
-            elif (wood != 0) and ((day_time_end_vlaue + (60*24)) <= len(metric_day_data.iloc[:,1])-1):
+                # getting the events for the days
+                if second_exact != 1:
+                    Event_for_1 = ff_use_1.iloc[5:((24*60)+6)]
+                    Event_for_sum2 = Event_for_1
+                else:
+                    Event_for_1 = ff_use_1.iloc[((24*60)+6)]
+                    Event_for_2 = ff_use_2.iloc[((24*60)+6)]
+                    Event_for_sum2 = Event_for_2 +Event_for_1
+                count_event_count.append(Event_for_sum2)
+
+            elif (wood != 0) and ((day_time_end_vlaue + (60*24)) <= len(metric_day_data.iloc[:,0])-1):
                 dummy_Fuel = Fuel_removal[day_time_end_vlaue:(day_time_end_vlaue +(24*60))]
+                dummy_Fuel_2 = Fuel_2_removal[day_time_end_vlaue:(day_time_end_vlaue +(24*60))]
+                #print('are the types the same fucking asshole', len(dummy_Fuel),len(dummy_Fuel_2) )
                 for tv, anything in enumerate(dummy_Fuel):
                     next_int = tv + 1 + day_time_end_vlaue
                     if tv + 1 == len(dummy_Fuel) -1:
@@ -157,17 +241,43 @@ for file in FUEL_csv_open:
                     elif anything != dummy_Fuel[next_int]:
                         fuel_setting.append(anything)
                 day_average_fuel.append(sum(fuel_setting))
+                #print('is next int correct?',next_int)
+                #now second Alg
+                for tv2, anything2 in enumerate(dummy_Fuel_2):
+                    next_int2 = tv2 + 1 + day_time_end_vlaue
+                    if tv2 + 1 == len(dummy_Fuel_2) -1:
+                        fuel_setting_2.append(anything2)
+                        break
+                    elif anything2 != dummy_Fuel_2[next_int]:
+                        fuel_setting_2.append(anything2)
+                day_average_fuel_2.append(sum(fuel_setting_2))
+                print('is next int correct?',next_int,next_int2)
+                
+                # getting the events for the days
+                if second_exact != 1:
+                    Event_for_1 = ff_use_1.iloc[day_time_end_vlaue]
+                    Event_for_sum2 = Event_for_1
+                else:
+                    Event_for_1 = ff_use_1.iloc[day_time_end_vlaue]
+                    Event_for_2 = ff_use_2.iloc[day_time_end_vlaue]
+                    Event_for_sum2 = Event_for_2 +Event_for_1
+                count_event_count.append(Event_for_sum2) 
+
                 day_time_end_vlaue  = day_time_end_vlaue + ((24*60))
                 day_count = day_count +1
-                
-
         print('here is day count ---------', day_count-1,round(day_count/2) )
         complete_phase_24_Fuel_Sum = (sum(day_average_fuel)/(day_count))
+        complete_phase_24_Fuel_Sum_2 = (sum(day_average_fuel_2)/(day_count))
         HH_NUMBER.append(id_number)
+        HH_NUMBER_2.append(str(id_number)+"_2")
+        Event_Count.append(count_event_count)
+        print('--------------==========event count==========------==-=-=-=-=-=-=-=-=', count_event_count)
+
         DAYS_O = (day_count)
         TIME_START.append(time_vlaue_frame.iloc[5,0])
         TIME_END.append(time_vlaue_frame.iloc[day_time_end_vlaue,0])
         PHASE_24_HR_AVG.append(complete_phase_24_Fuel_Sum)
+        PHASE_24_HR_AVG_2.append(complete_phase_24_Fuel_Sum_2)
         max_fuel_value = max(day_average_fuel)
         max_fuel_day = [index for index, item in enumerate(day_average_fuel) if item == max_fuel_value]
 
@@ -186,10 +296,12 @@ for file in FUEL_csv_open:
     else:
         day_average_fuel = [-1]
         HH_NUMBER.append(id_number)
+        HH_NUMBER_2.append(id_number+"_2")
         DAYS_O = (-1)
         TIME_START.append(-1)
         TIME_END.append(-1)
         PHASE_24_HR_AVG.append(-1)
+        PHASE_24_HR_AVG_2.append(-1)
         HIGHEST_Fuel_PER_DAY.append(-1)
         DAY_OF_HIGHEST_Fuel.append(-1)
 
@@ -370,4 +482,6 @@ df_HH_fuel_SAE_Moist_breakdown = pd.DataFrame(HH_fuel_SAE_Moist,columns=['Househ
 #df_HH_Fuel_breakdown.to_csv(HH_breakdown_file_path,index=False,mode='a')
 #df_HH_fuel_SAE_Moist_breakdown.to_csv(HH_SAE_moist_breakdown_file_path, index=False,mode='a')
 
+# first Funciton
+## define FUEL_REMOVAL as fuel removed from the 
 

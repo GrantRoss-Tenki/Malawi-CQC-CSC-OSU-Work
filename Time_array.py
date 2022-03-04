@@ -11,13 +11,16 @@ import os
 import glob
 
 
-Phase = "3H"
+Phase = "1H"
 Computer = "personal"
 if Computer == 'work':
     os.chdir("C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+Phase +"/Collection")
 
 else:
-    os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Collection")
+    if Phase == "1H":
+        os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Collection With first two days")
+    else:
+        os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Collection")
 
 Kitchen_HAPEx = os.getcwd()
 Kit_csv_open = glob.glob(os.path.join(Kitchen_HAPEx, "*.csv"))

@@ -71,7 +71,7 @@ def FUEL_REMOVAL(Raw_fuel, Filter_Fuel, Thresold):
      
         return KG_burned
 
-Phase = "1N"
+Phase = "3H"
 Computer = "personal"
 # THis file is for gathering 24 hour averages 
 #Work computer
@@ -356,7 +356,8 @@ for file in FUEL_csv_open:
         PHASE_24_HR_AVG_2.append(-1)
         HIGHEST_Fuel_PER_DAY.append(-1)
         DAY_OF_HIGHEST_Fuel.append(-1)
-
+        Cooking_times_min = [-1]
+        count_event_count = [-1]
     day_counter = np.arange(0,14)
     if len(day_average_fuel) < len(day_counter):
         zero_count = np.arange(0, len(day_counter) - len(day_average_fuel))

@@ -12,7 +12,7 @@ from io import StringIO
 import matplotlib.pyplot as plt
 
 # What Phase are we in?
-Phase = "3H"
+Phase = "4N"
 #What exact are we looking at? 1 or 2?
 Exact_num = "2"
 
@@ -50,7 +50,7 @@ HH_total_time_f_collection = []
 
 
 #Day_met_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/1N/Compiler/Raw_Day/Raw_D_metrics/1N_HH_raw_Day_metrics_1005.csv"
-os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_Day/Raw_D_metrics")
+os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_D_metrics")
 # For Hood portion
 #os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2H/Compiler/Raw_Day/Raw_D_metrics")
 # This was for hood portion
@@ -96,22 +96,22 @@ for file in csv_R_m:
             HH_fuel_removed_for_phase.append(-1)
 
         #Temperature Collection
-        if np.average(Day_data.iloc[:, 2]) != -1:
+        if np.average(Day_data.iloc[:, 5]) != -1:
             T_D_Temp.extend(Day_data.iloc[:, 2])
-            HH_avg_temp.append((int((np.average(Day_data.iloc[:, 2])) * 100)) / 100)
-            HH_std_temp.append((int((stat.stdev(Day_data.iloc[:, 2])) * 100)) / 100)
+            HH_avg_temp.append((int((np.average(Day_data.iloc[:, 5])) * 100)) / 100)
+            HH_std_temp.append((int((stat.stdev(Day_data.iloc[:, 5])) * 100)) / 100)
         else:
             HH_avg_temp.append(-1)
             HH_std_temp.append(-1)
 
         #Cook Hapex Collection
-        if np.average(Day_data.iloc[:, 3]) != -1:
-            T_D_Cook_comp.extend(Day_data.iloc[:, 3])
-            T_D_Cook_PM.extend(Day_data.iloc[:, 5])
-            HH_avg_cook_comp.append(int(((sum(Day_data.iloc[:, 3])) / Minutes_of_collection) * 100))
-            HH_sum_cook_pm.append((int((sum(Day_data.iloc[:, 5])) * 100)) / 100)
-            HH_avg_cook_PM.append((int((np.average(Day_data.iloc[:, 5])) * 100)) / 100)
-            HH_std_cook_PM.append((int((stat.stdev(Day_data.iloc[:, 5])) * 100)) / 100)
+        if np.average(Day_data.iloc[:, 8]) != -1:
+            T_D_Cook_comp.extend(Day_data.iloc[:, 6])
+            T_D_Cook_PM.extend(Day_data.iloc[:, 8])
+            HH_avg_cook_comp.append(int(((sum(Day_data.iloc[:, 6])) / Minutes_of_collection) * 100))
+            HH_sum_cook_pm.append((int((sum(Day_data.iloc[:, 8])) * 100)) / 100)
+            HH_avg_cook_PM.append((int((np.average(Day_data.iloc[:, 8])) * 100)) / 100)
+            HH_std_cook_PM.append((int((stat.stdev(Day_data.iloc[:, 8])) * 100)) / 100)
         else:
             HH_sum_cook_pm.append(-1)
             HH_avg_cook_comp.append(-1)
@@ -119,13 +119,13 @@ for file in csv_R_m:
             HH_std_cook_PM.append(-1)
 
         #Kitchen HAPEx Collection
-        if np.average(Day_data.iloc[:, 6]) != -1:
-            T_D_Kit_PM.extend(Day_data.iloc[:, 6])
-            T_D_Kit_comp.extend((Day_data.iloc[:, 4]))
-            HH_avg_Kit_comp.append(int(((sum(Day_data.iloc[:, 4])) / Minutes_of_collection) * 100))
-            HH_sum_KIT_PM.append((int((sum(Day_data.iloc[:, 6])) * 100)) / 100)
-            HH_avg_Kit_PM.append((int((np.average(Day_data.iloc[:, 6])) * 100)) / 100)
-            HH_std_Kit_PM.append((int((stat.stdev(Day_data.iloc[:, 6])) * 100)) / 100)
+        if np.average(Day_data.iloc[:, 9]) != -1:
+            T_D_Kit_PM.extend(Day_data.iloc[:, 9])
+            T_D_Kit_comp.extend((Day_data.iloc[:, 7]))
+            HH_avg_Kit_comp.append(int(((sum(Day_data.iloc[:, 7])) / Minutes_of_collection) * 100))
+            HH_sum_KIT_PM.append((int((sum(Day_data.iloc[:, 9])) * 100)) / 100)
+            HH_avg_Kit_PM.append((int((np.average(Day_data.iloc[:, 9])) * 100)) / 100)
+            HH_std_Kit_PM.append((int((stat.stdev(Day_data.iloc[:, 9])) * 100)) / 100)
         else:
             HH_sum_KIT_PM.append(-1)
             HH_avg_Kit_comp.append(-1)
@@ -155,7 +155,7 @@ HH_avg_cook_comp_per_day = []
 KG_removed_sum = []
 #For the Day summary that is to be used later
 
-os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_Day/Raw_D_summary")
+os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_D_summary")
 # For Hood portion
 #os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2H/Compiler/Raw_Day/Raw_D_summary")
 # For Hood portion
@@ -245,7 +245,7 @@ HH_E_std_cook_PM =[]
 HH_E_std_Kit_PM =[]
 HH_Cooking_length = []
 
-os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_Event/Raw_E_metrics")
+os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_E_metrics")
 
 Event_met_path = os.getcwd()
 csv_E_m = glob.glob(os.path.join(Event_met_path, "*.csv"))
@@ -339,7 +339,7 @@ T_E_Length_of_event = []
 T_E_Fuel_used_Event = []
 T_E_removed_Time = []
 
-os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_Event/Raw_E_summary")
+os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_E_summary")
 # For Hood portion
 #os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2H/Compiler/Raw_Event/Raw_E_summary")
 # For Hood portion
@@ -418,7 +418,7 @@ HH_STD_PM_five_kit = []
 
 
 
-os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_Event/Raw_E_first_five")
+os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_E_first_five")
 # For Hood portion
 #os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2H/Compiler/Raw_Event/Raw_E_first_five")
 # For Hood portion

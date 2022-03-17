@@ -9,11 +9,11 @@ from itertools import chain
 #import statistics as stat
 import datetime
 from datetime import datetime
-from itertools import islice, cycledfas
+#from itertools import islice, cycledfas
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-Phase  = input("What phase? -1N or 2N or 3N or 4N - ") 
+Phase  = "2H"
 computer = input("personal or work computer - ")
 
 if computer == "work":
@@ -27,6 +27,7 @@ Cooking_Time = []
 Num_of_Events = []
 Cooking_Time_2 = []
 Num_of_Events_2 = []
+second_Usage_2 = []
 Second_Exact = 0
 #os.chdir(USB+":/24_hour_pump/"+Phase+"/Collection")
 
@@ -130,7 +131,7 @@ for file in csv_R_m:
                     min_CE_length = 8
                     window_slope = 12
 
-                n = len(Usage) - 1
+                n = len(Usage) - 1  
                 Temp_slope = []
                 print('n length', n)
                 count = 1
@@ -230,6 +231,12 @@ for file in csv_R_m:
                             start_cooking = []
                         ISCOOKING = False
                         CE_time = 0
+
+                WHole_usage_array = []
+                for u in Usage:
+                    WHole_usage_array.append(u)
+                WHole_usage_array = [a for a in WHole_usage_array]
+                print('---------------=-=-=-=-=-gosh i fucking hat this --------------', len(Usage), type(Usage), type(WHole_usage_array))
                 Cooking_Time_sumation = np.sum(Usage)
                 Fire_start = ff_start
                 Fire_end = ff_end
@@ -314,6 +321,12 @@ for file in csv_R_m:
                 print('----this is cooking time 2', len(Cooking_Time_2),Cooking_Time_2)
                 print('----this is event number 1', len(Num_of_Events),Num_of_Events)
                 print('----this is event number 2', len(Num_of_Events_2),Num_of_Events_2)
+                if q ==2 and len(Two_exact)>1 and Second_Exact== 1:
+                    second_Usage_2.append((WHole_usage_array))
+                    Second_stove_firefinder = {'Usagefor second Exact':second_Usage_2}
+                    df_Second_stove_firefinder = pd.DataFrame(Second_stove_firefinder)
+                    path_2 = "C:/Users/gvros/Desktop/Oregon State Masters/work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_2_exact/Fire_Finder_usage_2/"+str(id_number)+"_"+str(q)+"_exact_2_FF_usage"+".csv"
+                    df_Second_stove_firefinder.to_csv(path_2)
             else:
                 Cooking_Time.append(Cooking_Time_sumation)
                 Household_FF.append(id_number)
@@ -325,14 +338,18 @@ for file in csv_R_m:
                 print('----this is cooking time 2', len(Cooking_Time_2),Cooking_Time_2)
                 print('----this is event number 1', len(Num_of_Events),Num_of_Events)
                 print('----this is event number 2', len(Num_of_Events_2),Num_of_Events_2)
-
+                
+            
 
 Tryoutdata = {'Household': Household_FF, 'Cooking Time first stove': Cooking_Time, 
     'Num_of_Events for first stove': Num_of_Events,'Cooking Time second stove': Cooking_Time_2, 
     'Num_of_Events for second stove': Num_of_Events_2}
 
+
+
+
 DF_tryout = pd.DataFrame(Tryoutdata)
 path = USB+":/24_hour_pump/"+Phase+"/Phase_"+Phase+"_Firefinder_both.csv"
-DF_tryout.to_csv(path, index=False, mode= 'a')
+#DF_tryout.to_csv(path, index=False, mode= 'a')
 
 

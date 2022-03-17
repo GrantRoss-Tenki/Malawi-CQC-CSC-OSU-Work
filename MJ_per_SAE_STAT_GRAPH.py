@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import scipy
 # I am goign to bring in the NO- hood section first
 
-No_hood_MJ_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/MJ per SAE - No_Hood.csv"
+No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - No_Hood.csv"
 No_hood_MJ = pd.read_csv(No_hood_MJ_path)
 Level_of_confidence = 0.05
 
@@ -324,3 +324,13 @@ Kj_per_sae = {'median':[np.median(MJ_Phase_1N_comon),np.median(MJ_Phase_2N_comon
                         'Phase':['1n','2n','3n','4n']}
 
 print(pd.DataFrame(Kj_per_sae))
+
+Kj_per_sae_filter = {'median filter':[np.median(MJ_filter_1N_comon),np.median(MJ_filter_2N_comon),np.median(MJ_filter_3N_comon),np.median(MJ_filter_4N_comon)],
+                        'Phase':['1n','2n','3n','4n']}
+
+print(pd.DataFrame(Kj_per_sae_filter))
+
+Kj_per_sae_mean = {'mean':[np.mean(MJ_Phase_1N_comon),np.mean(MJ_Phase_2N_comon),np.mean(MJ_Phase_3N_comon),np.mean(MJ_Phase_4N_comon)],
+                        'Phase':['1n','2n','3n','4n']}
+
+print(pd.DataFrame(Kj_per_sae_mean))

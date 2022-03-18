@@ -12,11 +12,11 @@ import matplotlib.pyplot as plt
 import scipy
 # I am goign to bring in the NO- hood section first
 
-No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - No_Hood.csv"
-No_hood_MJ = pd.read_csv(No_hood_MJ_path)
+No_hood_MJ_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/MJ per SAE - No_Hood.csv" #rossgra or gvros
+
 Level_of_confidence = 0.05
 
-
+C:\Users\rossgra\Box\Classes\Software Dev
 HH_1N = No_hood_MJ.iloc[:, 0]
 HH_2N = No_hood_MJ.iloc[:, 10]
 HH_3N = No_hood_MJ.iloc[:, 20]

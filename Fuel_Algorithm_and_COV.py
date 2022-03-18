@@ -219,7 +219,7 @@ def FUEL_REMOVAL(Raw_fuel, Thresold, min_average_spread):
 
 
 Computer = "personal"
-Phase = "4N"
+Phase = "1N"
 Second_Exact = [1,2]
 min_average_spread = 5
 if Phase== "2N":

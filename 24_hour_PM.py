@@ -11,7 +11,7 @@ import os
 import glob
 
 
-Phase = "1H"
+Phase = "2N"
 Computer = "personal"
 # THis file is for gathering 24 hour averages 
 #Work computer

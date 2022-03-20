@@ -235,3 +235,49 @@ def FuelRemovalTime(KG_burned, No_fuel):
         else:
             Fuel_removal_countdown = -1
         return Fuel_removal_countdown
+    
+    
+def Olivier_Fuel_Algo(Fuel_KG_nf, Thresold, min_average_spread,No_fuel):
+        if No_fuel != 1:
+            Mean_Count_min = []
+            one_to_five = np.arange(0,6,1)
+            for one in one_to_five:
+                fiveee = abs(Fuel_KG_nf[one])
+                Mean_Count_min.append(fiveee)
+
+            count = 0
+            not_first_value = 0
+            inside_spread = [0]
+            for kg in (Fuel_KG_nf):
+                if count == min_average_spread:
+                    median = stat.median(inside_spread)
+                    Mean_Count_min.append(median)
+                    inside_spread = []
+                    count = -1
+                elif not_first_value == 0:
+                    Mean_Count_min.append(Mean_Count_min[-1])
+                    inside_spread.append(abs(kg))
+                    not_first_value = 1
+                else:
+                    Mean_Count_min.append(Mean_Count_min[-1])
+                    inside_spread.append(abs(kg))
+
+                count = count + 1
+            
+            Mean_Count_min.remove(Mean_Count_min[0])
+            
+            Olivier_filter = []
+            for tv, change in enumerate(Mean_Count_min):
+                if len(Mean_Count_min) == tv +1:
+                    Olivier_filter.append(Olivier_filter[-1])
+                    break
+                elif change != Mean_Count_min[tv+1]:
+                    if abs(change - Mean_Count_min[tv+1]) > Thresold:
+                        fuel_change = change - Mean_Count_min[tv+1]
+                        Olivier_filter.append(fuel_change)
+                else:
+                    Olivier_filter.append(0)
+        else:
+            Olivier_filter = -1
+            
+        return Olivier_filter

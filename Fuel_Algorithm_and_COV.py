@@ -299,6 +299,28 @@ day_11_total_Min = []
 day_12_total_Min = []
 day_13_total_Min = []
 day_14_total_Min = []
+
+Day_1_use = []
+Day_2_use = []
+Day_3_use = []
+Day_4_use = []
+Day_5_use = []
+Day_6_use = []
+Day_7_use = []
+Day_8_use = []
+Day_9_use = []
+
+Day_1_Fuel = []
+Day_2_Fuel = []
+Day_3_Fuel = []
+Day_4_Fuel = []
+Day_5_Fuel = []
+Day_6_Fuel = []
+Day_7_Fuel = []
+Day_8_Fuel = []
+Day_9_Fuel = []
+
+
 COV_Whole = []
 mean_days_col_array = []
 STD_days_Col_array = []
@@ -508,27 +530,29 @@ for file in FUEL_csv_open:
 
     
     
-    print('here is the Weighted Biomass NCV---------------', NCV)
-    print('are the cooking times right?--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-', Cooking_times_min,day_sum_fuel, MOIST_SAE.iloc[row_survey,2])
+   # print('here is the Weighted Biomass NCV---------------', NCV)
+    #print('are the cooking times right?--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-', Cooking_times_min,day_sum_fuel, MOIST_SAE.iloc[row_survey,2])
 #    # Adding moisture and SAE
     Fuel_day_SAE_moist = []
     Fuel_day_SAE_moist_2 = []
     Fuel_day_SAE_moist_min = []
     MJ_SAE_DAY_array = []
+    Fuel_dry_WHole_Phase = []
     for day, fuel in enumerate(Day_Sum_pre_filter):
         if fuel == 0 or fuel == -1:# or MOIST_SAE.iloc[Household_count,5] == 0 or MOIST_SAE.iloc[Household_count,13] == 0:
             Fuel_day_SAE_moist.append(0)
             Fuel_day_SAE_moist_2.append(0)
             Fuel_day_SAE_moist_min.append(0)
+            Fuel_dry_WHole_Phase.append(0)
         else:
             if day <= round(DAYS_O/2):
                 fuel_calc = (fuel / (1 + (MOIST_SAE.iloc[row_survey,2]/100)))
-                
+                Fuel_dry_WHole_Phase.append(fuel_calc)
                 if day < MOIST_SAE.iloc[day,5]:
                     TOTAL_ref = fuel_calc /count_event_count[day]#/ MOIST_SAE.iloc[row_survey,6]
                     Fuel_day_SAE_moist.append(TOTAL_ref)    
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day]#/ MOIST_SAE.iloc[row_survey,6]
-                    if TOTAL_ref_min <= 0.023:
+                    if TOTAL_ref_min <= 0.0384:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -539,7 +563,7 @@ for file in FUEL_csv_open:
                     Fuel_day_SAE_moist.append(TOTAL_ref)
 
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day]#/ MOIST_SAE.iloc[Household_count,6]
-                    if fuel_calc <= 0.023:
+                    if TOTAL_ref_min <= 0.0384:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -550,7 +574,7 @@ for file in FUEL_csv_open:
                     Fuel_day_SAE_moist.append(TOTAL_ref)
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day] #/ MOIST_SAE.iloc[row_survey,12]
 
-                    if TOTAL_ref_min <= 0.023:
+                    if TOTAL_ref_min <= 0.0384:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -561,7 +585,7 @@ for file in FUEL_csv_open:
                     Fuel_day_SAE_moist.append(TOTAL_ref)
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day] #/ MOIST_SAE.iloc[row_survey,14]
 
-                    if TOTAL_ref_min <= 0.023:
+                    if TOTAL_ref_min <= 0.0384:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -571,14 +595,16 @@ for file in FUEL_csv_open:
                     Fuel_day_SAE_moist.append(0)
                     Fuel_day_SAE_moist_2.append(0)
                     Fuel_day_SAE_moist_min.append(0)
+                    Fuel_dry_WHole_Phase.append(0)
             else:
                 fuel_calc = (fuel/ (1 + (MOIST_SAE.iloc[row_survey,3]/100)))
+                Fuel_dry_WHole_Phase.append(fuel_calc)
                 if day <= (MOIST_SAE.iloc[row_survey,5] + MOIST_SAE.iloc[row_survey,7]): 
                     TOTAL_ref = fuel_calc/count_event_count[day] # / MOIST_SAE.iloc[row_survey,8]
                     Fuel_day_SAE_moist.append(TOTAL_ref)
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day]#/ MOIST_SAE.iloc[row_survey,6]
 
-                    if TOTAL_ref_min <= 0.023:
+                    if TOTAL_ref_min <= 0.0384:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -588,7 +614,7 @@ for file in FUEL_csv_open:
                     Fuel_day_SAE_moist.append(TOTAL_ref)
                     
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day] #/ MOIST_SAE.iloc[row_survey,12]
-                    if TOTAL_ref_min <= 0.023:
+                    if TOTAL_ref_min <= 0.0384:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -598,7 +624,7 @@ for file in FUEL_csv_open:
                     Fuel_day_SAE_moist.append(TOTAL_ref)
 
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day] #/ MOIST_SAE.iloc[row_survey,14]
-                    if TOTAL_ref_min <= 0.023:
+                    if TOTAL_ref_min <= 0.0384:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -608,7 +634,7 @@ for file in FUEL_csv_open:
                     
                 elif day > (MOIST_SAE.iloc[row_survey,5] + MOIST_SAE.iloc[row_survey,7] + MOIST_SAE.iloc[row_survey,11] + MOIST_SAE.iloc[row_survey,13]):
                     Fuel_day_SAE_moist.append(0)
-
+                    Fuel_dry_WHole_Phase.append(0)
                     Fuel_day_SAE_moist_min.append(0)
                 #print(Fuel_day_SAE_moist)
     
@@ -636,8 +662,10 @@ for file in FUEL_csv_open:
 
         ZERO_Erase_min = [g for g in Fuel_day_SAE_moist_min if g != 0]
         Collection_min = ZERO_Erase_min[-1]
-    
+        
+        #ZERO_Erase_Whole_Fuel = [g for g in Fuel_dry_WHole_Phase if g != 0]
 
+    
     day_1_total_Min.append(Fuel_day_SAE_moist_min[0])
     day_2_total_Min.append(Fuel_day_SAE_moist_min[1])
     day_3_total_Min.append(Fuel_day_SAE_moist_min[2])
@@ -657,6 +685,27 @@ for file in FUEL_csv_open:
     visit_3_min.append(Collection_min)
     days_collected = []
     
+
+    Day_1_use.append(Cooking_times_min[0])
+    Day_2_use.append(Cooking_times_min[1])
+    Day_3_use.append(Cooking_times_min[2])
+    Day_4_use.append(Cooking_times_min[3])
+    Day_5_use.append(Cooking_times_min[4])
+    Day_6_use.append(Cooking_times_min[5])
+    Day_7_use.append(Cooking_times_min[6])
+    Day_8_use.append(Cooking_times_min[7])
+    Day_9_use.append(Cooking_times_min[8])
+
+    Day_1_Fuel.append(Fuel_dry_WHole_Phase[0])
+    Day_2_Fuel.append(Fuel_dry_WHole_Phase[1])
+    Day_3_Fuel.append(Fuel_dry_WHole_Phase[2])
+    Day_4_Fuel.append(Fuel_dry_WHole_Phase[3])
+    Day_5_Fuel.append(Fuel_dry_WHole_Phase[4])
+    Day_6_Fuel.append(Fuel_dry_WHole_Phase[5])
+    Day_7_Fuel.append(Fuel_dry_WHole_Phase[6])
+    Day_8_Fuel.append(Fuel_dry_WHole_Phase[7])
+    Day_9_Fuel.append(Fuel_dry_WHole_Phase[8])
+
     count_em = 0
     for a in Fuel_day_SAE_moist_min:
         #print('-------------------',a)
@@ -743,7 +792,7 @@ if Computer == 'work':
 #    HH_breakdown_file_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+ Phase +"/"+Phase+"_Household_Fuel_removal_breakdown" +".csv"
 #    HH_SAE_moist_breakdown_file_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+ Phase +"/"+Phase+"_Household_SAE_Moist_breakdown" +".csv"
 else:
-#    Fuel_24_hour_file_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/"+Phase+"_24_hour_Fuel_removal" +".csv"
+    Fuel_24_hour_file_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase +"/"+Phase+"_24_hour_Fuel_removal" +".csv"
 #
     HH_SAE_moist_breakdown_file_path_minute = "C:/Users/gvros/Desktop/"+Phase+"_Min_filter_for_24_Household_Moist_CE_breakdown.csv"
 #
@@ -751,3 +800,27 @@ else:
 df_HH_fuel_SAE_Moist_breakdown_min.to_csv(HH_SAE_moist_breakdown_file_path_minute, index=False,mode='a')
 #print('day sum bull shit and cokign times ', day_sum_fuel[4], Cooking_times_min[4], MOIST_SAE.iloc[Household_count,8], day_1_total_Min,
      # ((day_sum_fuel[4]/(1.16))/MOIST_SAE.iloc[34,6]/Cooking_times_min[4]), int(id_number), type(id_number) )
+
+FUEL_breakdown = {'Household':HH_NUMBER,'day 1': Day_1_use,'day 2': Day_2_use,'day 3': Day_3_use,'day 4': Day_4_use,
+                  'day 5': Day_5_use,'day 6': Day_6_use,'day 7': Day_7_use,'day 8': Day_8_use,
+                  'day 9': Day_9_use}
+
+USe_breakdown = {'Household':HH_NUMBER, 'day 1': Day_1_Fuel,'day 2': Day_2_Fuel,'day 3': Day_3_Fuel,'day 4': Day_4_Fuel,
+                  'day 5': Day_5_Fuel,'day 6': Day_6_Fuel,'day 7': Day_7_Fuel,'day 8': Day_8_Fuel,
+                  'day 9': Day_9_Fuel}
+
+df_fuel = pd.DataFrame(FUEL_breakdown,columns=['Household','day 1','day 2',
+                                                                           'day 3','day 4','day 5',
+                                                                           'day 6','day 7','day 8',
+                                                                           'day 9'])
+
+df_use = pd.DataFrame(USe_breakdown,columns=['Household','day 1','day 2',
+                                                                           'day 3','day 4','day 5',
+                                                                           'day 6','day 7','day 8',
+                                                                           'day 9'])
+
+path = "C:/Users/gvros/Desktop/My_algo_Fule_Time.csv"
+
+#print(df_use)
+df_fuel.to_csv(path, index=False,mode='a')
+df_use.to_csv(path, index=False,mode='a')

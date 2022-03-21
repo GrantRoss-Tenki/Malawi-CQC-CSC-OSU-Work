@@ -15,213 +15,13 @@ import glob
 import matplotlib.pyplot as plt
 import math
 import statistics as stat 
-#from pathlib import Path
-#import satistics as stat
-
-def FUEL_REMOVAL(Raw_fuel, Thresold, min_average_spread):
-        Fuel_KG_nf = Raw_fuel
-
-
-        count = 0
-        n = 0
-        Fuel_KG = []
-
-        insert = []
-        remove = []
-        #This works, but there needsis a better way
-        
-#        previous = Fuel_KG_nf.iloc[(0)]
-#        for kg in Fuel_KG_nf:
-#            n = n + 1
-#            if n+2 == (len(Fuel_KG_nf)):
-#                Fuel_KG.append(Fuel_KG_nf.iloc[(n)])
-#                Fuel_KG.append(Fuel_KG_nf.iloc[(n+1)])
-#                break
-#
-#            elif (previous < Fuel_KG_nf.iloc[n+2]) and  (Fuel_KG_nf.iloc[(n+2)] < Fuel_KG_nf.iloc[(n)]):
-#                Fuel_KG.append(Fuel_KG_nf.iloc[n+2])
-#
-#            elif Fuel_KG_nf.iloc[n+2] >= previous:
-#                 Fuel_KG.append(previous)
-#
-#            elif (previous > Fuel_KG_nf.iloc[n+2]) and (Fuel_KG_nf.iloc[(n)] < Fuel_KG_nf.iloc[(n+2)]):
-#                Fuel_KG.append(Fuel_KG_nf.iloc[n+2])
-#
-#            else:
-#                Fuel_KG.append(Fuel_KG_nf.iloc[(n)])
-#            previous = Fuel_KG[-1]
-#        
-        
-        # this is for running average
-        Mean_Count_min = [np.mean(Fuel_KG_nf[0:min_average_spread+1])]
-        count = 0
-        inside_spread = [0]
-        for kg in (Fuel_KG_nf):
-            if count == min_average_spread:
-                median = stat.median(inside_spread)
-                Mean_Count_min.append(median)
-                inside_spread = []
-                count = -1
-            else:
-                Mean_Count_min.append(Mean_Count_min[-1])
-                inside_spread.append(kg)
-            count = count + 1
-        
-        Mean_Count_min.remove(Mean_Count_min[0])
-        
-        # two in one algorithm taking in the threshold and running average 
-        KG_burned = [0]
-        insert = []
-        for vv, kg in enumerate(Fuel_KG_nf):
-            if ((vv % 2) == 0) or (vv == 0):
-                KG_burned.append(KG_burned[-1])
-                if vv + 3 == len(Fuel_KG_nf):
-                    KG_burned.append(KG_burned[-1])
-                    KG_burned.append(KG_burned[-1])
-                    KG_burned.remove(KG_burned[0])  
-                    break
-                if (vv == 0):
-                    previous = Fuel_KG_nf.iloc[(0)]
-                    delta_up = 0
-                    delta_down = 0
-                else:
-                    previous = Fuel_KG_nf.iloc[vv -1]
-                    delta_up =  abs(Fuel_KG_nf.iloc[vv +2] -kg)
-                    delta_down = abs(kg - Fuel_KG_nf.iloc[vv +2])
-                pass
-            elif vv + 3 == len(Fuel_KG_nf):
-                    KG_burned.append(KG_burned[-1])
-                    KG_burned.append(KG_burned[-1])
-                    
-                    break
-            elif  delta_up > Thresold and Fuel_KG_nf[vv +3] > Mean_Count_min[vv]:
-                if previous < kg:
-                    insert.append(vv)
-                    KG_burned.append(KG_burned[-1])
-                else:
-                    KG_burned.append(KG_burned[-1])
-            elif delta_down > Thresold and Fuel_KG_nf.loc[vv +3] < Mean_Count_min[vv]:
-                if (kg  < previous) or (kg < Mean_Count_min[vv]) or (Fuel_KG_nf.loc[vv +1] < previous):
-                    
-                    KG_burned.append(delta_down)
-                else:
-                    KG_burned.append(KG_burned[-1])
-            else:
-                KG_burned.append(KG_burned[-1])
-        
-#        if aray_equal != 0:
-#            print('this needs to work,,,,,n ow', aray_equal)
-#            #if aray_equal < 0:
-#                
-#            for a in equate_araray:
-#                Mean_Count_min.append(Mean_Count_min[0])
-        # threshold fun time
-        # first adaptation willl need this
-        print('---WILL NEED THE FOLLOWING ------ IT IS NEW ALGO------')
-#        count_removals = 0
-#        KG_burned = [0]
-#        for time_value, weight in enumerate(Fuel_KG):
-#            if ((time_value % 2) == 0) or (time_value == 0):
-#                KG_burned.append(KG_burned[-1])
-#
-#                if time_value + 2 == len(Fuel_KG):
-#                    KG_burned.append(KG_burned[-1])
-#                    KG_burned.append(KG_burned[-1])
-#                    print('this the length of mean count array', len(Mean_Count_min))
-#                    break
-#                pass
-#            elif time_value + 2 == len(Fuel_KG):
-#                    KG_burned.append(KG_burned[-1])
-#                    KG_burned.append(KG_burned[-1])
-#                    print('this the length of mean count array', len(Mean_Count_min))
-#                    break
-#            elif abs(weight - Fuel_KG[time_value+2] > Thresold) or  (abs(Fuel_KG[time_value+2] - weight) > Thresold):
-#                up_thresh = abs(Fuel_KG[time_value+2] - weight)
-#                low_thresh = abs(weight - Fuel_KG[time_value+2])
-#                if (up_thresh > Thresold) and (Fuel_KG[time_value+2] >= Mean_Count_min[time_value]): # the two here can be adjusted
-#                    insert.append(up_thresh)
-#                    KG_burned.append(KG_burned[-1])
-#                elif (low_thresh > Thresold) and (Fuel_KG[time_value+2] <= Mean_Count_min[time_value]): # the two here can be adjusted
-#                    KG_burned.append(up_thresh)
-#                    count_removals = count_removals + 1
-#                else:
-#                    KG_burned.append(KG_burned[-1])
-#            elif (weight == 0) and (weight -Thresold <  weight  < weight + Thresold):
-#                KG_burned.append(0)
-#            else:
-#                KG_burned.append(KG_burned[-1])
-                
-         
-        
-        print('-What are the lengths-------in and out-------', len(KG_burned),len(Raw_fuel))
-        
-        ##this is the origional and now it does not work
-        print('---ORIGIONAL ------ IT IS THE OLD WORKING ALGO------')
-#        Fuel_KG.insert(0, Fuel_KG_nf.iloc[0])
-#        remove = []
-#        remove_kg = []
-#        insert = []
-#        insert_kg = []
-#        v = 0
-#        Filter_Fuel = Fuel_KG
-#        for weight in Filter_Fuel:
-#            v = v + 1
-#            #print(weight)
-#            if v+1 == (len(Raw_fuel)):
-#                break
-#            elif Filter_Fuel[v] <= 0 or weight <= 0:
-#                if (abs(weight - Filter_Fuel[v]) > Thresold) or (abs(weight + Filter_Fuel[v]) > Thresold):
-#                    if weight - Filter_Fuel[v] > Thresold:
-#                        remove.append(v)
-#                        kg_amount = weight - Filter_Fuel[v]
-#                        remove_kg.append((int(kg_amount*1000))/1000)
-#                    elif (weight + Filter_Fuel[v] > Thresold):
-#                        insert.append(v)
-#                        kg_amount = weight + Filter_Fuel[v]
-#                        insert_kg.append((int(kg_amount*1000))/1000)
-#                else:
-#                    pass
-#            elif (weight - Filter_Fuel[v]) > Thresold:
-#                remove.append(v)
-#                remove_kg.append((int((abs(Filter_Fuel[v] - weight))*1000)/1000))
-#
-#            elif (Filter_Fuel[v] - weight) > Thresold:
-#                insert.append(v)
-#                insert_kg.append(Filter_Fuel[v] - weight)
-     
-
-
-#        kg = np.arange(0, len(Raw_fuel),1)
-#        count = 0
-#        KG_burned = []
-#        
-#        for wei in kg:
-#            if (wei) == (len(Raw_fuel)-1):
-#                KG_burned.append(KG_burned[-1])
-#                break
-#            elif remove[-1] == len(KG_burned)-2:
-#                KG_burned.append(KG_burned[-1])
-#                pass
-#            elif wei == remove[count]:
-#                KG_burned.append(remove_kg[count])
-#                if remove[-1] == wei:
-#                    end_bit = np.arange(wei, len(Raw_fuel),1)
-#                    for a in end_bit:
-#                        KG_burned.append(KG_burned[-1])
-#                    break
-#                count = count + 1
-#            elif wei == 0: #and remove_kg[wei] != 0:
-#                KG_burned.append(0)
-#            else:
-#                KG_burned.append(KG_burned[-1])
-#        #print('is this where it breaks?  ', remove, len(KG_burned))
-        return KG_burned, Mean_Count_min
-
+import Functions_malawi
 
 Computer = "personal"
-Phase = "1N"
-Second_Exact = [1,2]
+Phase = "1H"
+Second_Exact = 0
 min_average_spread = 5
+Fuel_Threshold = 0.005
 if Phase== "2N":
     exact_2_hh = [1007]
 elif Phase== "3N":
@@ -357,24 +157,35 @@ for file in FUEL_csv_open:
     
     NCV = 20.7*(1-FUEL_SCALE_VALUE) + 15.13*(FUEL_SCALE_VALUE)
     
+    if Phase== "2N" or Phase== "3H":
+        MJ_thresh = (7*1000*60)/(NCV)/1000000
+    elif Phase== "1N" or Phase== "1H" or Phase== "2H":
+        MJ_thresh = (10*1000*60)/(NCV)/1000000
+    else:
+        MJ_thresh = (8*1000*60)/(NCV)/1000000
+
+
     for ttt in exact_2_hh:
         Cooking_minute_2 = []
-        if int(id_number) == ttt and len(Second_Exact) > 1:
-            second_exact_2_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_2_exact/Fire_Finder_usage_2/"+Phase+"_HH_raw_Day_metrics_"+str(id_number)+"_1_exact_seeeecond.csv"
+        if int(id_number) == ttt: 
+            print('this beter be it-=-=-=-=-=-=-=-------------<>><><>>>><><><><><><><><>>><><><><><>><>><',id_number)
+            second_exact_2_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_2_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(id_number)+"_2_exact_3.55555.csv"
             second_exact_2 = pd.read_csv(second_exact_2_path,  skiprows=2)
             Cooking_minute_2 = second_exact_2.iloc[:,3]
-            
+            second_exact = 1
+            break
         else:
-            for zero in metric_day_data.iloc[:,0]:
-                Cooking_minute_2.append(0)
-    second_exact = 0
+            ##for zero in metric_day_data.iloc[:,0]:
+            #    Cooking_minute_2.append(0)
+            second_exact = 0
     
     Fuel_removal = metric_day_data.iloc[:,0]
+    No_fuel = 0
     if Fuel_removal[0] == -1:
+        No_fuel = 1
         continue
-    Fuel_removal, Fuel_running_mean = FUEL_REMOVAL(Fuel_removal, 0.005, min_average_spread)
-    Cooking_minute = metric_day_data.iloc[:,4]
-    
+    Fuel_removal, Fuel_running_mean = Functions_malawi.FUEL_REMOVAL(Fuel_removal, Fuel_Threshold, min_average_spread, No_fuel)
+    Cooking_minute = metric_day_data.iloc[:,3]
     day_arange = np.arange(0, 14)
     if Computer == 'work':
         Fuel_time_path = "D:/Time_list/1N_"+id_number+"_time_array.csv"
@@ -413,8 +224,16 @@ for file in FUEL_csv_open:
 
             if wood == 0:
                 dummy_Fuel = Fuel_removal[5:((24*60)+6)]
-                Cooking_sum = int(sum((Cooking_minute[5:((24*60)+6)]))) + int(sum((Cooking_minute_2[5:((24*60)+6)])))
-                Cooking_times_min.append(Cooking_sum)
+                Sum_exact_1_usage = (sum(list(Cooking_minute[5:((24*60)+6)])))
+                if second_exact == 0:
+                    Cooking_sum = Sum_exact_1_usage
+                    Cooking_times_min.append(Cooking_sum)
+                    Cooking_sum_2 = 0
+                else:
+                    Cooking_sum_2 =  (sum(list(Cooking_minute_2[5:((24*60)+6)])))
+                    Cooking_sum = Sum_exact_1_usage + Sum_exact_1_usage
+                    Cooking_times_min.append(Cooking_sum)
+                
                 for tv, anything in enumerate(dummy_Fuel):
                     if tv + 1 == len(dummy_Fuel)-1:
                         if anything != dummy_Fuel[-1]:
@@ -442,8 +261,15 @@ for file in FUEL_csv_open:
                 
             elif (wood != 0) and ((day_time_end_vlaue + (60*24)) <= len(metric_day_data.iloc[:,0])-1):
                 dummy_Fuel = Fuel_removal[day_time_end_vlaue:(day_time_end_vlaue +(24*60))]
-                Cooking_sum = int(sum((Cooking_minute[day_time_end_vlaue:(day_time_end_vlaue +(24*60))]))) + int(sum((Cooking_minute_2[day_time_end_vlaue:(day_time_end_vlaue +(24*60))])))
-                Cooking_times_min.append(Cooking_sum)
+                Sum_exact_1_usage = sum(list(Cooking_minute[day_time_end_vlaue:(day_time_end_vlaue +(24*60))]))
+                if second_exact == 0:
+                    Cooking_sum = Sum_exact_1_usage
+                    Cooking_times_min.append(Cooking_sum)
+                    Cooking_sum_2 = 0
+                else:
+                    Cooking_sum_2 = (sum(list(Cooking_minute_2[day_time_end_vlaue:(day_time_end_vlaue +(24*60))])))
+                    Cooking_sum = Sum_exact_1_usage +Cooking_sum_2
+                    Cooking_times_min.append(Cooking_sum)
 
                 #print('are the types the same fucking asshole', len(dummy_Fuel),len(dummy_Fuel_2) )
                 for tv, anything in enumerate(dummy_Fuel):
@@ -472,7 +298,7 @@ for file in FUEL_csv_open:
 
                 day_time_end_vlaue  = day_time_end_vlaue + ((24*60))
                 day_count = day_count +1
-        #print('here is day count ---------', day_count-1,round(day_count/2)) 
+            print('----------------------------------+++++++=====______+_+_+_+_+_+_+_+_+_+_+_+_', Cooking_sum_2, Sum_exact_1_usage,Cooking_sum,second_exact )
         new_fuel_day = []
         Day_Sum_pre_filter = day_sum_fuel
         for fff in day_sum_fuel:
@@ -552,7 +378,7 @@ for file in FUEL_csv_open:
                     TOTAL_ref = fuel_calc /count_event_count[day]#/ MOIST_SAE.iloc[row_survey,6]
                     Fuel_day_SAE_moist.append(TOTAL_ref)    
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day]#/ MOIST_SAE.iloc[row_survey,6]
-                    if TOTAL_ref_min <= 0.0384:
+                    if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -563,7 +389,7 @@ for file in FUEL_csv_open:
                     Fuel_day_SAE_moist.append(TOTAL_ref)
 
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day]#/ MOIST_SAE.iloc[Household_count,6]
-                    if TOTAL_ref_min <= 0.0384:
+                    if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -574,7 +400,7 @@ for file in FUEL_csv_open:
                     Fuel_day_SAE_moist.append(TOTAL_ref)
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day] #/ MOIST_SAE.iloc[row_survey,12]
 
-                    if TOTAL_ref_min <= 0.0384:
+                    if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -585,7 +411,7 @@ for file in FUEL_csv_open:
                     Fuel_day_SAE_moist.append(TOTAL_ref)
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day] #/ MOIST_SAE.iloc[row_survey,14]
 
-                    if TOTAL_ref_min <= 0.0384:
+                    if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -604,7 +430,7 @@ for file in FUEL_csv_open:
                     Fuel_day_SAE_moist.append(TOTAL_ref)
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day]#/ MOIST_SAE.iloc[row_survey,6]
 
-                    if TOTAL_ref_min <= 0.0384:
+                    if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -614,7 +440,7 @@ for file in FUEL_csv_open:
                     Fuel_day_SAE_moist.append(TOTAL_ref)
                     
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day] #/ MOIST_SAE.iloc[row_survey,12]
-                    if TOTAL_ref_min <= 0.0384:
+                    if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -624,7 +450,7 @@ for file in FUEL_csv_open:
                     Fuel_day_SAE_moist.append(TOTAL_ref)
 
                     TOTAL_ref_min = fuel_calc /Cooking_times_min[day] #/ MOIST_SAE.iloc[row_survey,14]
-                    if TOTAL_ref_min <= 0.0384:
+                    if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
                     else:
@@ -746,8 +572,8 @@ for file in FUEL_csv_open:
 
     days_counted.append((count_em))
     MINUTESSSS= np.arange(0, len(metric_day_data.iloc[:,0]), 1)
-    graph_me = {'minutes': MINUTESSSS, 'raw': metric_day_data.iloc[:,0], 'filters removal':Fuel_removal, 'mean run':Fuel_running_mean}
-    dfgraphsss = pd.DataFrame(graph_me,columns=['minutes','raw','filters removal', 'mean run'])
+    #graph_me = {'minutes': MINUTESSSS, 'raw': metric_day_data.iloc[:,0], 'filters removal':Fuel_removal, 'mean run':Fuel_running_mean}
+    #dfgraphsss = pd.DataFrame(graph_me,columns=['minutes','raw','filters removal', 'mean run'])
     #dfgraphsss.to_csv("D:/ALGORITHM-TEST/tester_avg_spread_"+str(min_average_spread)+"__"+str(id_number)+"_.csv", index=False,mode='a')
 Fuel_per_24_hour = {'Household': HH_NUMBER,
                       'Days Observed': DAYS_O,
@@ -761,7 +587,7 @@ df_Fuel_per_24_hour = pd.DataFrame(Fuel_per_24_hour, columns= ['Household','Days
                                                                    'Day Start','Day End','KG of Highest Fuel removed for one day',
                                                                    'Day with Highest Fuel Removal','Phase 24hr Avg (sum of phase/min/day obesrved)'])
 
-print('are the lengths real------', len(SAE_PHase), len(PHASE_24_HR_AVG) )
+
 HH_fuel_SAE_Moist_min = {'Household': HH_NUMBER_Min,'Days counted':days_counted ,'24hr Avg _m':PHASE_24_HR_AVG,'Fuel Removed For Phase (24h hour Sprints)':fuel_removed_for_phase, 'avg SAE for Phase': SAE_PHase,'MJ/SAE/day for phase':MJ_SAE_DAY,'MJ/SAE(breakdown)/day for phase Filtered': MJ_SAE_DAY_phase,
                          'Days that were filtered':days_filtered,
                          'Time Cooked':Phase_cooking_times,'Fuel Scale':fuel_scle_value,'COV':COV_Whole,'mean':mean_days_col_array, 'std':STD_days_Col_array,  
@@ -785,7 +611,7 @@ df_HH_fuel_SAE_Moist_breakdown_min = pd.DataFrame(HH_fuel_SAE_Moist_min,columns=
                                                                            'Day 6 min','Day 7 min','Day 8 min',
                                                                            'Day 9 min','Day 10 min','Day 11 min',
                                                                            'Day 12 min','Day 13 min','Day 14 min','Visit 1 min', 'Visit 2 min', 'Visit 3 min' ])
-print(df_HH_fuel_SAE_Moist_breakdown_min.iloc[:,4:16])
+
 if Computer == 'work':
     HH_SAE_moist_breakdown_file_path_minute = "D:/1N_Minute_for 24_Household_SAE_Moist_breakdown.csv"
     Fuel_24_hour_file_path = "D:/1N_24_hour_Fuel_removal.csv"
@@ -819,7 +645,7 @@ df_use = pd.DataFrame(USe_breakdown,columns=['Household','day 1','day 2',
                                                                            'day 6','day 7','day 8',
                                                                            'day 9'])
 
-path = "C:/Users/gvros/Desktop/My_algo_Fule_Time.csv"
+path = "C:/Users/gvros/Desktop/My_algo_Fule_Time_"+Phase+".csv"
 
 #print(df_use)
 df_fuel.to_csv(path, index=False,mode='a')

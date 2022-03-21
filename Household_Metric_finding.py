@@ -36,7 +36,7 @@ path_on_windows_1 = PureWindowsPath(Folder_path_1)
 
 Folder_path_2 = Path(input("-Copy down the path for - 1N_1H_Survey_summary_.csv - Format should work for either Mac or Windows "))
 path_on_windows_22 = PureWindowsPath(Folder_path_2)
-path_on_windows_2 = os.path.join(path_on_windows_22, '1N_1H_Survey_summary_.csv')
+path_on_windows_2 = os.path.join(path_on_windows_22, '1H_Survey_summary_.csv')
 # this is just for 1H
 if Phase == "1H":
     os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Collection Hapex Stich")
@@ -119,7 +119,14 @@ for file in csv_R_m:
     if No_exact != 1 and Second_Exact != 1:
         Usage, Fire_start_1, Fire_end_1 = Functions_malawi.FireFinder(sensor_data.iloc[:,3],sensor_data.iloc[:,2], cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
         temp = sensor_data.iloc[:,3]
+    elif No_exact != 1 and Second_Exact == 1:
+        Usage, Fire_start_1, Fire_end_1 = Functions_malawi.FireFinder(sensor_data.iloc[:,3],sensor_data.iloc[:,2], cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        temp = sensor_data.iloc[:,3]
+        Usage_2, Fire_start_2, Fire_end_2 = Functions_malawi.FireFinder(sensor_data.iloc[:,9],sensor_data.iloc[:,8], cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        temp_2 = sensor_data.iloc[:,9]
     else:
+        Fire_start_2 = 0
+        Fire_end_2 = 0
         continue
     Fuel_KG_nf = sensor_data.iloc[:,1]
 
@@ -158,15 +165,17 @@ for file in csv_R_m:
         day.append(dayyy)
         Timeeee = datetime.strptime(d,'%m/%d/%Y %H:%M')
         event_T.append(Timeeee)
-    q = 2
     for q in Two_exact:
         if No_exact == 0:
             if q == 1:
                 Fire_start = Fire_start_1
                 Fire_end = Fire_end_1
+                temp = temp
             elif q == 2:
-                Fire_start = Fire_start_1
-                Fire_end = Fire_end_1
+                Fire_start = Fire_start_2
+                Fire_end = Fire_end_2
+                temp = temp_2
+                Usage = Usage_2 
         else:
             Fire_start = [-1, -1]
             Fire_end = [-1, -1]
@@ -578,9 +587,9 @@ for file in csv_R_m:
         Path_Raw_Day = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact"
         File_Day_Raw_metrics = str(Path_Raw_Day) + "/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(id_number)+"_"+str(q)+"_exact_3.55555"+".csv"
         
-        #Df_sensor.to_csv(File_Day_Raw_metrics)
+        Df_sensor.to_csv(File_Day_Raw_metrics)
         
-       # Df_raw_day.to_csv(File_Day_Raw_metrics, index=False,mode='a')
+        Df_raw_day.to_csv(File_Day_Raw_metrics, index=False,mode='a')
 
         File_Day_Raw_summary = str(Path_Raw_Day) + "/Raw_D_summary/"+ Phase+ "_HH_raw_Day_summary_"+str(id_number)+"_"+str(q)+"_exact_2.5"+".csv"
         #Df_sensor.to_csv(File_Day_Raw_summary)
@@ -605,7 +614,7 @@ Metric_compare = {'Household':Whole_hh, 'Number of Events':Whole_num_events, 'Ti
  '% Cook moving for Cooking':Whole_Cook_comp_event, '% Cook moving for Phase': Whole_cook_comp_phase, 'Fuel Used per Phase':Whole_Fuel_removed_phase,
  'Fuel used per Event':Whole_Fuel_per_event, 'Average People fed':Whole_SAE, '0 = wood, 1= Residue':Whole_Fuel_used_scale, 'Kitchen Volume (m^3)':Whole_kitchen_volume}
 DF_Metric_compare = pd.DataFrame(Metric_compare)
-print(DF_Metric_compare)
+#print(DF_Metric_compare)
 
 # sns.set(style='ticks')
 # f, (ax_box, ax_hist) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios":(0.15, 0.85)})

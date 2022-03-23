@@ -36,7 +36,7 @@ path_on_windows_1 = PureWindowsPath(Folder_path_1)
 
 Folder_path_2 = Path(input("-Copy down the path for - 1N_1H_Survey_summary_.csv - Format should work for either Mac or Windows "))
 path_on_windows_22 = PureWindowsPath(Folder_path_2)
-path_on_windows_2 = os.path.join(path_on_windows_22, '1H_Survey_summary_.csv')
+path_on_windows_2 = os.path.join(path_on_windows_22, '3H_Survey_summary_.csv')
 # this is just for 1H
 if Phase == "1H":
     os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Collection Hapex Stich")
@@ -189,7 +189,8 @@ for file in csv_R_m:
         ##Event Fuel
         E_Fuel_Used = []
         E_Time_Fuel_Remove = [] #how much time was fuel removed until fire started
-
+        Fire_Start_Array = []
+        Fire_End_Array = []
         ##Event Cook PM
         E_Avg_Cook_PM = []
         E_Med_Cook_PM = []
@@ -197,6 +198,8 @@ for file in csv_R_m:
         E_PC_Cook_Move =[]
         E_Spread_Cook_PM =[] #in order to get the average you need to extend to 5 and RAW
         E_Spread_AVG_Cook_PM = []
+        E_CoolDown_Cook_PM = []
+        E_CoolDoown_AVG_Cook_PM = []
         ##Event Kitchen PM
         E_Avg_Kit_PM = []
         E_Med_Kit_PM = []
@@ -204,6 +207,8 @@ for file in csv_R_m:
         E_PC_Kit_PM = []
         E_Spread_Kit_PM = [] #in order to get the average you need to extend to 5 and RAW
         E_Spread_AVG_Kit_PM = []
+        E_CoolDown_Kit_PM = []
+        E_CoolDoown_AVG_Kit_PM = []
         ##raw files needed to average whole phase
         Raw_E_Cook_PM = []
         Raw_E_Cook_Comp = []
@@ -214,7 +219,10 @@ for file in csv_R_m:
         Raw_E_Fuel_removed = []
         Raw_Spread_Cook = []
         Raw_Spread_Kit = []
+        Raw_CoolDown_Cook = []
+        Raw_CoolDown_Kit = []
         filler_spread_values = np.full(shape=11,fill_value=-1)
+
 
         ##Gathering Metrics for the event
 
@@ -233,6 +241,8 @@ for file in csv_R_m:
                     E_AVG_Temp.append(-1)
                     E_STD_Temp.append(-1)
                     Raw_E_Temp.extend(filler_value)
+                    Fire_Start_Array.append(1)
+                    Fire_End_Array.append(-1)
                 else:
                     E_Time_Start.append(event_T[st])
                     E_Time_End.append(event_T[Fire_end[tv]])
@@ -240,6 +250,8 @@ for file in csv_R_m:
                     E_AVG_Temp.append((int((np.average([a for a in temp[st:Fire_end[tv]]]))*10))/10)
                     E_STD_Temp.append((int((stat.stdev(temp[st:Fire_end[tv]]))*100))/100)
                     Raw_E_Temp.extend([a for a in temp[st:Fire_end[tv]]])
+                    Fire_Start_Array.append(st)
+                    Fire_End_Array.append(Fire_end[tv])
                     ##Starting Fuel Useage
                 if No_fuel == 0 and No_exact == 0:
                     fuel_bounds = list(set(KG_burned[st:Fire_end[tv]]))
@@ -260,15 +272,18 @@ for file in csv_R_m:
                     E_Med_Cook_PM.append((int((np.median([a for a in Cook_PM[st:Fire_end[tv]]])) * 100)) / 100)
                     E_STD_Cook_PM.append((int((stat.stdev(Cook_PM[st:Fire_end[tv]])) * 100)) / 100)
                     E_PC_Cook_Move.append((int(((sum(Cook_comp[st:Fire_end[tv]]))/(Fire_end[tv]-st))*100)))
-                    E_Cook_S_before = (list([a for a in Cook_PM[(st - 5):st]]))
-                    E_Cook_S_after = (list([a for a in Cook_PM[st:(st + 6)]]))
-                    E_cook_spread_combo = E_Cook_S_before + E_Cook_S_after + Cook_PM[st]
+                    E_Cook_S_before = (list([a for a in Cook_PM[(st - 10):st]]))
+                    E_cook_spread_combo = E_Cook_S_before + Cook_PM[st]
                     E_Spread_Cook_PM.extend(E_cook_spread_combo)
                     E_Spread_AVG_Cook_PM.append(np.average(E_Spread_Cook_PM))
                     #raw values for total compare
                     Raw_E_Cook_PM.extend([a for a in Cook_PM[st:Fire_end[tv]]])
                     Raw_E_Cook_Comp.extend([a for a in Cook_comp[st:Fire_end[tv]]])
                     Raw_Spread_Cook = E_Spread_Cook_PM
+                    E_Cook_S_after = (list([a for a in Cook_PM[Fire_end[tv]:(st + 30)]]))
+                    E_CoolDown_Cook_PM.extend(E_Cook_S_after)
+                    E_CoolDoown_AVG_Cook_PM.append(np.average(E_Cook_S_after))
+                    Raw_CoolDown_Cook = E_CoolDown_Cook_PM
                 else:
                     E_Avg_Cook_PM.append(-1)
                     E_Med_Cook_PM.append(-1)
@@ -278,7 +293,12 @@ for file in csv_R_m:
                     Raw_E_Cook_PM.extend(filler_value)
                     Raw_E_Cook_Comp.extend(filler_value)
                     Raw_Spread_Cook.extend(filler_spread_values)
+                    E_CoolDown_Cook_PM.append(-1)
+                    E_CoolDoown_AVG_Cook_PM.append(-1)
 
+                    Raw_CoolDown_Cook.extend(filler_spread_values)
+
+                
                 # Kitchen HAPEx
                 if No_kitchen == 0 and No_exact == 0:
                     E_Avg_Kit_PM.append((int((np.average([a for a in Kitcen_PM[st:Fire_end[tv]]]))*100))/100)
@@ -286,21 +306,26 @@ for file in csv_R_m:
                     E_STD_Kit_PM.append((int((stat.stdev(Kitcen_PM[st:Fire_end[tv]])) * 100)) / 100)
                     E_PC_Kit_PM.append((int((sum(Kitchen_Comp[st:Fire_end[tv]]))/(len(Kitchen_Comp[st:Fire_end[tv]]))*100)))
 
-                    E_Kit_S_before = (list([a for a in Kitcen_PM[(st - 5):st]]))
-                    E_Kit_S_after = (list([a for a in Kitcen_PM[st:(st + 6)]]))
-                    E_Kit_spread_combo = E_Kit_S_before + E_Kit_S_after + Kitcen_PM[st]
+                    E_Kit_S_before = (list([a for a in Kitcen_PM[(st - 10):st]]))
+                    E_Kit_spread_combo = E_Kit_S_before  + Kitcen_PM[st]
                     E_Spread_Kit_PM.extend(E_Kit_spread_combo)
                     E_Spread_AVG_Kit_PM.append(np.average(E_Spread_Kit_PM))
+
+                    E_Kit_S_after = (list([a for a in Kitcen_PM[Fire_end[tv]:(st + 30)]]))
+                    E_CoolDoown_AVG_Kit_PM.append(np.average(E_Kit_S_after))
+                    E_CoolDown_Kit_PM.extend(E_Kit_S_after)
                     # raw values for total compare
                     Raw_E_Kit_PM.extend([a for a in Kitcen_PM[st:Fire_end[tv]]])
                     Raw_E_Kit_Comp.extend([a for a in Kitchen_Comp[st:Fire_end[tv]]])
                     Raw_Spread_Kit = E_Spread_Kit_PM
+                    Raw_CoolDown_Kit = E_CoolDown_Kit_PM
                 else:
                     E_Avg_Kit_PM.append(-1)
                     E_Med_Kit_PM.append(-1)
                     E_STD_Kit_PM.append(-1)
                     E_PC_Kit_PM.append(-1)
                     E_Spread_AVG_Kit_PM.append(-1)
+                    Raw_CoolDown_Kit.append(filler_value)
                     Raw_E_Kit_PM.extend(filler_value)
                     Raw_E_Kit_Comp.extend(filler_value)
                     Raw_Spread_Kit.extend(filler_spread_values)
@@ -311,6 +336,7 @@ for file in csv_R_m:
         Data_event = {'| Event Number |' : Event_num,
                           '| Event Start |' : E_Time_Start,
                            '| Event Stop |' : E_Time_End,
+                           'Start Time Value':Fire_Start_Array, 'End Time Vlaue':Fire_End_Array,
                           '| Removed Fuel Before Start (min) |' : E_Time_Fuel_Remove,
                            '| Length of Event (min)|': E_Event_length,
                            '| Fuel Used (FUEL) |' : E_Fuel_Used,
@@ -318,12 +344,13 @@ for file in csv_R_m:
                            '| Std of Event Temperature |' : E_AVG_Temp,
                            '| Average PM for Cook in Event (HAPEx) |' : E_Avg_Cook_PM,
                            '| Median PM for Cook in Event (HAPEx) |': E_Med_Cook_PM,
-                           '| Std of Cook PM |' : E_STD_Cook_PM,
+                           '| Std of Cook PM |' : E_STD_Cook_PM,'30 Minute Cooldown Cook':E_CoolDoown_AVG_Cook_PM,
                           '| 10 minutes spread Cook Exposure|' : E_Spread_AVG_Cook_PM,
                            '| Percentage Cook Compliance for Event (HAPEx) |': E_PC_Cook_Move,
                            '| Average PM in Kitchen for Event (HAPEx) |' : E_Avg_Kit_PM,
                            '| Median PM in Kitchen for Event (HAPEx) |' : E_Med_Kit_PM,
                            '| Std of Kitchen PM |' : E_STD_Kit_PM,
+                           '30 Minute Cooldown Kitchen':E_CoolDoown_AVG_Kit_PM,
                            '| 10 minutes spread Kitchen PM |' : E_Spread_AVG_Kit_PM,
                            '| Percentage Kitchen Compliance for Event (HAPEx) |' : E_PC_Kit_PM}
 
@@ -353,7 +380,7 @@ for file in csv_R_m:
                      'Kitchen Compliance': Raw_E_Kit_Comp,
                      'Cook PM': Raw_E_Cook_PM, 'Kitchen PM': Raw_E_Kit_PM}
 
-        RAW_Spread_PM = {'10 minutes spread (Cook PM)': Raw_Spread_Cook,'10 minutes spread (Kitchen PM)': Raw_Spread_Kit}
+        RAW_Spread_PM = {'10 minutes spread (Cook PM)': Raw_Spread_Cook,'10 minutes spread (Kitchen PM)': Raw_Spread_Kit, '30 Cooldown spread (Cook PM)': Raw_Spread_Cook,'30 Cooldown spread (Kitchen PM)': Raw_CoolDown_Kit}
 
         Df_raw_event = pd.DataFrame(RAW_event)
         Df_first_five = pd.DataFrame(RAW_Spread_PM)
@@ -563,37 +590,37 @@ for file in csv_R_m:
         ###first is the Specific summary metrics for Household
         Path_HH_Sum_event = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact/HH_summary_Event"
         File_name_HH_sum_Event = str(Path_HH_Sum_event) + "/"+ Phase +"_HH_Summary_Event_"+str(id_number)+"_"+str(q)+"_exact_2.2"+".csv"
-        #Df_sensor.to_csv(File_name_HH_sum_Event)
-        #df_event.to_csv(File_name_HH_sum_Event,index=False,mode='a')
+        Df_sensor.to_csv(File_name_HH_sum_Event)
+        df_event.to_csv(File_name_HH_sum_Event,index=False,mode='a')
 
         Path_HH_Sum_day = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact/HH_summary_Day"
         File_name_HH_sum_Day = str(Path_HH_Sum_day) + "/"+ Phase+"_HH_Summary_Day_"+str(id_number)+"_"+str(q)+"_exact_2.2"+".csv"
-        #Df_sensor.to_csv(File_name_HH_sum_Day)
-        #Df_day.to_csv(File_name_HH_sum_Day,index=False, mode= 'a')
+        Df_sensor.to_csv(File_name_HH_sum_Day)
+        Df_day.to_csv(File_name_HH_sum_Day,index=False, mode= 'a')
 
         Path_Raw_Event = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact"
         File_event_Raw_metrics = str(Path_Raw_Event) + "/Raw_E_metrics/"+Phase+"_HH_raw_Event_metrics_"+str(id_number)+"_"+str(q)+"_exact_2.2"+".csv"
-        #Df_sensor.to_csv(File_event_Raw_metrics)
-        #Df_raw_event.to_csv(File_event_Raw_metrics,index=False,mode='a')
+        Df_sensor.to_csv(File_event_Raw_metrics)
+        Df_raw_event.to_csv(File_event_Raw_metrics,index=False,mode='a')
 
         File_event_Raw_summary = str(Path_Raw_Event) + "/Raw_E_summary/"+Phase+"_HH_raw_Event_summary_"+str(id_number)+"_"+str(q)+"_exact_2.2"+".csv"
-        #Df_sensor.to_csv(File_event_Raw_summary)
-        #Df_Summary_Event.to_csv(File_event_Raw_summary,index=False,mode='a')
+        Df_sensor.to_csv(File_event_Raw_summary)
+        Df_Summary_Event.to_csv(File_event_Raw_summary,index=False,mode='a')
 
         File_event_Raw_first_five = str(Path_Raw_Event) + "/Raw_E_first_five/"+ Phase+"_HH_Event_first_five_"+str(id_number)+"_"+str(q)+"_exact_2.2"+".csv"
-        #Df_sensor.to_csv(File_event_Raw_first_five)
-        #Df_first_five.to_csv(File_event_Raw_first_five,index=False,mode='a')
+        Df_sensor.to_csv(File_event_Raw_first_five)
+        Df_first_five.to_csv(File_event_Raw_first_five,index=False,mode='a')
 
         Path_Raw_Day = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact"
         File_Day_Raw_metrics = str(Path_Raw_Day) + "/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(id_number)+"_"+str(q)+"_exact_3.55555"+".csv"
         
-        Df_sensor.to_csv(File_Day_Raw_metrics)
+        #Df_sensor.to_csv(File_Day_Raw_metrics)
         
-        Df_raw_day.to_csv(File_Day_Raw_metrics, index=False,mode='a')
+        #Df_raw_day.to_csv(File_Day_Raw_metrics, index=False,mode='a')
 
         File_Day_Raw_summary = str(Path_Raw_Day) + "/Raw_D_summary/"+ Phase+ "_HH_raw_Day_summary_"+str(id_number)+"_"+str(q)+"_exact_2.5"+".csv"
-        #Df_sensor.to_csv(File_Day_Raw_summary)
-        #Df_Summary_day.to_csv(File_Day_Raw_summary, index=False,mode='a')
+        Df_sensor.to_csv(File_Day_Raw_summary)
+        Df_Summary_day.to_csv(File_Day_Raw_summary, index=False,mode='a')
 
         # metrics for whole 
 

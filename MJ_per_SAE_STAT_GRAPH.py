@@ -6,15 +6,23 @@ Created on Thu Mar 17 11:02:24 2022
 """
 
 import numpy as np
+from numpy.core.fromnumeric import std
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import scipy
 from scipy.stats import mannwhitneyu
+import statistics as stat
 # I am goign to bring in the NO- hood section first
-
-No_hood_MJ_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/MJ per SAE - No_Hood.csv" #rossgra or gvros
-Hood_MJ_Path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/MJ per SAE - Hood.csv"
+#for Megajouels
+#No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - No_Hood.csv" #rossgra or gvros
+#Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - Hood.csv"
+#### for FUEL_REMOVED _perd
+No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove - No_Hood.csv" #rossgra or gvros
+Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove - Hood.csv"
+######For Fuel removed per 24 hours per SAE
+#No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - No_Hood.csv" #rossgra or gvros
+#Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - Hood.csv"
 
 Level_of_confidence = 0.05
 No_hood_MJ = pd.read_csv(No_hood_MJ_path)
@@ -310,18 +318,16 @@ if degree_1N_3N_filter < abs(T_stat_1N_3N_filter):
     print('1N and 3N Filter rejects the null', T_stat_1N_3N_filter,'P-value', P_val_1N_3N_filter,'Sample size N', N_MJ_filter_1N_3N)
 else:
     print('1N and 3N Filter accepts the null', T_stat_1N_3N_filter,'P-value', P_val_1N_3N_filter,'Sample size N', N_MJ_filter_1N_3N)
-T_sign_1N_3N_filter, P_sign_1N_3N_filter = scipy.stats.wilcoxon(MJ_filter_1N_to_3_comon, MJ_filter_1N_to_3_comon)
+T_sign_1N_3N_filter, P_sign_1N_3N_filter = scipy.stats.wilcoxon(MJ_filter_1N_to_3_comon, MJ_filter_3N_to_1_comon)
 
 T_stat_1N_4N, P_val_1N_4N = scipy.stats.ttest_ind(MJ_Phase_1N_to_4_comon,MJ_Phase_4N_to_1_comon, axis=0, equal_var=True)
 degree_1N_4N = (N_MJ_Phase_1N_4N -1) *Level_of_confidence
 if degree_1N_4N < abs(T_stat_1N_4N):
     print('1N and 4N Phase rejects the null', T_stat_1N_4N,'P-value', P_val_1N_4N,'Sample size N', N_MJ_Phase_1N_4N)
-    T_sign_1N_4N, P_sign_1N_4N = scipy.stats.wilcoxon(MJ_Phase_1N_to_4_comon, MJ_Phase_4N_to_1_comon)
-    print('Tried Wilcox Sign Test, Tstat= ',T_sign_1N_4N, 'P value= ',P_sign_1N_4N, 'Degree of freedom = ',degree_1N_4N, 'Accepted if + ',degree_1N_4N - abs(T_sign_1N_4N)  )
 else:
     print('1N and 4N Phase accepts the null', T_stat_1N_4N,'P-value', P_val_1N_4N,'Sample size N', N_MJ_Phase_1N_4N)
-    print('Tried Wilcox Sign Test, Tstat= ',T_sign_1N_4N, 'P value= ',P_sign_1N_4N, 'Degree of freedom = ',degree_1N_4N, 'Accepted if + ',degree_1N_4N - abs(T_sign_1N_4N)  )
-  
+
+T_sign_1N_4N, P_sign_1N_4N = scipy.stats.wilcoxon(MJ_Phase_1N_to_4_comon, MJ_Phase_4N_to_1_comon)
     
 T_stat_1N_4N_filter, P_val_1N_4N_filter = scipy.stats.ttest_ind(MJ_filter_1N_to_4_comon,MJ_filter_4N_to_1_comon, axis=0, equal_var=True)
 degree_1N_4N_filter = (N_MJ_filter_1N_4N -1) *Level_of_confidence
@@ -329,7 +335,7 @@ if degree_1N_4N_filter < abs(T_stat_1N_4N_filter):
     print('1N and 4N Filter rejects the null', T_stat_1N_4N_filter,'P-value', P_val_1N_4N_filter,'Sample size N', N_MJ_filter_1N_4N)
 else:
     print('1N and 4N Filter accepts the null', T_stat_1N_4N_filter,'P-value', P_val_1N_4N_filter,'Sample size N', N_MJ_filter_1N_4N)
-T_sign_1N_4N_filter, P_sign_1N_4N_filter = scipy.stats.wilcoxon(MJ_filter_1N_to_4_comon, MJ_filter_1N_to_4_comon)      
+T_sign_1N_4N_filter, P_sign_1N_4N_filter = scipy.stats.wilcoxon(MJ_filter_1N_to_4_comon, MJ_filter_4N_to_1_comon)      
 
 T_stat_2N_3N, P_val_2N_3N = scipy.stats.ttest_ind(MJ_Phase_2N_to_3_comon,MJ_Phase_3N_to_2_comon, axis=0, equal_var=True)
 degree_2N_3N = (N_MJ_Phase_2N_3N -1) *Level_of_confidence
@@ -370,14 +376,19 @@ Whole_degree = [degree_1N_2N, degree_1N_3N, degree_1N_4N, degree_2N_3N, degree_3
 Whole_sighn_t_stat = [T_sign_1N_2N,T_sign_1N_3N,T_sign_1N_4N,T_sign_2N_3N,T_sign_3N_4N]
 Whole_sighn_p_test = [P_sign_1N_2N,P_sign_1N_3N,P_sign_1N_4N,P_sign_2N_3N,P_sign_3N_4N]
 
-
+STD_1 = [np.std(MJ_Phase_1N_to_2_comon), np.std(MJ_Phase_1N_to_3_comon),np.std(MJ_Phase_1N_to_4_comon),np.std(MJ_Phase_2N_to_3_comon),np.std(MJ_Phase_3N_to_4_comon)]
+Median_1 = [stat.median(MJ_Phase_1N_to_2_comon), stat.median(MJ_Phase_1N_to_3_comon),stat.median(MJ_Phase_1N_to_4_comon),stat.median(MJ_Phase_2N_to_3_comon),stat.median(MJ_Phase_3N_to_4_comon)]
+Mean_1 = [np.average(MJ_Phase_1N_to_2_comon),np.average(MJ_Phase_1N_to_3_comon),np.average(MJ_Phase_1N_to_4_comon),np.average(MJ_Phase_2N_to_3_comon),np.average(MJ_Phase_3N_to_4_comon)]
+STD_2 = [np.std(MJ_Phase_2N_to_1_comon), np.std(MJ_Phase_3N_to_1_comon),np.std(MJ_Phase_4N_to_1_comon),np.std(MJ_Phase_3N_to_2_comon),np.std(MJ_Phase_4N_to_3_comon)]
+Median_2 = [stat.median(MJ_Phase_2N_to_1_comon), stat.median(MJ_Phase_3N_to_1_comon),stat.median(MJ_Phase_4N_to_1_comon),stat.median(MJ_Phase_3N_to_2_comon),stat.median(MJ_Phase_4N_to_3_comon)]
+Mean_2 = [np.average(MJ_Phase_2N_to_1_comon),np.average(MJ_Phase_3N_to_1_comon),np.average(MJ_Phase_4N_to_1_comon),np.average(MJ_Phase_3N_to_2_comon),np.average(MJ_Phase_4N_to_3_comon)]
 
 Non_filtered_no_hood = {'Phase':['1n-2N','1n-3n','1n-4n','2n-3n', '3n-4n'],'T-statistic':whole_t_stat, 'P Value':whole_p_test,
                 'T-statistic-Sign-Test':Whole_sighn_t_stat, 'P Vaue-Sign Test':Whole_sighn_p_test,
-                'Deggree of Confidence':Whole_degree, 'Sample Size':Whole_sample  }
+                'Deggree of Confidence':Whole_degree, 'Sample Size':Whole_sample, 'Std _1':STD_1,'median _1':Median_1,'mean _1':Mean_1,'Std _2':STD_2,'median _1':Median_2,'mean _1':Mean_2   }
 
 df_Non_filtered_no_hood = pd.DataFrame(Non_filtered_no_hood, columns=['Phase','T-statistic','P Value','T-statistic-Sign-Test',
-                                                              'P Vaue-Sign Test','Deggree of Confidence','Sample Size'])
+                                                              'P Vaue-Sign Test','Deggree of Confidence','Sample Size', 'Std _1','median _1','mean _1','Std _2','median _1','mean _1'])
 
 whole_t_stat_filter = [T_stat_1N_2N_filter, T_stat_1N_3N_filter, T_stat_1N_4N_filter, T_stat_2N_3N_filter, T_stat_3N_4N_filter] 
 whole_p_test_filter = [P_val_1N_2N_filter,P_val_1N_3N_filter,P_val_1N_4N_filter,P_val_2N_3N_filter,P_val_3N_4N_filter]
@@ -388,7 +399,7 @@ Whole_sighn_p_test_filter = [P_sign_1N_2N_filter ,P_sign_1N_3N_filter,P_sign_1N_
 
 filtered_No_hood = {'Phase Filtered ':['1n-2N - Filter','1n-3n - Filter','1n-4n - Filter','2n-3n - Filter', '3n-4n - Filter'],'T-statistic':whole_t_stat_filter, 'P Value':whole_p_test_filter,
                 'T-statistic-Sign-Test':Whole_sighn_t_stat_filter, 'P Vaue-Sign Test':Whole_sighn_p_test_filter,
-                'Deggree of Confidence':Whole_degree_filter, 'Sample Size':Whole_sample_filter  }
+                'Deggree of Confidence':Whole_degree_filter, 'Sample Size':Whole_sample_filter }
 
 df_filtered_No_hood = pd.DataFrame(filtered_No_hood, columns=['Phase Filtered ' ,'T-statistic','P Value','T-statistic-Sign-Test',
                                                               'P Vaue-Sign Test','Deggree of Confidence','Sample Size'])
@@ -424,6 +435,9 @@ Kj_per_sae_mean_Hood = {'mean':[np.mean(Mj_1H_Phase),np.mean(Mj_2H_Phase),np.mea
                         'Phase':['1H','2H','3H']}
 print(pd.DataFrame(Kj_per_sae_mean_Hood))
 
-pATH = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD.csv"
+pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_24hour_SAE.csv"
 df_Non_filtered_no_hood.to_csv(pATH, index=False,mode='a')
 df_filtered_No_hood.to_csv(pATH, index=False,mode='a')
+
+MJ_Phase_1N_to_3_comon
+Mj_filter_3N_Phase

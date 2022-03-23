@@ -18,7 +18,7 @@ import statistics as stat
 import Functions_malawi
 
 Computer = "personal"
-Phase = "1H"
+Phase = "1N"
 Second_Exact = 0
 min_average_spread = 5
 Fuel_Threshold = 0.005
@@ -119,14 +119,15 @@ Day_6_Fuel = []
 Day_7_Fuel = []
 Day_8_Fuel = []
 Day_9_Fuel = []
-
-
+Dry_Fule_24Hour = []
+Filterd_fuel_24 = []
 COV_Whole = []
 mean_days_col_array = []
 STD_days_Col_array = []
 days_counted = []
 MJ_SAE_DAY = []
 MJ_SAE_DAY_phase = []
+FULE_removed_filterd = []
 days_filtered = []
 SAE_PHase = []
 fuel_scle_value = []
@@ -158,11 +159,11 @@ for file in FUEL_csv_open:
     NCV = 20.7*(1-FUEL_SCALE_VALUE) + 15.13*(FUEL_SCALE_VALUE)
     
     if Phase== "2N" or Phase== "3H":
-        MJ_thresh = (7*1000*60)/(NCV)/1000000
+        MJ_thresh = (10.5*1000*60)/(NCV)/1000000
     elif Phase== "1N" or Phase== "1H" or Phase== "2H":
-        MJ_thresh = (10*1000*60)/(NCV)/1000000
+        MJ_thresh = (15*1000*60)/(NCV)/1000000
     else:
-        MJ_thresh = (8*1000*60)/(NCV)/1000000
+        MJ_thresh = (12*1000*60)/(NCV)/1000000
 
 
     for ttt in exact_2_hh:
@@ -298,7 +299,7 @@ for file in FUEL_csv_open:
 
                 day_time_end_vlaue  = day_time_end_vlaue + ((24*60))
                 day_count = day_count +1
-            print('----------------------------------+++++++=====______+_+_+_+_+_+_+_+_+_+_+_+_', Cooking_sum_2, Sum_exact_1_usage,Cooking_sum,second_exact )
+            #print('----------------------------------+++++++=====______+_+_+_+_+_+_+_+_+_+_+_+_', Cooking_sum_2, Sum_exact_1_usage,Cooking_sum,second_exact )
         new_fuel_day = []
         Day_Sum_pre_filter = day_sum_fuel
         for fff in day_sum_fuel:
@@ -363,6 +364,7 @@ for file in FUEL_csv_open:
     Fuel_day_SAE_moist_2 = []
     Fuel_day_SAE_moist_min = []
     MJ_SAE_DAY_array = []
+    Fuel_day_filter = []
     Fuel_dry_WHole_Phase = []
     for day, fuel in enumerate(Day_Sum_pre_filter):
         if fuel == 0 or fuel == -1:# or MOIST_SAE.iloc[Household_count,5] == 0 or MOIST_SAE.iloc[Household_count,13] == 0:
@@ -381,6 +383,7 @@ for file in FUEL_csv_open:
                     if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
+                        Fuel_day_filter.append(fuel_calc)
                     else:
                         Fuel_day_SAE_moist_min.append(-1)
                    
@@ -392,6 +395,7 @@ for file in FUEL_csv_open:
                     if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
+                        Fuel_day_filter.append(fuel_calc)
                     else:
                         Fuel_day_SAE_moist_min.append(-1)
                     
@@ -403,6 +407,7 @@ for file in FUEL_csv_open:
                     if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
+                        Fuel_day_filter.append(fuel_calc)
                     else:
                         Fuel_day_SAE_moist_min.append(-1)
                    
@@ -414,6 +419,7 @@ for file in FUEL_csv_open:
                     if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
+                        Fuel_day_filter.append(fuel_calc)
                     else:
                         Fuel_day_SAE_moist_min.append(-1)
                 elif day > (MOIST_SAE.iloc[row_survey,5] + MOIST_SAE.iloc[row_survey,7] + MOIST_SAE.iloc[row_survey,11] + MOIST_SAE.iloc[row_survey,13]):
@@ -433,6 +439,7 @@ for file in FUEL_csv_open:
                     if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
+                        Fuel_day_filter.append(fuel_calc)
                     else:
                         Fuel_day_SAE_moist_min.append(-1)
                 elif day <= (MOIST_SAE.iloc[row_survey,5] + MOIST_SAE.iloc[row_survey,7] + MOIST_SAE.iloc[row_survey,11]): 
@@ -443,6 +450,7 @@ for file in FUEL_csv_open:
                     if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
+                        Fuel_day_filter.append(fuel_calc)
                     else:
                         Fuel_day_SAE_moist_min.append(-1)
                 elif day <= (MOIST_SAE.iloc[row_survey,5] + MOIST_SAE.iloc[row_survey,7] + MOIST_SAE.iloc[row_survey,11] + MOIST_SAE.iloc[row_survey,13]): 
@@ -453,6 +461,7 @@ for file in FUEL_csv_open:
                     if TOTAL_ref_min <= MJ_thresh:
                         MJ_SAE_DAY_array.append((int(fuel_calc)* int(NCV))/ (Average_SAE))
                         Fuel_day_SAE_moist_min.append(TOTAL_ref_min)
+                        Fuel_day_filter.append(fuel_calc)
                     else:
                         Fuel_day_SAE_moist_min.append(-1)
                     Collection = TOTAL_ref
@@ -562,14 +571,21 @@ for file in FUEL_csv_open:
     mean_days_col_array.append(mean_days_col)
     STD_days_Col_array.append(STD_days_Col)
     COV_Whole.append(STD_days_Col/mean_days_col)
+    FULE_removed_filterd.append(sum(Fuel_day_filter))
+    ffffuuuuuel = sum(Fuel_day_filter)
     if len(MJ_SAE_DAY_array) != 0:
         MJ_SAE_DAY_phase.append(sum(MJ_SAE_DAY_array)/(len(MJ_SAE_DAY_array)))
     else:
         MJ_SAE_DAY_phase.append(-1)
-    days_filtered.append(len(MJ_SAE_DAY_array))
+    days_filtered.append((len(MJ_SAE_DAY_array)))
     Phase_cooking_times.append(sum(Cooking_times_min))
-
-
+    Dry_Fule_24Hour.append((sum(Fuel_dry_WHole_Phase))/count_em)
+    dddddddaaaayyyy_FIlllll = len(MJ_SAE_DAY_array)
+    print('=============================-------------------------------------=-=-=-=-=-=-=-=-=-',dddddddaaaayyyy_FIlllll)
+    if dddddddaaaayyyy_FIlllll != 0 :
+        Filterd_fuel_24.append(ffffuuuuuel / dddddddaaaayyyy_FIlllll)
+    else:
+        Filterd_fuel_24.append(-1)
     days_counted.append((count_em))
     MINUTESSSS= np.arange(0, len(metric_day_data.iloc[:,0]), 1)
     #graph_me = {'minutes': MINUTESSSS, 'raw': metric_day_data.iloc[:,0], 'filters removal':Fuel_removal, 'mean run':Fuel_running_mean}
@@ -588,8 +604,8 @@ df_Fuel_per_24_hour = pd.DataFrame(Fuel_per_24_hour, columns= ['Household','Days
                                                                    'Day with Highest Fuel Removal','Phase 24hr Avg (sum of phase/min/day obesrved)'])
 
 
-HH_fuel_SAE_Moist_min = {'Household': HH_NUMBER_Min,'Days counted':days_counted ,'24hr Avg _m':PHASE_24_HR_AVG,'Fuel Removed For Phase (24h hour Sprints)':fuel_removed_for_phase, 'avg SAE for Phase': SAE_PHase,'MJ/SAE/day for phase':MJ_SAE_DAY,'MJ/SAE(breakdown)/day for phase Filtered': MJ_SAE_DAY_phase,
-                         'Days that were filtered':days_filtered,
+HH_fuel_SAE_Moist_min = {'Household': HH_NUMBER_Min,'Days counted':days_counted ,'24hr Avg _m':Dry_Fule_24Hour ,'Fuel Removed For Phase (24h hour Sprints)':fuel_removed_for_phase, 'avg SAE for Phase': SAE_PHase,'MJ/SAE/day for phase':MJ_SAE_DAY,'MJ/SAE(breakdown)/day for phase Filtered': MJ_SAE_DAY_phase,
+                         'Fuel /24 that were filtered':Filterd_fuel_24, 'Days Filtereds':days_filtered,
                          'Time Cooked':Phase_cooking_times,'Fuel Scale':fuel_scle_value,'COV':COV_Whole,'mean':mean_days_col_array, 'std':STD_days_Col_array,  
                            'Day 1 min': day_1_total_Min,
                            'Day 2 min': day_2_total_Min,
@@ -606,7 +622,7 @@ HH_fuel_SAE_Moist_min = {'Household': HH_NUMBER_Min,'Days counted':days_counted 
                            'Day 13 min': day_13_total_Min,'Day 14min': day_14_total_Min,
                            'Visit 1 min': visit_1_min , 'Visit 2 min': visit_2_min , 'Visit 3 min':visit_3_min }
 
-df_HH_fuel_SAE_Moist_breakdown_min = pd.DataFrame(HH_fuel_SAE_Moist_min,columns=['Household','Days counted' ,'24hr Avg _m','Fuel Removed For Phase (24h hour Sprints)', 'avg SAE for Phase','MJ/SAE/day for phase','MJ/SAE(breakdown)/day for phase Filtered','Days that were filtered','Time Cooked', 'Fuel Scale','COV','mean', 'std','Day 1 min','Day 2 min',
+df_HH_fuel_SAE_Moist_breakdown_min = pd.DataFrame(HH_fuel_SAE_Moist_min,columns=['Household','Days counted' ,'24hr Avg _m','Fuel Removed For Phase (24h hour Sprints)', 'avg SAE for Phase','MJ/SAE/day for phase','MJ/SAE(breakdown)/day for phase Filtered','Fuel /24 that were filtered','Days Filtereds','Time Cooked', 'Fuel Scale','COV','mean', 'std','Day 1 min','Day 2 min',
                                                                            'Day 3 min','Day 4 min','Day 5 min', 
                                                                            'Day 6 min','Day 7 min','Day 8 min',
                                                                            'Day 9 min','Day 10 min','Day 11 min',

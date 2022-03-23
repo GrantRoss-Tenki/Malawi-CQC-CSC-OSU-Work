@@ -96,22 +96,22 @@ for file in csv_R_m:
             HH_fuel_removed_for_phase.append(-1)
 
         #Temperature Collection
-        if np.average(Day_data.iloc[:, 5]) != -1:
-            T_D_Temp.extend(Day_data.iloc[:, 2])
-            HH_avg_temp.append((int((np.average(Day_data.iloc[:, 5])) * 100)) / 100)
-            HH_std_temp.append((int((stat.stdev(Day_data.iloc[:, 5])) * 100)) / 100)
+        if np.average(Day_data.iloc[:, 4]) != -1:
+            T_D_Temp.extend(Day_data.iloc[:, 4])
+            HH_avg_temp.append((int((np.average(Day_data.iloc[:, 4])) * 100)) / 100)
+            HH_std_temp.append((int((stat.stdev(Day_data.iloc[:, 4])) * 100)) / 100)
         else:
             HH_avg_temp.append(-1)
             HH_std_temp.append(-1)
 
         #Cook Hapex Collection
-        if np.average(Day_data.iloc[:, 8]) != -1:
-            T_D_Cook_comp.extend(Day_data.iloc[:, 6])
-            T_D_Cook_PM.extend(Day_data.iloc[:, 8])
-            HH_avg_cook_comp.append(int(((sum(Day_data.iloc[:, 6])) / Minutes_of_collection) * 100))
-            HH_sum_cook_pm.append((int((sum(Day_data.iloc[:, 8])) * 100)) / 100)
-            HH_avg_cook_PM.append((int((np.average(Day_data.iloc[:, 8])) * 100)) / 100)
-            HH_std_cook_PM.append((int((stat.stdev(Day_data.iloc[:, 8])) * 100)) / 100)
+        if np.average(Day_data.iloc[:, 7]) != -1:
+            T_D_Cook_comp.extend(Day_data.iloc[:, 5])
+            T_D_Cook_PM.extend(Day_data.iloc[:, 7])
+            HH_avg_cook_comp.append(int(((sum(Day_data.iloc[:, 5])) / Minutes_of_collection) * 100))
+            HH_sum_cook_pm.append((int((sum(Day_data.iloc[:, 7])) * 100)) / 100)
+            HH_avg_cook_PM.append((int((np.average(Day_data.iloc[:, 7])) * 100)) / 100)
+            HH_std_cook_PM.append((int((stat.stdev(Day_data.iloc[:, 7])) * 100)) / 100)
         else:
             HH_sum_cook_pm.append(-1)
             HH_avg_cook_comp.append(-1)
@@ -119,13 +119,13 @@ for file in csv_R_m:
             HH_std_cook_PM.append(-1)
 
         #Kitchen HAPEx Collection
-        if np.average(Day_data.iloc[:, 9]) != -1:
-            T_D_Kit_PM.extend(Day_data.iloc[:, 9])
-            T_D_Kit_comp.extend((Day_data.iloc[:, 7]))
-            HH_avg_Kit_comp.append(int(((sum(Day_data.iloc[:, 7])) / Minutes_of_collection) * 100))
-            HH_sum_KIT_PM.append((int((sum(Day_data.iloc[:, 9])) * 100)) / 100)
-            HH_avg_Kit_PM.append((int((np.average(Day_data.iloc[:, 9])) * 100)) / 100)
-            HH_std_Kit_PM.append((int((stat.stdev(Day_data.iloc[:, 9])) * 100)) / 100)
+        if np.average(Day_data.iloc[:, 8]) != -1:
+            T_D_Kit_PM.extend(Day_data.iloc[:, 8])
+            T_D_Kit_comp.extend((Day_data.iloc[:,6]))
+            HH_avg_Kit_comp.append(int(((sum(Day_data.iloc[:, 8])) / Minutes_of_collection) * 100))
+            HH_sum_KIT_PM.append((int((sum(Day_data.iloc[:, 8])) * 100)) / 100)
+            HH_avg_Kit_PM.append((int((np.average(Day_data.iloc[:, 8])) * 100)) / 100)
+            HH_std_Kit_PM.append((int((stat.stdev(Day_data.iloc[:, 8])) * 100)) / 100)
         else:
             HH_sum_KIT_PM.append(-1)
             HH_avg_Kit_comp.append(-1)
@@ -332,7 +332,7 @@ KG_per_event = []
 HH_PE_Cook_Comp =[]
 HH_PE_Kit_com = []
 HH_Time_Fuel_remove = []
-HH_Time_Fuel_Insert = []
+#HH_Time_Fuel_Insert = []
 HH_avg_cooking_length = []
 # bellow is for the total to be averaged out later for all households
 T_E_Length_of_event = []
@@ -355,7 +355,7 @@ for file_s in csv_E_S:
                 Fuel_type_E_s = (row[2])
                 Exact_stove_E_s = (row[3])
                 Kitchen_Hapex_E_s = (row[4])
-                Cook_hapex_E_s = (row[5])
+                #Cook_hapex_E_s = (row[5])
             elif 'Fuel Removed (FUEL)' in row:
                 data_start = idx
 
@@ -379,26 +379,26 @@ for file_s in csv_E_S:
     if np.average(Event_SUM_data.iloc[:,1]) != -1:
         Fuel_removed = Event_SUM_data.iloc[:,1]
         KG_per_event.append(((int(sum(Fuel_removed)/how_many_events))*1000)/1000)
-        HH_Time_Fuel_remove.append(Event_SUM_data.iloc[:, 2])
-        HH_Time_Fuel_Insert.append(Event_SUM_data.iloc[:, 3])
+        HH_Time_Fuel_remove.append(Event_SUM_data.iloc[:, 1])
+        #HH_Time_Fuel_Insert.append(Event_SUM_data.iloc[:, 3])
         T_E_Fuel_used_Event.extend(Fuel_removed)
         T_E_removed_Time.extend(Event_SUM_data.iloc[:, 2])
         HH_fuel_removed_for_event.append((HH_KG_E_removed))
     else:
         KG_per_event.append(-1)
         HH_Time_Fuel_remove.append([0,-1])
-        HH_Time_Fuel_Insert.append(-1)
+        #HH_Time_Fuel_Insert.append(-1)
         HH_fuel_removed_for_event.append(-1)
 
     #Cook HAPEx Collection
-    if np.average(Event_SUM_data.iloc[:,4]) != -1:
-        HH_PE_Cook_Comp.append(Event_SUM_data.iloc[:,4])
+    if np.average(Event_SUM_data.iloc[:,3]) != -1:
+        HH_PE_Cook_Comp.append(Event_SUM_data.iloc[:,3])
     else:
         HH_PE_Cook_Comp.append(-1)
 
     #Kitchen HAPEx Collection
-    if np.average(Event_SUM_data.iloc[:,5]) != -1:
-        HH_PE_Kit_com.append(Event_SUM_data.iloc[:,5])
+    if np.average(Event_SUM_data.iloc[:,4]) != -1:
+        HH_PE_Kit_com.append(Event_SUM_data.iloc[:,4])
     else:
         HH_PE_Kit_com.append(-1)
 
@@ -938,7 +938,7 @@ for Num, hh in enumerate(HH_dict_event.keys()):
 DataFrame_event_HH = {'Household humber': Household_event,'Number of Events Observed':HH_Event_number_Events_observed,\
                   'Average Events per day (Events/day)':HH_Event_Average_Events_day,\
                   'Total time cooking (minutes)': HH_Event_Total_time_cooking,\
-                  # 'Percentage of Cooking per day (minutes)': HH_Event_percentage_cooking_per_day,
+                   'Percentage of Cooking per day (minutes)': HH_Event_percentage_cooking_per_day,
                   'Average length of Each Cooking Event (minutes)': HH_Event_Average_Cooking_length, \
                     'STD length of Each Cooking Event(minutes)': HH_Event_STD_Cooking_length, \
                     'Average Cook PM Per Event' : HH_Event_Average_Cook_PM,\

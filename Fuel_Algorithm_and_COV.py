@@ -18,7 +18,7 @@ import statistics as stat
 import Functions_malawi
 
 Computer = "personal"
-Phase = "1N"
+Phase = "4N"
 Second_Exact = 0
 min_average_spread = 5
 Fuel_Threshold = 0.005
@@ -156,7 +156,7 @@ for file in FUEL_csv_open:
     FUEL_SCALE_VALUE =  fuel_scale.iloc[row_survey, 19]
     Average_SAE = fuel_scale.iloc[row_survey,7]
     
-    NCV = 20.7*(1-FUEL_SCALE_VALUE) + 15.13*(FUEL_SCALE_VALUE)
+    NCV = 15.6*(1-FUEL_SCALE_VALUE) + 11*(FUEL_SCALE_VALUE)
     
     if Phase== "2N" or Phase== "3H":
         MJ_thresh = (10.5*1000*60)/(NCV)/1000000

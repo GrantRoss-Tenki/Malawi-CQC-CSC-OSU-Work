@@ -639,35 +639,35 @@ df_filtered_hood = pd.DataFrame(filtered_hood, columns=['Phase Filtered HOOD' ,'
 Kj_per_sae_no_hood = {'median':[np.median(Mj_1N_Phase),np.median(Mj_2N_Phase),np.median(Mj_3N_Phase),np.median(Mj_4N_Phase)],
                         'Phase':['1n','2n','3n','4n']}
 
-print(pd.DataFrame(Kj_per_sae_no_hood))
+df_Kj_per_sae_no_hood = pd.DataFrame(Kj_per_sae_no_hood)
 
 Kj_per_sae_filter_no_hood = {'median filter':[np.median(Mj_filter_1N_Phase),np.median(Mj_filter_2N_Phase),np.median(Mj_filter_3N_Phase),np.median(Mj_filter_4N_Phase)],
                         'Phase':['1n','2n','3n','4n']}
 
-print(pd.DataFrame(Kj_per_sae_filter_no_hood))
+df_Kj_per_sae_filter_no_hood = pd.DataFrame(Kj_per_sae_filter_no_hood)
 
 Kj_per_sae_mean_no_hood = {'mean':[np.mean(Mj_1N_Phase),np.mean(Mj_2N_Phase),np.mean(Mj_3N_Phase),np.mean(Mj_4N_Phase)],
                         'Phase':['1n','2n','3n','4n']}
 
-print(pd.DataFrame(Kj_per_sae_mean_no_hood))
+df_Kj_per_sae_mean_no_hood = pd.DataFrame(Kj_per_sae_mean_no_hood)
 
 ###hood
 print('Hood section')
 Kj_per_sae_Hood = {'median':[np.median(Mj_1H_Phase),np.median(Mj_2H_Phase),np.median(Mj_3H_Phase)],
                         'Phase':['1H','2H','3H']}
 
-print(pd.DataFrame(Kj_per_sae_Hood))
+df_Kj_per_sae_Hood = pd.DataFrame(Kj_per_sae_Hood)
 
 Kj_per_sae_filter_Hood = {'median filter':[np.median(Mj_filter_1H_Phase),np.median(Mj_filter_2H_Phase),np.median(Mj_filter_3H_Phase)],
                         'Phase':['1H','2H','3H']}
 
-print(pd.DataFrame(Kj_per_sae_filter_Hood))
+df_Kj_per_sae_filter_Hood = pd.DataFrame(Kj_per_sae_filter_Hood)
 
 Kj_per_sae_mean_Hood = {'mean':[np.mean(Mj_1H_Phase),np.mean(Mj_2H_Phase),np.mean(Mj_3H_Phase)],
                         'Phase':['1H','2H','3H']}
-print(pd.DataFrame(Kj_per_sae_mean_Hood))
+df_Kj_per_sae_mean_Hood = pd.DataFrame(Kj_per_sae_mean_Hood)
 
-pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_24hour_SAE.csv"
+pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_24hour.csv"
 df_Non_filtered_no_hood.to_csv(pATH, index=False,mode='a')
 df_filtered_No_hood.to_csv(pATH, index=False,mode='a')
 
@@ -675,6 +675,14 @@ df_Non_filtered_hood.to_csv(pATH, index=False,mode='a')
 df_filtered_hood.to_csv(pATH, index=False,mode='a')
 df_percent_hood.to_csv(pATH, index=False,mode='a')
 df_percent_No_hood.to_csv(pATH, index=False,mode='a')
+
+df_Kj_per_sae_no_hood.to_csv(pATH, index=False,mode='a')
+df_Kj_per_sae_filter_no_hood.to_csv(pATH, index=False,mode='a')
+df_Kj_per_sae_mean_no_hood.to_csv(pATH, index=False,mode='a')
+df_Kj_per_sae_Hood.to_csv(pATH, index=False,mode='a')
+df_Kj_per_sae_filter_Hood.to_csv(pATH, index=False,mode='a')
+df_Kj_per_sae_mean_Hood
+
 
 MJ_Phase_1N_to_3_comon
 Mj_filter_3N_Phase

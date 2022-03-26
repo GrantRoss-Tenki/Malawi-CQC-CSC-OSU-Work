@@ -13,16 +13,22 @@ import matplotlib.pyplot as plt
 import scipy
 from scipy.stats import mannwhitneyu
 import statistics as stat
+
+metric = input('SAE or Non   - ')
+
 # I am goign to bring in the NO- hood section first
 #for Megajouels
 #No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - No_Hood.csv" #rossgra or gvros
 #Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - Hood.csv"
 #### for FUEL_REMOVED _perd
-No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove - No_Hood.csv" #rossgra or gvros
-Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove - Hood.csv"
+if metric== 'SAE':
+    No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - No_Hood.csv" #rossgra or gvros
+    Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - Hood.csv"
+else:
+    No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove - No_Hood.csv" #rossgra or gvros
+    Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove - Hood.csv"
 ######For Fuel removed per 24 hours per SAE
-#No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - No_Hood.csv" #rossgra or gvros
-#Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - Hood.csv"
+
 
 Level_of_confidence = 0.05
 No_hood_MJ = pd.read_csv(No_hood_MJ_path)
@@ -99,6 +105,27 @@ cooking_times_4N = [x for x in No_hood_MJ.iloc[:, 41] if x != -1]
 cooking_times_1H = [x for x in Hood_MJ.iloc[:, 8] if x != -1]
 cooking_times_2H = [x for x in Hood_MJ.iloc[:, 19] if x != -1]
 cooking_times_3H = [x for x in Hood_MJ.iloc[:, 30] if x != -1]
+## data frames of metrics
+no_hood_df = {'1N': Mj_1N_Phase,'2N':Mj_2N_Phase,'3N':Mj_3N_Phase,'4N':Mj_4N_Phase}
+no_hood_filter_df = {'1N':Mj_filter_1N_Phase,'2N':Mj_filter_2N_Phase,'3N':Mj_filter_3N_Phase,'4N':Mj_filter_4N_Phase}
+Hood_df = {'1H':Mj_1H_Phase,'2H':Mj_2H_Phase,'3H':Mj_3H_Phase }
+Hood_Filter_df = {'1H':Mj_1H_Phase,'2H':Mj_2H_Phase,'3H':Mj_3H_Phase }
+
+# Graphing
+if metric== 'SAE':
+    sns.displot((Mj_1N_Phase, Mj_2N_Phase, Mj_3N_Phase,Mj_4N_Phase), kind="kde", common_norm=False)
+    plt.title('Fule/Day/SAE No-Hood')
+    plt.show()
+    sns.displot((Mj_filter_1N_Phase, Mj_filter_2N_Phase, Mj_filter_3N_Phase,Mj_filter_4N_Phase), kind="kde", common_norm=False)
+    plt.title('Fule/Day/SAE No-Hood - Filtered')
+    plt.show()
+else:
+    ax = sns.displot(data=Filter_1N_day_count)
+    plt.show()
+
+
+
+
 #1N to 2N
 # for Phase
 MJ_Phase_1N_to_2_comon = []
@@ -646,6 +673,12 @@ Kj_per_sae_filter_no_hood = {'median filter':[np.median(Mj_filter_1N_Phase),np.m
 
 df_Kj_per_sae_filter_no_hood = pd.DataFrame(Kj_per_sae_filter_no_hood)
 
+Kj_per_sae_mean_filter_no_hood = {'Mean filter':[np.mean(Mj_filter_1N_Phase),np.mean(Mj_filter_2N_Phase),np.mean(Mj_filter_3N_Phase),np.mean(Mj_filter_4N_Phase)],
+                        'Phase':['1n','2n','3n','4n']}
+
+df_Kj_per_sae_mean_filter_no_hood = pd.DataFrame(Kj_per_sae_mean_filter_no_hood)
+
+
 Kj_per_sae_mean_no_hood = {'mean':[np.mean(Mj_1N_Phase),np.mean(Mj_2N_Phase),np.mean(Mj_3N_Phase),np.mean(Mj_4N_Phase)],
                         'Phase':['1n','2n','3n','4n']}
 
@@ -663,26 +696,35 @@ Kj_per_sae_filter_Hood = {'median filter':[np.median(Mj_filter_1H_Phase),np.medi
 
 df_Kj_per_sae_filter_Hood = pd.DataFrame(Kj_per_sae_filter_Hood)
 
+Kj_per_sae_mean_filter_Hood = {'Mean filter':[np.mean(Mj_filter_1H_Phase),np.mean(Mj_filter_2H_Phase),np.mean(Mj_filter_3H_Phase)],
+                        'Phase':['1H','2H','3H']}
+
+df_Kj_per_mean_filter_Hood = pd.DataFrame(Kj_per_sae_mean_filter_Hood)
+
+
 Kj_per_sae_mean_Hood = {'mean':[np.mean(Mj_1H_Phase),np.mean(Mj_2H_Phase),np.mean(Mj_3H_Phase)],
                         'Phase':['1H','2H','3H']}
 df_Kj_per_sae_mean_Hood = pd.DataFrame(Kj_per_sae_mean_Hood)
 
-pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_24hour.csv"
-df_Non_filtered_no_hood.to_csv(pATH, index=False,mode='a')
-df_filtered_No_hood.to_csv(pATH, index=False,mode='a')
+#pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_24hour_SAE.csv"
+#df_Non_filtered_no_hood.to_csv(pATH, index=False,mode='a')
+#df_filtered_No_hood.to_csv(pATH, index=False,mode='a')
 
-df_Non_filtered_hood.to_csv(pATH, index=False,mode='a')
-df_filtered_hood.to_csv(pATH, index=False,mode='a')
-df_percent_hood.to_csv(pATH, index=False,mode='a')
-df_percent_No_hood.to_csv(pATH, index=False,mode='a')
+#df_Non_filtered_hood.to_csv(pATH, index=False,mode='a')
+#df_filtered_hood.to_csv(pATH, index=False,mode='a')
+#df_percent_hood.to_csv(pATH, index=False,mode='a')
+#df_percent_No_hood.to_csv(pATH, index=False,mode='a')
 
-df_Kj_per_sae_no_hood.to_csv(pATH, index=False,mode='a')
-df_Kj_per_sae_filter_no_hood.to_csv(pATH, index=False,mode='a')
-df_Kj_per_sae_mean_no_hood.to_csv(pATH, index=False,mode='a')
-df_Kj_per_sae_Hood.to_csv(pATH, index=False,mode='a')
-df_Kj_per_sae_filter_Hood.to_csv(pATH, index=False,mode='a')
-df_Kj_per_sae_mean_Hood
-
+#df_Kj_per_sae_no_hood.to_csv(pATH, index=False,mode='a')
+#df_Kj_per_sae_filter_no_hood.to_csv(pATH, index=False,mode='a')
+#df_Kj_per_sae_mean_filter_no_hood.to_csv(pATH, index=False,mode='a')
+#df_Kj_per_sae_mean_no_hood.to_csv(pATH, index=False,mode='a')
+#df_Kj_per_sae_Hood.to_csv(pATH, index=False,mode='a')
+#df_Kj_per_sae_filter_Hood.to_csv(pATH, index=False,mode='a')
+#df_Kj_per_sae_mean_Hood.to_csv(pATH, index=False,mode='a')
+#df_Kj_per_mean_filter_Hood.to_csv(pATH, index=False,mode='a')
 
 MJ_Phase_1N_to_3_comon
 Mj_filter_3N_Phase
+
+

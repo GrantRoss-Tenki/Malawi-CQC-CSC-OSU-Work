@@ -114,13 +114,37 @@ Hood_Filter_df = {'1H':Mj_1H_Phase,'2H':Mj_2H_Phase,'3H':Mj_3H_Phase }
 # Graphing
 if metric== 'SAE':
     sns.displot((Mj_1N_Phase, Mj_2N_Phase, Mj_3N_Phase,Mj_4N_Phase), kind="kde", common_norm=False)
-    plt.title('Fule/Day/SAE No-Hood')
+    plt.title('Fuel/Day/SAE No-Hood')
+    #plt.legend(labels=['1N', '2N', '3N', '4N'])
     plt.show()
     sns.displot((Mj_filter_1N_Phase, Mj_filter_2N_Phase, Mj_filter_3N_Phase,Mj_filter_4N_Phase), kind="kde", common_norm=False)
-    plt.title('Fule/Day/SAE No-Hood - Filtered')
+    plt.title('Fuel/Day/SAE No-Hood - Filtered')
+    #plt.legend(labels=['1N', '2N', '3N', '4N'])
+    plt.show()
+    sns.displot((Mj_1H_Phase, Mj_2H_Phase, Mj_3H_Phase), kind="kde", common_norm=False)
+    plt.title('Fuel/Day/SAE Hood')
+    #plt.legend(labels=['1N', '2N', '3N', '4N'])
+    plt.show()
+    sns.displot((Mj_filter_1H_Phase, Mj_filter_2H_Phase, Mj_filter_3H_Phase), kind="kde", common_norm=False)
+    plt.title('Fuel/Day/SAE ood - Filtered')
+    #plt.legend(labels=['1N', '2N', '3N', '4N'])
     plt.show()
 else:
-    ax = sns.displot(data=Filter_1N_day_count)
+    sns.displot((Mj_1N_Phase, Mj_2N_Phase, Mj_3N_Phase,Mj_4N_Phase), kind="kde", common_norm=False)
+    plt.title('Fuel/Day No-Hood')
+    #plt.legend(labels=['1N', '2N', '3N', '4N'])
+    plt.show()
+    sns.displot((Mj_filter_1N_Phase, Mj_filter_2N_Phase, Mj_filter_3N_Phase,Mj_filter_4N_Phase), kind="kde", common_norm=False)
+    plt.title('Fuel/Day No-Hood - Filtered')
+    #plt.legend(labels=['1N', '2N', '3N', '4N'])
+    plt.show()
+    sns.displot((Mj_1H_Phase, Mj_2H_Phase, Mj_3H_Phase), kind="kde", common_norm=False)
+    plt.title('Fuel/Day Hood')
+    #plt.legend(labels=['1N', '2N', '3N', '4N'])
+    plt.show()
+    sns.displot((Mj_filter_1H_Phase, Mj_filter_2H_Phase, Mj_filter_3H_Phase), kind="kde", common_norm=False)
+    plt.title('Fuel/Day Hood - Filtered')
+    #plt.legend(labels=['1N', '2N', '3N', '4N'])
     plt.show()
 
 
@@ -706,7 +730,7 @@ Kj_per_sae_mean_Hood = {'mean':[np.mean(Mj_1H_Phase),np.mean(Mj_2H_Phase),np.mea
                         'Phase':['1H','2H','3H']}
 df_Kj_per_sae_mean_Hood = pd.DataFrame(Kj_per_sae_mean_Hood)
 
-#pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_24hour_SAE.csv"
+pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_24hour_SAE_new.csv"
 #df_Non_filtered_no_hood.to_csv(pATH, index=False,mode='a')
 #df_filtered_No_hood.to_csv(pATH, index=False,mode='a')
 

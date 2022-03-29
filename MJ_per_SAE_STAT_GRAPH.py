@@ -22,8 +22,10 @@ metric = input('SAE or Non   - ')
 #Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - Hood.csv"
 #### for FUEL_REMOVED _perd
 if metric== 'SAE':
-    No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - No_Hood.csv" #rossgra or gvros
-    Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - Hood.csv"
+    #No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - No_Hood.csv" #rossgra or gvros
+    #Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - Hood.csv"
+    No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - No_Hood.csv" #rossgra or gvros
+    Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - Hood.csv"
 else:
     #No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove - No_Hood.csv" #rossgra or gvros
     #Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove - Hood.csv"
@@ -744,7 +746,7 @@ Kj_per_sae_no_hood = {'median':[np.median(Mj_1N_Phase),np.median(Mj_2N_Phase),np
                         'Phase':['1n','2n','3n','4n']}
 
 df_Kj_per_sae_no_hood = pd.DataFrame(Kj_per_sae_no_hood)
-print(' this is the median filter for 1N----=-==-=-=-=-=-=-=-',[np.median(Mj_filter_1N_Phase) )
+print(' this is the median filter for 1N----=-==-=-=-=-=-=-=-',np.mean(Mj_filter_1N_Phase) )
 Kj_per_sae_filter_no_hood = {'median filter':[np.median(Mj_filter_1N_Phase),np.median(Mj_filter_2N_Phase),np.median(Mj_filter_3N_Phase),np.median(Mj_filter_4N_Phase)],
                         'Phase':['1n','2n','3n','4n']}
 
@@ -784,7 +786,7 @@ Kj_per_sae_mean_Hood = {'mean':[np.mean(Mj_1H_Phase),np.mean(Mj_2H_Phase),np.mea
 df_Kj_per_sae_mean_Hood = pd.DataFrame(Kj_per_sae_mean_Hood)
 
 
-pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_24hour_mj_day.csv"
+pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_24hour_mj_day_SAE.csv"
 df_Non_filtered_no_hood.to_csv(pATH, index=False,mode='a')
 df_filtered_No_hood.to_csv(pATH, index=False,mode='a')
 

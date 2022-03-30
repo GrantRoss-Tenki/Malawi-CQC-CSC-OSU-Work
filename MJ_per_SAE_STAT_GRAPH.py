@@ -22,10 +22,10 @@ metric = input('SAE or Non   - ')
 #Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - Hood.csv"
 #### for FUEL_REMOVED _perd
 if metric== 'SAE':
-    #No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - No_Hood.csv" #rossgra or gvros
-    #Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - Hood.csv"
-    No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - No_Hood.csv" #rossgra or gvros
-    Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - Hood.csv"
+    No_hood_MJ_path = "C:/Users/rossgra /Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - No_Hood.csv" #rossgra or gvros
+    Hood_MJ_Path = "C:/Users/rossgra /Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - Hood.csv"
+    #No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - No_Hood.csv" #rossgra or gvros
+    #Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - Hood.csv"
 else:
     #No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove - No_Hood.csv" #rossgra or gvros
     #Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove - Hood.csv"
@@ -38,6 +38,7 @@ else:
 Level_of_confidence = 0.05
 No_hood_MJ = pd.read_csv(No_hood_MJ_path)
 Hood_MJ = pd.read_csv(Hood_MJ_Path)
+
 #C:\Users\rossgra\Box\Classes\Software Dev C:\Users\rossgra\Box\OSU, CSC, CQC Project files
 HH_1N = [x for x in No_hood_MJ.iloc[:, 0] if x != -1]
 HH_2N = [x for x in  No_hood_MJ.iloc[:, 11] if x != -1]
@@ -786,7 +787,7 @@ Kj_per_sae_mean_Hood = {'mean':[np.mean(Mj_1H_Phase),np.mean(Mj_2H_Phase),np.mea
 df_Kj_per_sae_mean_Hood = pd.DataFrame(Kj_per_sae_mean_Hood)
 
 
-pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_24hour_mj_day_SAE.csv"
+pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_24hour_Fuel_SAE.csv"
 df_Non_filtered_no_hood.to_csv(pATH, index=False,mode='a')
 df_filtered_No_hood.to_csv(pATH, index=False,mode='a')
 

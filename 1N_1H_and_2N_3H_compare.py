@@ -19,13 +19,16 @@ No_hood_MJ_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/1N_1H_and_2N
 No_hood_MJ = pd.read_csv(No_hood_MJ_path)
 
 Fuel_1N_1H = [x for x in No_hood_MJ.iloc[:,1] if x != -1]
-Fuel_2N_3H = [x for x in No_hood_MJ.iloc[:,5] if x != -1]
+Fuel_2N_3H = [x for x in No_hood_MJ.iloc[:,6] if x != -1]
 print(Fuel_1N_1H, len(Fuel_1N_1H)) 
 Fuel_SAE_1N_1H = [x for x in No_hood_MJ.iloc[:,2] if x != -1]
-Fuel_SAE_2N_3H = [x for x in No_hood_MJ.iloc[:,6] if x != -1]
+Fuel_SAE_2N_3H = [x for x in No_hood_MJ.iloc[:,7] if x != -1]
 
 MJ_1N_1H = [x for x in No_hood_MJ.iloc[:,3] if x != -1]
-MJ_2N_3H = [x for x in No_hood_MJ.iloc[:,7] if x != -1]
+MJ_2N_3H = [x for x in No_hood_MJ.iloc[:,8] if x != -1]
+
+MJ_sae_1N_1H = [x for x in No_hood_MJ.iloc[:,4] if x != -1]
+MJ_sae_2N_3H = [x for x in No_hood_MJ.iloc[:,9] if x != -1]
 
 T_stat_Fuel, P_Fuel = scipy.stats.ttest_ind(Fuel_1N_1H, Fuel_2N_3H, axis=0, equal_var=True)
 T_sign_Fuel, P_sign_Fuel = scipy.stats.wilcoxon(Fuel_1N_1H, Fuel_2N_3H)
@@ -36,11 +39,19 @@ T_sign_Fuel_SAE, P_sign_Fuel_SAE = scipy.stats.wilcoxon(Fuel_SAE_1N_1H, Fuel_SAE
 T_stat_MJ, P_MJ = scipy.stats.ttest_ind(MJ_1N_1H, MJ_2N_3H, axis=0, equal_var=True)
 T_sign_MJ, P_sign_MJ = scipy.stats.wilcoxon(MJ_1N_1H, MJ_2N_3H)
 
-df_met =pd.DataFrame({'Metric':['Fuel reduc','fuel pval','fuel pval sign','MJ reduc','mj pval','mj pval sign'], 'Percentatges of hood filter':[(np.median(Fuel_2N_3H)/np.median(Fuel_1N_1H)),
-       P_Fuel,P_sign_Fuel,(np.median(MJ_2N_3H)/np.median(MJ_1N_1H)),P_MJ,P_sign_MJ]})
+T_stat_SAE_MJ, P_MJ_SAE = scipy.stats.ttest_ind(MJ_sae_1N_1H, MJ_sae_2N_3H, axis=0, equal_var=True)
+T_sign_SAE_MJ, P_sign_MJ_SAE = scipy.stats.wilcoxon(MJ_sae_1N_1H, MJ_sae_2N_3H)
+
+df_met =pd.DataFrame({'Metric for DAY':['Fuel reduc','fuel pval','fuel pval sign','MJ reduc','mj pval','mj pval sign'], 
+                      'Percentatges of hood filter':[(np.median(Fuel_2N_3H)/np.median(Fuel_1N_1H)),
+                                                     P_Fuel,P_sign_Fuel,(np.median(MJ_2N_3H)/np.median(MJ_1N_1H)),P_MJ,P_sign_MJ]})
 print(df_met)
 
-
+df_met_SAE =pd.DataFrame({'Metric for SAE':['Fuel reduc','fuel pval','fuel pval sign','MJ reduc','mj pval','mj pval sign'], 
+                      'Percentatges metrics':[(np.median(Fuel_SAE_2N_3H)/np.median(Fuel_SAE_1N_1H)),
+                                                     P_Fuel_SAE,P_sign_Fuel_SAE,(np.median(MJ_sae_2N_3H)/np.median(MJ_sae_1N_1H)),
+                                                     P_MJ_SAE,P_sign_MJ_SAE]})
+print(df_met_SAE)
 
 Cooking_times_path = "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/Ratios_COOKINGTIMES_day_event.csv" #rossgra or gvros
 cooking_times = pd.read_csv(Cooking_times_path)

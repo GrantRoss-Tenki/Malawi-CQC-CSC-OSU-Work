@@ -22,8 +22,8 @@ metric = input('SAE or Non   - ')
 #Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - Hood.csv"
 #### for FUEL_REMOVED _perd
 if metric== 'SAE':
-    No_hood_MJ_path = "C:/Users/rossgra /Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - No_Hood.csv" #rossgra or gvros
-    Hood_MJ_Path = "C:/Users/rossgra /Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - Hood.csv"
+    No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - No_Hood.csv" #rossgra or gvros
+    Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/24 Hour Remove SAE - Hood.csv"
     #No_hood_MJ_path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - No_Hood.csv" #rossgra or gvros
     #Hood_MJ_Path = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/MJ per SAE - Hood.csv"
 else:

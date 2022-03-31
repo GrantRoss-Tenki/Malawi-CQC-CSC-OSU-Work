@@ -163,9 +163,9 @@ for n,hhh in enumerate(Household_array):
     if Agri_quest == 'Three times a day or more':
         Score_Fuel_Agri = 1
     if Agri_quest == 'Twice a day':
-        Score_Fuel_Agri = 0.928
+        Score_Fuel_Agri = 0.964
     if Agri_quest == 'Once a day':
-        Score_Fuel_Agri = 0.857
+        Score_Fuel_Agri = 0.928
     if Agri_quest == 'At least once a week':
         Score_Fuel_Agri = 0.785
     if Agri_quest == 'Less than once a week':

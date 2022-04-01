@@ -6,7 +6,7 @@ import csv
 import glob
 from decimal import *
 from itertools import chain
-import statistics as stat
+#import statistics as stat
 import datetime
 from io import StringIO
 import matplotlib.pyplot as plt
@@ -14,9 +14,10 @@ import scipy as scipy
 import math
 
 
-Phase_number = '4N'
+Phase_number = '3H'
 
-datafile_path = 'C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/4N/Survey_4N.xlsx'
+#datafile_path = 'C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/4N/Survey_4N.xlsx'
+datafile_path = 'C:/Users/rossgra/Box/OSU, CSC, CQC Project files/'+Phase_number+'/Survey_3H.xlsx'
 Survey_1H_1N = pd.read_excel(datafile_path)
 Household_array = Survey_1H_1N.iloc[:,0]
 # Information and arrays that i want to remove and look at
@@ -74,7 +75,7 @@ for n,hhh in enumerate(Household_array):
     Moisture_std_2 = (Survey_1H_1N.iloc[n,115:124])
     Moisture_compiler_1 = [water for water in Moisture_std_1]
     Moisture_compiler_2 = [water for water in Moisture_std_2]
-    Moisture_std.append((int((stat.stdev((Moisture_compiler_1+Moisture_compiler_2))) * 100)) / 100)
+    Moisture_std.append((int((np.std((Moisture_compiler_1+Moisture_compiler_2))) * 100)) / 100)
     ## Kitchen Characheristics
     #kitchen size
     Kit_avg_height.append(((int((Survey_1H_1N.iloc[n,35])*100)/100)+(int((Survey_1H_1N.iloc[n,36])*100)/100))/2)
@@ -97,49 +98,49 @@ for n,hhh in enumerate(Household_array):
     Fuel_check_1 = Survey_1H_1N.iloc[n,15]
     if Fuel_check_1 == 'Only Wood':
         Score_fuel_1 = 0
-    if Fuel_check_1 == 'Mostly wood and a little bit of agricultural residues':
+    elif Fuel_check_1 == 'Mostly wood and a little bit of agricultural residues':
         Score_fuel_1 = 0.25
-    if Fuel_check_1 == 'About half wood and half agricultural residues':
+    elif Fuel_check_1 == 'About half wood and half agricultural residues':
         Score_fuel_1 = 0.5
-    if Fuel_check_1 == 'Mostly agricultural residues and a little bit of wood':
+    elif Fuel_check_1 == 'Mostly agricultural residues and a little bit of wood':
         Score_fuel_1 = 0.75
-    if Fuel_check_1 == 'Only agricultural residues':
+    elif Fuel_check_1 == 'Only agricultural residues':
         Score_fuel_1 = 1
 
     Fuel_check_2 = Survey_1H_1N.iloc[n,66]
     if Fuel_check_2 == 'Only Wood':
         Score_fuel_2 = 0
-    if Fuel_check_2 == 'Mostly wood and a little bit of agricultural residues':
+    elif Fuel_check_2 == 'Mostly wood and a little bit of agricultural residues':
         Score_fuel_2 = 0.25
-    if Fuel_check_2 == 'About half wood and half agricultural residues':
+    elif Fuel_check_2 == 'About half wood and half agricultural residues':
         Score_fuel_2 = 0.5
-    if Fuel_check_2 == 'Mostly agricultural residues and a little bit of wood':
+    elif Fuel_check_2 == 'Mostly agricultural residues and a little bit of wood':
         Score_fuel_2 = 0.75
-    if Fuel_check_2 == 'Only agricultural residues':
+    elif Fuel_check_2 == 'Only agricultural residues':
         Score_fuel_2 = 1
-
+        
     Fuel_check_3 = Survey_1H_1N.iloc[n,87]
     if Fuel_check_3 == 'Only Wood':
         Score_fuel_3 = 0
-    if Fuel_check_3 == 'Mostly wood and a little bit of agricultural residues':
+    elif Fuel_check_3 == 'Mostly wood and a little bit of agricultural residues':
         Score_fuel_3 = 0.25
-    if Fuel_check_3 == 'About half wood and half agricultural residues':
+    elif Fuel_check_3 == 'About half wood and half agricultural residues':
         Score_fuel_3 = 0.5
-    if Fuel_check_3 == 'Mostly agricultural residues and a little bit of wood':
+    elif Fuel_check_3 == 'Mostly agricultural residues and a little bit of wood':
         Score_fuel_3 = 0.75
-    if Fuel_check_3 == 'Only agricultural residues':
+    elif Fuel_check_3 == 'Only agricultural residues':
         Score_fuel_3 = 1
 
     Fuel_check_4 = Survey_1H_1N.iloc[n,124]
     if Fuel_check_4 == 'Only Wood':
         Score_fuel_4 = 0
-    if Fuel_check_4 == 'Mostly wood and a little bit of agricultural residues':
+    elif Fuel_check_4 == 'Mostly wood and a little bit of agricultural residues':
         Score_fuel_4 = 0.25
-    if Fuel_check_4 == 'About half wood and half agricultural residues':
+    elif Fuel_check_4 == 'About half wood and half agricultural residues':
         Score_fuel_4 = 0.5
-    if Fuel_check_4 == 'Mostly agricultural residues and a little bit of wood':
+    elif Fuel_check_4 == 'Mostly agricultural residues and a little bit of wood':
         Score_fuel_4 = 0.75
-    if Fuel_check_4 == 'Only agricultural residues':
+    elif Fuel_check_4 == 'Only agricultural residues':  
         Score_fuel_4 = 1
 
     #second is the Firewood and agricultural residue details survey
@@ -149,13 +150,13 @@ for n,hhh in enumerate(Household_array):
     if Firewood_quest == 'Three times a day or more':
         Score_Fuel_Firewood = 0
     if Firewood_quest == 'Twice a day':
-        Score_Fuel_Firewood = 0.0357
+        Score_Fuel_Firewood = 0.05#0.0357
     if Firewood_quest == 'Once a day':
-        Score_Fuel_Firewood = 0.0714
+        Score_Fuel_Firewood = 0.1#0.0714
     if Firewood_quest == 'At least once a week':
-        Score_Fuel_Firewood = 0.214
+        Score_Fuel_Firewood = 0.33#0.214
     if Firewood_quest == 'Less than once a week':
-        Score_Fuel_Firewood = 0.357
+        Score_Fuel_Firewood = 0.67#0.357
     if Firewood_quest == 'Never': # this is now assumed that they are using all Agricultural
         Score_Fuel_Firewood = 1
 
@@ -163,17 +164,19 @@ for n,hhh in enumerate(Household_array):
     if Agri_quest == 'Three times a day or more':
         Score_Fuel_Agri = 1
     if Agri_quest == 'Twice a day':
-        Score_Fuel_Agri = 0.964
+        Score_Fuel_Agri = 0.67#0.964
     if Agri_quest == 'Once a day':
-        Score_Fuel_Agri = 0.928
+        Score_Fuel_Agri = 0.33#0.928
     if Agri_quest == 'At least once a week':
-        Score_Fuel_Agri = 0.785
+        Score_Fuel_Agri = 0.1#0.785
     if Agri_quest == 'Less than once a week':
-        Score_Fuel_Agri = 0.642
-    if Agri_quest == 'Never': # this is now assumed they are using all Firewood
+        Score_Fuel_Agri = 0.05#0.642
+    if Agri_quest == 'Never': # this is now assumed they are using all Score_Fuel_Agri+Score_Fuel_Firewood
         Score_Fuel_Agri = 0
 
-    FUEL_sum = (int(((Score_Fuel_Agri+Score_Fuel_Firewood+Score_fuel_4+Score_fuel_3+Score_fuel_2+Score_fuel_1)/6)*100))/100
+    FUEL_sumyy = (Score_Fuel_Agri+Score_Fuel_Firewood+Score_fuel_4 + Score_fuel_3 + Score_fuel_2+Score_fuel_1)
+    FUEL_sum = FUEL_sumyy*0.1666666
+    print(FUEL_sum,Score_fuel_1,Score_fuel_2,Score_fuel_3,Score_fuel_4)
     FUEL_scale.append(FUEL_sum)
     #kitchen ventilation
     Kit_up_v = Survey_1H_1N.iloc[n,42]
@@ -259,7 +262,7 @@ Survey_data = {'Household' : House_hold, 'Child 14 or Under Feed (avg)' : Feed_C
 
 df_Survey_data = pd.DataFrame(Survey_data)
 
-Path_Survey= "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase_number
-File_phase_1_survey = str(Path_Survey) + "/"+Phase_number+"_Survey_summary_"+".csv"
+Path_Survey= "C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+Phase_number
+File_phase_1_survey = str(Path_Survey) + "/"+Phase_number+"_Survey_summary_New Scale_"+".csv"
 df_Survey_data.to_csv(File_phase_1_survey)
 

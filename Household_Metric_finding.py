@@ -57,7 +57,11 @@ Whole_Fuel_per_event = []
 Whole_SAE = []
 Whole_Fuel_used_scale = []
 Whole_kitchen_volume = []
-
+cooldown_count_negative_one = []
+countts = 0
+while countts != 30:
+    cooldown_count_negative_one.append(-1)
+    countts = countts + 1
 Second_Exact = 0
 for file in csv_R_m:
     with open(file, 'r') as f:
@@ -280,7 +284,7 @@ for file in csv_R_m:
                     Raw_E_Cook_PM.extend([a for a in Cook_PM[st:Fire_end[tv]]])
                     Raw_E_Cook_Comp.extend([a for a in Cook_comp[st:Fire_end[tv]]])
                     Raw_Spread_Cook = E_Spread_Cook_PM
-                    E_Cook_S_after = (list([a for a in Cook_PM[Fire_end[tv]:(st + 30)]]))
+                    E_Cook_S_after = (list([a for a in Cook_PM[Fire_end[tv]:(Fire_end[tv] + 30)]]))
                     E_CoolDown_Cook_PM.extend(E_Cook_S_after)
                     E_CoolDoown_AVG_Cook_PM.append(np.average(E_Cook_S_after))
                     Raw_CoolDown_Cook = E_CoolDown_Cook_PM
@@ -296,7 +300,7 @@ for file in csv_R_m:
                     E_CoolDown_Cook_PM.append(-1)
                     E_CoolDoown_AVG_Cook_PM.append(-1)
 
-                    Raw_CoolDown_Cook.extend(filler_spread_values)
+                    Raw_CoolDown_Cook.extend(cooldown_count_negative_one)
 
                 
                 # Kitchen HAPEx
@@ -326,7 +330,7 @@ for file in csv_R_m:
                     E_PC_Kit_PM.append(-1)
                     E_CoolDoown_AVG_Kit_PM.append(-1)
                     E_Spread_AVG_Kit_PM.append(-1)
-                    Raw_CoolDown_Kit.append(filler_value)
+                    Raw_CoolDown_Kit.append(cooldown_count_negative_one)
                     Raw_E_Kit_PM.extend(filler_value)
                     Raw_E_Kit_Comp.extend(filler_value)
                     Raw_Spread_Kit.extend(filler_spread_values)
@@ -346,13 +350,13 @@ for file in csv_R_m:
                            '| Average PM for Cook in Event (HAPEx) |' : E_Avg_Cook_PM,
                            '| Median PM for Cook in Event (HAPEx) |': E_Med_Cook_PM,
                            '| Std of Cook PM |' : E_STD_Cook_PM,'30 Minute Cooldown Cook':E_CoolDoown_AVG_Cook_PM,
-                          '| 10 minutes spread Cook Exposure|' : E_Spread_AVG_Cook_PM,
+                          '| 10 minutes start-up Cook Exposure|' : E_Spread_AVG_Cook_PM,
                            '| Percentage Cook Compliance for Event (HAPEx) |': E_PC_Cook_Move,
                            '| Average PM in Kitchen for Event (HAPEx) |' : E_Avg_Kit_PM,
                            '| Median PM in Kitchen for Event (HAPEx) |' : E_Med_Kit_PM,
                            '| Std of Kitchen PM |' : E_STD_Kit_PM,
                            '30 Minute Cooldown Kitchen':E_CoolDoown_AVG_Kit_PM,
-                           '| 10 minutes spread Kitchen PM |' : E_Spread_AVG_Kit_PM,
+                           '| 10 minutes start-up Kitchen PM |' : E_Spread_AVG_Kit_PM,
                            '| Percentage Kitchen Compliance for Event (HAPEx) |' : E_PC_Kit_PM}
 
         df_event = pd.DataFrame(Data_event)
@@ -382,9 +386,28 @@ for file in csv_R_m:
                      'Cook PM': Raw_E_Cook_PM, 'Kitchen PM': Raw_E_Kit_PM}
 
         RAW_Spread_PM = {'10 minutes spread (Cook PM)': Raw_Spread_Cook,'10 minutes spread (Kitchen PM)': Raw_Spread_Kit}
-        Raw_Cool_down_pm = { '30 Cooldown spread (Cook PM)': Raw_Spread_Cook,'30 Cooldown spread (Kitchen PM)': Raw_CoolDown_Kit}
+            
+        print('-----------------------`-`==-`=-`=-`=-=-`=-`=-=-=~_=-`=-+~_+~_~+-~+_~+-~=-~=-~~=-~=-~ len of cool down for cook and kitchen', len(Raw_CoolDown_Cook), len(Raw_CoolDown_Kit))
+        if len(Raw_CoolDown_Cook) != len(Raw_CoolDown_Kit):
+            if len(Raw_CoolDown_Cook) > len(Raw_CoolDown_Kit):
+                diff = len(Raw_CoolDown_Cook) - len(Raw_CoolDown_Kit)
+                count_diff = 0
+                while count_diff != diff:
+                    Raw_CoolDown_Kit.append(-1)
+                    count_diff = count_diff +1
+            elif len(Raw_CoolDown_Cook) < len(Raw_CoolDown_Kit):
+                diff_2 = len(Raw_CoolDown_Kit) - len(Raw_CoolDown_Cook)
+                count_diff = 0
+                while count_diff != diff_2:
+                    Raw_CoolDown_Cook.append(-1)
+                    count_diff = count_diff + 1
+
+        print('-----after correction ******~=-~~=-~=-~ len of cool down for cook and kitchen', len(Raw_CoolDown_Cook), len(Raw_CoolDown_Kit))
+
+        Raw_Cool_down_pm = { '30 Cooldown spread (Cook PM)': Raw_CoolDown_Cook,'30 Cooldown spread (Kitchen PM)': Raw_CoolDown_Kit}
         Df_raw_event = pd.DataFrame(RAW_event)
         Df_first_five = pd.DataFrame(RAW_Spread_PM)
+        DF_Cooldown = pd.DataFrame(Raw_Cool_down_pm)
             # Taking some metrics that need to be compared to each other, will be in own CSV file
             # these metrics are to be compared to other households, there are no averages inside here
             # these are repeated, but want to have a separate file to easily gather
@@ -590,36 +613,40 @@ for file in csv_R_m:
         # making all different CSV files for all metrics (This spit out 6 different files)
         ###first is the Specific summary metrics for Household
         Path_HH_Sum_event = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact/HH_summary_Event"
-        File_name_HH_sum_Event = str(Path_HH_Sum_event) + "/"+ Phase +"_HH_Summary_Event_"+str(id_number)+"_"+str(q)+"_exact_2.2"+".csv"
-        #Df_sensor.to_csv(File_name_HH_sum_Event)
-        #df_event.to_csv(File_name_HH_sum_Event,index=False,mode='a')
+        File_name_HH_sum_Event = str(Path_HH_Sum_event) + "/"+ Phase +"_HH_Summary_Event_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
+        Df_sensor.to_csv(File_name_HH_sum_Event)
+        df_event.to_csv(File_name_HH_sum_Event,index=False,mode='a')
 
         Path_HH_Sum_day = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact/HH_summary_Day"
-        File_name_HH_sum_Day = str(Path_HH_Sum_day) + "/"+ Phase+"_HH_Summary_Day_"+str(id_number)+"_"+str(q)+"_exact_2.2"+".csv"
+        File_name_HH_sum_Day = str(Path_HH_Sum_day) + "/"+ Phase+"_HH_Summary_Day_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
         #Df_sensor.to_csv(File_name_HH_sum_Day)
         #Df_day.to_csv(File_name_HH_sum_Day,index=False, mode= 'a')
 
         Path_Raw_Event = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact"
-        File_event_Raw_metrics = str(Path_Raw_Event) + "/Raw_E_metrics/"+Phase+"_HH_raw_Event_metrics_"+str(id_number)+"_"+str(q)+"_exact_2.2"+".csv"
+        File_event_Raw_metrics = str(Path_Raw_Event) + "/Raw_E_metrics/"+Phase+"_HH_raw_Event_metrics_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
         #Df_sensor.to_csv(File_event_Raw_metrics)
         #Df_raw_event.to_csv(File_event_Raw_metrics,index=False,mode='a')
 
-        File_event_Raw_summary = str(Path_Raw_Event) + "/Raw_E_summary/"+Phase+"_HH_raw_Event_summary_"+str(id_number)+"_"+str(q)+"_exact_2.2"+".csv"
+        File_event_Raw_summary = str(Path_Raw_Event) + "/Raw_E_summary/"+Phase+"_HH_raw_Event_summary_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
         #Df_sensor.to_csv(File_event_Raw_summary)
         #Df_Summary_Event.to_csv(File_event_Raw_summary,index=False,mode='a')
 
-        File_event_Raw_first_five = str(Path_Raw_Event) + "/Raw_E_first_five/"+ Phase+"_HH_Event_first_five_"+str(id_number)+"_"+str(q)+"_exact_2.2"+".csv"
-        #Df_sensor.to_csv(File_event_Raw_first_five)
-        #Df_first_five.to_csv(File_event_Raw_first_five,index=False,mode='a')
+        File_event_Raw_first_five = str(Path_Raw_Event) + "/Raw_E_first_five/"+ Phase+"_HH_Event_first_five_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
+        Df_sensor.to_csv(File_event_Raw_first_five)
+        Df_first_five.to_csv(File_event_Raw_first_five,index=False,mode='a')
+
+        File_event_Raw_CoolDown= str(Path_Raw_Event) + "/Raw_E_Cooldown/"+ Phase+"_HH_Event_Cooldown_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
+        Df_sensor.to_csv(File_event_Raw_CoolDown)
+        DF_Cooldown.to_csv(File_event_Raw_CoolDown,index=False,mode='a')
 
         Path_Raw_Day = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact"
-        File_Day_Raw_metrics = str(Path_Raw_Day) + "/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(id_number)+"_"+str(q)+"_exact_3.55555"+".csv"
+        File_Day_Raw_metrics = str(Path_Raw_Day) + "/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
         
         #Df_sensor.to_csv(File_Day_Raw_metrics)
         
         #Df_raw_day.to_csv(File_Day_Raw_metrics, index=False,mode='a')
 
-        File_Day_Raw_summary = str(Path_Raw_Day) + "/Raw_D_summary/"+ Phase+ "_HH_raw_Day_summary_"+str(id_number)+"_"+str(q)+"_exact_2.5"+".csv"
+        File_Day_Raw_summary = str(Path_Raw_Day) + "/Raw_D_summary/"+ Phase+ "_HH_raw_Day_summary_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
         #Df_sensor.to_csv(File_Day_Raw_summary)
         #Df_Summary_day.to_csv(File_Day_Raw_summary, index=False,mode='a')
 

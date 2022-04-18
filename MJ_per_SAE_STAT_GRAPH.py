@@ -373,8 +373,9 @@ for row_2N, hh_2N in enumerate(HH_2N):
             MJ_Phase_2N_to_3_comon.append(Mj_2N_Phase[row_2N])
             MJ_Phase_3N_to_2_comon.append(Mj_3N_Phase[row_3N])
             Day_count_MJ_Phase_2N_3N.append(Phase_2N_day_count[row_2N] +Phase_3N_day_count[row_3N] )
+            print(hh_2N,Mj_2N_Phase[row_2N],hh_3N,Mj_3N_Phase[row_3N]) 
             count_n = count_n + 1
-            
+           
 N_MJ_Phase_2N_3N = count_n -1
 #for filter 
 MJ_filter_2N_to_3_comon = []
@@ -388,6 +389,7 @@ for row_2N, hh_2N in enumerate(HH_2N):
         if hh_2N == hh_3N:
             MJ_filter_2N_to_3_comon.append(Mj_filter_2N_Phase[row_2N])
             MJ_filter_3N_to_2_comon.append(Mj_filter_3N_Phase[row_3N])
+            print(hh_2N,Mj_filter_2N_Phase[row_2N],hh_3N,Mj_filter_3N_Phase[row_3N]) 
             Day_count_MJ_filter_2N_3N.append(Filter_2N_day_count[row_2N] +Filter_3N_day_count[row_3N] )
             count_n = count_n + 1
             
@@ -787,7 +789,7 @@ Kj_per_sae_mean_Hood = {'mean':[np.mean(Mj_1H_Phase),np.mean(Mj_2H_Phase),np.mea
 df_Kj_per_sae_mean_Hood = pd.DataFrame(Kj_per_sae_mean_Hood)
 
 
-pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_24hour_Fuel_SAE.csv"
+pATH = "C:/Users/gvros/Box/OSU, CSC, CQC Project files/P_TEST_NO_HOOD_MJ_DAY_CHECH 2N_3N.csv"
 df_Non_filtered_no_hood.to_csv(pATH, index=False,mode='a')
 df_filtered_No_hood.to_csv(pATH, index=False,mode='a')
 

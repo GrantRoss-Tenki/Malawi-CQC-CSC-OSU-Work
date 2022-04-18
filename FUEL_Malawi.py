@@ -435,7 +435,7 @@ for file_5 in csv_E_5:
                 # Exact_stove_5 = (row[3])
                 # Kitchen_Hapex_5 = (row[4])
                 # Cook_hapex_5 = (row[5])
-            elif 'Fuel Removed (FUEL)' in row:
+            elif '10 minutes spread (Cook PM)' in row:
                 data_start = idx
 
                 break
@@ -462,7 +462,56 @@ for file_5 in csv_E_5:
     ID_Five_Event = id_number_5
 
 
+print('----------------Cooldown----------')
+### we only care about the cook and kitchen PM
+ID_CoolDown_Event = []
+T_CoolDown_Cook_PM = []
+T_CoolDown_KIT_PM = []
+HH_Avg_PP_CoolDown_cook = []
+HH_Avg_PM_CoolDown_kit = []
+HH_STD_PP_CoolDown_cook = []
+HH_STD_PM_CoolDown_kit = []
 
+
+
+os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_E_Cooldown")
+# For Hood portion
+#os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/2H/Compiler/Raw_Event/Raw_E_first_five")
+# For Hood portion
+Event_five_path = os.getcwd()
+csv_E_5 = glob.glob(os.path.join(Event_five_path, "*.csv"))
+
+for file_5 in csv_E_5:
+    with open(file_5, 'r') as f:
+        csv_reader = csv.reader(f)
+        for idx, row in enumerate(csv_reader):
+            if '0' in row:
+                id_number_5 = (row[1])
+            elif '30 Cooldown spread (Cook PM)' in row:
+                data_start = idx
+
+                break
+    Event_5_data = pd.read_csv(file_5, skiprows=data_start)
+    #Cook HAPEx Collection
+    if np.average(Event_5_data.iloc[:, 0]) != -1:
+        HH_Avg_PP_CoolDown_cook.append((int((np.average(Event_5_data.iloc[:, 0])) * 100)) / 100)
+        HH_STD_PP_CoolDown_cook.append((int((stat.stdev(Event_5_data.iloc[:, 0])) * 100)) / 100)
+        T_CoolDown_Cook_PM.extend(Event_5_data.iloc[:, 0])
+    else:
+        HH_Avg_PP_CoolDown_cook.append(-1)
+        HH_STD_PP_CoolDown_cook.append(-1)
+
+    #Kitchen HAPEx Collection
+    if np.average(Event_5_data.iloc[:, 1]) != -1:
+        HH_Avg_PM_CoolDown_kit.append((int((np.average(Event_5_data.iloc[:, 1])) * 100)) / 100)
+        HH_STD_PM_CoolDown_kit.append((int((stat.stdev(Event_5_data.iloc[:, 1])) * 100)) / 100)
+        T_CoolDown_KIT_PM.extend((Event_5_data.iloc[:, 1]))
+    else:
+        HH_Avg_PM_CoolDown_kit.append(-1)
+        HH_STD_PM_CoolDown_kit.append(-1)
+
+    Event_5_data = pd.read_csv(file_5, skiprows=data_start)
+    ID_Five_Event = id_number_5
 
 ####geting all the metrics compiled
 print('------------------metrics summary for day first -----------------------')
@@ -626,7 +675,12 @@ for HH_num, HH in enumerate(ID_HH_EM):
                          'Average Cook PM for First Five minutes of Cooking' : HH_Avg_PP_five_cook[HH_num],
                          'STD Cook PM for First Five minutes of Cooking' : HH_STD_PP_five_cook[HH_num],
                          'Average Kitchen PM for First Five minutes of Cooking' : HH_Avg_PM_five_kit[HH_num],
-                         'STD Kitchen PM for First Five minutes of Cooking' : HH_STD_PM_five_kit[HH_num] }
+                         'STD Kitchen PM for First Five minutes of Cooking' : HH_STD_PM_five_kit[HH_num],
+                         
+                        'Average Cook PM for Cooldown of Cooking' : HH_Avg_PP_CoolDown_cook[HH_num],
+                         'STD Cook PM for Cooldown of Cooking' : HH_STD_PP_CoolDown_cook[HH_num],
+                         'Average Kitchen PM for Cooldown of Cooking' : HH_Avg_PM_CoolDown_kit[HH_num],
+                         'STD Kitchen PM for Cooldown of Cooking' : HH_STD_PM_Cooldown_kit[HH_num]}
 
 
 
@@ -766,10 +820,17 @@ Total_Average_Event_cook_exposure = (int(np.average(T_E_Cook_PM)*100)/100)
 print('Average Cook PM exposure per event (PM)', Total_Average_Event_cook_exposure)
 Total_Average_Event_Kitchen_PM = (int(np.average(T_E_Kit_PM)*100)/100)
 print('Average Kitchen PM Exposure per event (PM)', Total_Average_Event_Kitchen_PM)
-Total_Average_first_five_Kit_PM = (int((((sum(T_Five_KIT_PM)))/(len(T_D_Kit_PM)))*100)/100)
-print('Average Kitchen PM for the first five minutes of cooking (PM)', Total_Average_first_five_Kit_PM)
-Total_Average_first_five_Cook_PM = (int((((sum(T_Five_Cook_PM)))/(len(T_D_Kit_PM)))*100)/100)
-print('Average Cook PM for the first five minutes of cooking (PM)', Total_Average_first_five_Cook_PM)
+
+Total_Average_first_five_Kit_PM = (int((((sum(T_Five_KIT_PM)))/(len(T_Five_KIT_PM)))*100)/100)
+print('Average Kitchen PM for the 10 Minute Start-Up of cooking (PM)', Total_Average_first_five_Kit_PM)
+Total_Average_first_five_Cook_PM = (int((((sum(T_Five_Cook_PM)))/(len(T_Five_Cook_PM)))*100)/100)
+print('Average Cook PM for the 10 Minute Start-Up of cooking (PM)', Total_Average_first_five_Cook_PM)
+
+Total_Average_Cooldown_Kit_PM = (int((((sum(T_Cooldown_KIT_PM)))/(len(T_Cooldown_KIT_PM)))*100)/100)
+print('Average Kitchen PM for the whole Cooldown of cooking (PM)', Total_Average_Cooldown_Kit_PM)
+Total_Average_Cooldown_Cook_PM = (int((((sum(T_CoolDown_Cook_PM)))/(len(T_CoolDown_Cook_PM)))*100)/100)
+print('Average Cook PM for the whole Cooldown of cooking (PM)', Total_Average_Cooldown_Cook_PM)
+
 Total_Cook_Comp_Event = (int((sum(T_E_Cook_comp)/len((T_E_Cook_comp)))*100)/100)
 print('Total percentage of Cook Compliance while Cooking(%)',(Total_Cook_Comp_Event)*100)
 Total_kitchen_comp_Event = (int((sum(T_E_Kit_comp)/len((T_E_Kit_comp)))*100)/100)
@@ -950,10 +1011,15 @@ DataFrame_event_HH = {'Household humber': Household_event,'Number of Events Obse
                   'Fuel Used for all events': HH_Event_Fuel_used_all_events ,
                    'Average Fuel Used per event':HH_Event_Average_fuel_per_event,
                     'Average Time Fuel was removed before Cooking (minutes)': HH_Event_Average_time_fuel_removed_before,
-                         'Average Cook PM for First Five minutes of Cooking' : HH_Event_Average_five_Cook_PM,
-                         'STD Cook PM for First Five minutes of Cooking' : HH_Event_STD_five_Cook_PM,
-                         'Average Kitchen PM for First Five minutes of Cooking' : HH_Event_Average_five_Kitchen_PM,
-                         'STD Kitchen PM for First Five minutes of Cooking' : HH_Event_STD_five_Kithen_PM}
+                         'Average Cook PM for Start-up of Cooking' : HH_Event_Average_five_Cook_PM,
+                         'STD Cook PM for Start-up of Cooking' : HH_Event_STD_five_Cook_PM,
+                         'Average Kitchen PM for Start-up minutes of Cooking' : HH_Event_Average_five_Kitchen_PM,
+                         'STD Kitchen PM for Start-up minutes of Cooking' : HH_Event_STD_five_Kithen_PM,
+
+                         'Average Cook PM for Cooldown of Cooking' : HH_Event_Average_Cooldown_Cook_PM,
+                         'STD Cook PM for Start-up of Cooking' : HH_Event_STD_five_Cook_PM,
+                         'Average Kitchen PM for Start-up minutes of Cooking' : HH_Event_Average_five_Kitchen_PM,
+                         'STD Kitchen PM for Start-up minutes of Cooking' : HH_Event_STD_five_Kithen_PM}
 DF_event_HH = pd.DataFrame(DataFrame_event_HH)
 
 DataFrame_Event = {'Total Amount of minutes for cooking event that was sensed: (minutes)': Total_Amount_of_event_time_sensed,
@@ -986,8 +1052,8 @@ DF_Event_rankings = pd.DataFrame(DataFrame_Event_rankings)
 Path_HH_Sum = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase
 if Exact_num == "1":
     File_name_phase_Day = str(Path_HH_Sum) + "/"+Phase+"_Summary_Day_"+Exact_num+"_exact"+".csv"
-    DF_day.to_csv(File_name_phase_Day)
-    DF_HH_day.to_csv(File_name_phase_Day,index=False, mode= 'a')
+    #DF_day.to_csv(File_name_phase_Day)
+    #DF_HH_day.to_csv(File_name_phase_Day,index=False, mode= 'a')
     File_name_phase_Day_rank = str(Path_HH_Sum) + "/"+Phase+"_Summary_Day_rank_"+Exact_num+"_exact"+".csv"
     DF_day_rankings.to_csv(File_name_phase_Day_rank,index=False,mode='a')
 

@@ -12,7 +12,7 @@ import seaborn as sns
 from pathlib import Path, PureWindowsPath
 import Functions_malawi
 
-Phase = input("What Phase are we in? --type 1N-- ")
+Phase = input("What Phase are we in? ")
 print('Phase Number', Phase)
 
 if Phase  == ("2N") or Phase == "3N" or Phase == "3N" or Phase == "4N":

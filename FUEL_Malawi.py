@@ -12,9 +12,9 @@ from io import StringIO
 import matplotlib.pyplot as plt
 
 # What Phase are we in?
-Phase = "1N"
+Phase = "4N"
 #What exact are we looking at? 1 or 2?
-Exact_num = "1"
+Exact_num = "2"
 
 
 
@@ -487,7 +487,7 @@ for file_5 in csv_E_5:
         for idx, row in enumerate(csv_reader):
             if '0' in row:
                 id_number_5 = (row[1])
-                #print('here is the ID number before cooldown',id_number_5)
+                print('here is the ID number before cooldown',id_number_5)
             elif '30 Cooldown spread (Cook PM)' in row:
                 data_start = idx
 
@@ -505,8 +505,8 @@ for file_5 in csv_E_5:
     #Kitchen HAPEx Collection
     #print(Event_5_data.iloc[5, 1])
     if Event_5_data.iloc[5, 1] != -1:
-        HH_Avg_PM_CoolDown_kit.append((int((np.average(Event_5_data.iloc[:, 1])) * 100)) / 100)
-        HH_STD_PM_CoolDown_kit.append((int((stat.stdev(Event_5_data.iloc[:, 1])) * 100)) / 100)
+        HH_Avg_PM_CoolDown_kit.append((int((np.average(Event_5_data.iloc[:, 1])))))# * 100)) / 100)
+        HH_STD_PM_CoolDown_kit.append((int((stat.stdev(Event_5_data.iloc[:, 1])))))# * 100)) / 100)
         T_CoolDown_KIT_PM.extend(Event_5_data.iloc[:, 1])
     else:
         HH_Avg_PM_CoolDown_kit.append(-1)

@@ -12,7 +12,7 @@ from io import StringIO
 import matplotlib.pyplot as plt
 
 # What Phase are we in?
-Phase = "1N"
+Phase = "1H"
 #What exact are we looking at? 1 or 2?
 Exact_num = "1"
 
@@ -379,7 +379,7 @@ for file_s in csv_E_S:
     if np.average(Event_SUM_data.iloc[:,1]) != -1:
         Fuel_removed = Event_SUM_data.iloc[:,1]
         KG_per_event.append(((int(sum(Fuel_removed)/how_many_events))*1000)/1000)
-        HH_Time_Fuel_remove.append(Event_SUM_data.iloc[:, 1])
+        HH_Time_Fuel_remove.append(Event_SUM_data.iloc[:, 2])
         #HH_Time_Fuel_Insert.append(Event_SUM_data.iloc[:, 3])
         T_E_Fuel_used_Event.extend(Fuel_removed)
         T_E_removed_Time.extend(Event_SUM_data.iloc[:, 2])
@@ -1069,7 +1069,8 @@ DataFrame_Event = {'Total Amount of minutes for cooking event that was sensed: (
                    'Average Kitchen PM for the first five minutes of cooking (PM)': Total_Average_first_five_Kit_PM,
                    'Average Cook PM for the first five minutes of cooking (PM)': Total_Average_first_five_Cook_PM,
                    'Total percentage of Cook Compliance while Cooking(%)':(Total_Cook_Comp_Event)*100,
-                   'Total percentage of Kitchen Compliance  while Cooking (%)': Total_kitchen_comp_Event}
+                   'Total percentage of Kitchen Compliance  while Cooking (%)': Total_kitchen_comp_Event, 
+                   'Total average fuel removed before Cooking':np.average(T_E_removed_Time)}
 index_why_s = [0]
 DF_Event = pd.DataFrame(DataFrame_Event,index=index_why_s)
 

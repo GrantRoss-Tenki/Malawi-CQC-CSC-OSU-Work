@@ -12,9 +12,9 @@ from io import StringIO
 import matplotlib.pyplot as plt
 
 # What Phase are we in?
-Phase = "1H"
+Phase = "4N"
 #What exact are we looking at? 1 or 2?
-Exact_num = "1"
+Exact_num = "2"
 
 
 
@@ -415,7 +415,8 @@ HH_Avg_PP_five_cook = []
 HH_Avg_PM_five_kit = []
 HH_STD_PP_five_cook = []
 HH_STD_PM_five_kit = []
-
+HH_SUM_PM_Five_kit = []
+HH_SUM_PM_Five_cook = []
 
 
 os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_E_first_five")
@@ -445,18 +446,22 @@ for file_5 in csv_E_5:
         HH_Avg_PP_five_cook.append((int((np.average(Event_5_data.iloc[:, 0])) * 100)) / 100)
         HH_STD_PP_five_cook.append((int((stat.stdev(Event_5_data.iloc[:, 0])) * 100)) / 100)
         T_Five_Cook_PM.extend(Event_5_data.iloc[:, 0])
+        HH_SUM_PM_Five_cook.append(int(sum(Event_5_data.iloc[:, 0])))
     else:
         HH_Avg_PP_five_cook.append(-1)
         HH_STD_PP_five_cook.append(-1)
+        HH_SUM_PM_Five_cook.append(-1)
 
     #Kitchen HAPEx Collection
     if np.average(Event_5_data.iloc[:, 1]) != -1:
         HH_Avg_PM_five_kit.append((int((np.average(Event_5_data.iloc[:, 1])) * 100)) / 100)
         HH_STD_PM_five_kit.append((int((stat.stdev(Event_5_data.iloc[:, 1])) * 100)) / 100)
         T_Five_KIT_PM.extend((Event_5_data.iloc[:, 1]))
+        HH_SUM_PM_Five_kit.append(int(sum(Event_5_data.iloc[:, 0])))
     else:
         HH_Avg_PM_five_kit.append(-1)
         HH_STD_PM_five_kit.append(-1)
+        HH_SUM_PM_Five_kit.append(-1)
 
     Event_5_data = pd.read_csv(file_5, skiprows=data_start)
     ID_Five_Event = id_number_5
@@ -510,8 +515,8 @@ for file_5 in csv_E_5:
     #Kitchen HAPEx Collection
     #print(Event_5_data.iloc[5, 1])
     if Event_5_data.iloc[5, 1] != -1:
-        HH_Avg_PM_CoolDown_kit.append((int((np.average(Event_5_data.iloc[:, 1])))))# * 100)) / 100)
-        HH_STD_PM_CoolDown_kit.append((int((stat.stdev(Event_5_data.iloc[:, 1])))))# * 100)) / 100)
+        HH_Avg_PM_CoolDown_kit.append(np.average(Event_5_data.iloc[:, 1]))# * 100)) / 100)
+        HH_STD_PM_CoolDown_kit.append((((stat.stdev(Event_5_data.iloc[:, 1])))))# * 100)) / 100)
         T_CoolDown_KIT_PM.extend(Event_5_data.iloc[:, 1])
         HH_SUM_PM_Cooldown_kit.append(int(sum(Event_5_data.iloc[:, 1])))
     else:
@@ -691,7 +696,9 @@ for HH_num, HH in enumerate(ID_HH_EM):
                          'STD Kitchen PM for Cooldown of Cooking' : HH_STD_PM_CoolDown_kit[HH_num],
                          'Sum of total 30 minute Cooldown (cook)': HH_SUM_PM_Cooldown_kit[HH_num],
                          'Sum of total 30 minute Cooldown (kitchen)' : HH_SUM_PM_Cooldown_kit[HH_num],
-                         'CoolDown Minutes Coolected': CoolDown_length[HH_num]}                 
+                         'CoolDown Minutes Coolected': CoolDown_length[HH_num],
+                         'Sum of total startup Kitchen':HH_SUM_PM_Five_kit[HH_num],
+                         'Sum of total startup Cook': HH_SUM_PM_Five_cook[HH_num]}                 
 
     #print('length of average kitchen, cooldown lenght, fuel removed for origional dictionary',HH_dict_event)
 
@@ -965,11 +972,12 @@ HH_Event_STD_Cooldown_Kithen_PM = []
 HH_Event_SUM_CoolDown_Cook = []
 HH_Event_SUM_CoolDown_Kitchen = []
 HH_Event_Cooldown_Minutes_Collected = []
-
+HH_Event_SUM_Five_Cook = []
+HH_Event_SUM_Five_Kitchen = []
 
 for Num, hh in enumerate(HH_dict_event.keys()):
     Household_event.append(hh)
-    countings = np.arange(0, 26,1)
+    countings = np.arange(0, 28,1)
     for val in countings:
         if val == 0:
             HH_Event_number_Events_observed.append(HH_dict_event[hh]['Number of Events Observed'])
@@ -1023,6 +1031,10 @@ for Num, hh in enumerate(HH_dict_event.keys()):
            HH_Event_SUM_CoolDown_Kitchen.append(HH_dict_event[hh]['Sum of total 30 minute Cooldown (kitchen)'])
         elif val == 25:
            HH_Event_Cooldown_Minutes_Collected.append(HH_dict_event[hh]['CoolDown Minutes Coolected'])
+        elif val == 26:
+           HH_Event_SUM_Five_Kitchen.append(HH_dict_event[hh]['Sum of total startup Kitchen'])
+        elif val == 27:
+           HH_Event_SUM_Five_Cook.append(HH_dict_event[hh]['Sum of total startup Cook'])
 
 
 DataFrame_event_HH = {'Household number': Household_event,'Number of Events Observed':HH_Event_number_Events_observed,
@@ -1050,7 +1062,10 @@ DataFrame_event_HH = {'Household number': Household_event,'Number of Events Obse
                    'Average Kitchen PM for Cooldown of Cooking' : HH_Event_Average_Cooldown_Kitchen_PM,
                    'STD Kitchen PM for Cooldown of Cooking' : HH_Event_STD_Cooldown_Kithen_PM,
                    'Sum of 30 Minutes CoolDown (Kitchen)':HH_Event_SUM_CoolDown_Kitchen,
-                   'Cooldown Minutes Collected':HH_Event_Cooldown_Minutes_Collected}
+                   'Cooldown Minutes Collected':HH_Event_Cooldown_Minutes_Collected,
+                   'Sum of Kitchen Startup': HH_Event_SUM_Five_Kitchen, 
+                   'Sum of Cook Startup':HH_Event_SUM_Five_Cook}
+
 print('length of fule used', len(HH_Event_Average_fuel_per_event))
 print('length of avg Kit Cooldown', len(HH_Event_Average_Cooldown_Kitchen_PM))
 print('length of sum kit', len(HH_Event_SUM_CoolDown_Kitchen))

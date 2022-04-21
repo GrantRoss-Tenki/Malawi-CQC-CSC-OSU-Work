@@ -457,7 +457,7 @@ for file_5 in csv_E_5:
         HH_Avg_PM_five_kit.append((int((np.average(Event_5_data.iloc[:, 1])) * 100)) / 100)
         HH_STD_PM_five_kit.append((int((stat.stdev(Event_5_data.iloc[:, 1])) * 100)) / 100)
         T_Five_KIT_PM.extend((Event_5_data.iloc[:, 1]))
-        HH_SUM_PM_Five_kit.append(int(sum(Event_5_data.iloc[:, 0])))
+        HH_SUM_PM_Five_kit.append(int(sum(Event_5_data.iloc[:, 1])))
     else:
         HH_Avg_PM_five_kit.append(-1)
         HH_STD_PM_five_kit.append(-1)
@@ -694,7 +694,7 @@ for HH_num, HH in enumerate(ID_HH_EM):
                          'STD Cook PM for Cooldown of Cooking' : HH_STD_PP_CoolDown_cook[HH_num],
                          'Average Kitchen PM for Cooldown of Cooking' : HH_Avg_PM_CoolDown_kit[HH_num],
                          'STD Kitchen PM for Cooldown of Cooking' : HH_STD_PM_CoolDown_kit[HH_num],
-                         'Sum of total 30 minute Cooldown (cook)': HH_SUM_PM_Cooldown_kit[HH_num],
+                         'Sum of total 30 minute Cooldown (cook)': HH_SUM_PM_Cooldown_cook[HH_num],
                          'Sum of total 30 minute Cooldown (kitchen)' : HH_SUM_PM_Cooldown_kit[HH_num],
                          'CoolDown Minutes Coolected': CoolDown_length[HH_num],
                          'Sum of total startup Kitchen':HH_SUM_PM_Five_kit[HH_num],
@@ -1038,8 +1038,8 @@ for Num, hh in enumerate(HH_dict_event.keys()):
 
 
 DataFrame_event_HH = {'Household number': Household_event,'Number of Events Observed':HH_Event_number_Events_observed,
-                   'Average Events per day (Events/day)':HH_Event_Average_Events_day,
                    'Total time cooking (minutes)': HH_Event_Total_time_cooking,
+                   'Average Events per day (Events/day)':HH_Event_Average_Events_day,
                    'Percentage of Cooking per day (minutes)': HH_Event_percentage_cooking_per_day,
                    'Average length of Each Cooking Event (minutes)': HH_Event_Average_Cooking_length, 
                    'STD length of Each Cooking Event(minutes)': HH_Event_STD_Cooking_length, 
@@ -1058,13 +1058,13 @@ DataFrame_event_HH = {'Household number': Household_event,'Number of Events Obse
                    'STD Kitchen PM for Start-up minutes of Cooking' : HH_Event_STD_five_Kithen_PM,
                    'Average Cook PM for Cooldown of Cooking' : HH_Event_Average_Cooldown_Cook_PM,
                    'STD Cook PM for Cooldown of Cooking' : HH_Event_STD_Cooldown_Cook_PM,
-                   'Sum of 30 Minutes CoolDown (Cook)': HH_Event_SUM_CoolDown_Cook,
                    'Average Kitchen PM for Cooldown of Cooking' : HH_Event_Average_Cooldown_Kitchen_PM,
                    'STD Kitchen PM for Cooldown of Cooking' : HH_Event_STD_Cooldown_Kithen_PM,
-                   'Sum of 30 Minutes CoolDown (Kitchen)':HH_Event_SUM_CoolDown_Kitchen,
                    'Cooldown Minutes Collected':HH_Event_Cooldown_Minutes_Collected,
                    'Sum of Kitchen Startup': HH_Event_SUM_Five_Kitchen, 
-                   'Sum of Cook Startup':HH_Event_SUM_Five_Cook}
+                   'Sum of Cook Startup':HH_Event_SUM_Five_Cook,
+                   'Sum of 30 Minutes CoolDown (Kitchen)':HH_Event_SUM_CoolDown_Kitchen,
+                   'Sum of 30 Minutes CoolDown (Cook)': HH_Event_SUM_CoolDown_Cook}
 
 print('length of fule used', len(HH_Event_Average_fuel_per_event))
 print('length of avg Kit Cooldown', len(HH_Event_Average_Cooldown_Kitchen_PM))

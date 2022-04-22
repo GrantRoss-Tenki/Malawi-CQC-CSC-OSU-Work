@@ -171,4 +171,15 @@ for file in csv_R_m:
         RAW_day_Path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_1_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(Household)+"_1_exact_3.55555.csv"
         RAW_day = pd.read_csv(RAW_day_Path,  skiprows=2)
         Fuel_Removed = RAW_day.iloc[:, 1]
-        print(Fuel_Removed)
+        Cook_compliance = RAW_day.iloc[:, 5]
+        Kitchen_Compliance = RAW_day.iloc[:, 6]
+        Cook_PM = RAW_day.iloc[:, 7]
+        Kitchen_PM = RAW_day.iloc[:, 8]
+
+        Number_of_events = []
+        total_cooking_time = sum(Merged_Stoves_end)
+        Average_events_per_day = len(Merged_Stoves_start)/ (len(Merged_Stove_combined_Array)*24*60)
+        Percentage_cooking = total_cooking_time/ len(Merged_Stove_combined_Array)
+
+
+        #for time_value, start in enumerate(Merged_Stoves_start):

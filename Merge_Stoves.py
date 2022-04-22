@@ -85,25 +85,83 @@ for file in csv_R_m:
         #MERGING: if stove cooking events overlay, combine to new Time Value complete stove in variible - "Merged_Stoves_start" and Merged_Stove_end" 
         #New Time Values are going to be used for raw dauly metrics to get complete metrics
 
+        Collection_length = np.arange(0, Greatest_event_stove_end.iloc[-1]+45, 1)
+
+        Greatest_event_stove = []
+        Greatest_event_count = 0
+        No_more_cooking = 0
+        for tv in Collection_length:
+            if No_more_cooking == 0:
+                if (tv >= int(Greatest_event_stove_start[Greatest_event_count])) and (tv <= int(Greatest_event_stove_end[Greatest_event_count])):
+                    Greatest_event_stove.append(1)
+                elif (tv > int(Greatest_event_stove_end[Greatest_event_count])) or tv == Greatest_event_stove_end.iloc[-1]:
+                    if Greatest_event_count + 1 == len(Greatest_event_stove_end):
+                        No_more_cooking = 1
+                    elif Greatest_event_count <=  len(Greatest_event_stove_end):
+                        Greatest_event_count = Greatest_event_count + 1 
+                        Greatest_event_stove.append(1)
+                else:
+                    Greatest_event_stove.append(0)
+            else:
+                Greatest_event_stove.append(0)
+
+        print(len(Greatest_event_stove_end),len(Greatest_event_stove), Greatest_event_count)
+
+        Collection_length_least = np.arange(0, Least_event_stove_end.iloc[-1]+45, 1)
+        Least_event_stove = []
+        Least_event_count = 0
+        No_more_cooking = 0
+        for tv in Collection_length_least:
+            if No_more_cooking == 0:
+                if (tv >= int(Least_event_stove_start[Least_event_count])) and (tv <= int(Least_event_stove_end[Least_event_count])):
+                    Least_event_stove.append(1)
+                elif (tv > int(Least_event_stove_end[Least_event_count])) or tv == Least_event_stove_end.iloc[-1]:
+                    if Least_event_count + 1 == len(Least_event_stove_end):
+                        No_more_cooking = 1
+                    elif Least_event_count <=  len(Least_event_stove_end):
+                        Least_event_count = Least_event_count + 1 
+                        Least_event_stove.append(1)
+                else:
+                    Least_event_stove.append(0)
+            else:
+                Least_event_stove.append(0)
+
+        print(len(Least_event_stove_end),len(Least_event_stove), Least_event_count)
+
+        Merged_Stove_combined_Array = []
+        if len(Greatest_event_stove) > len(Least_event_stove):
+            Greatest_stove_length = Greatest_event_stove
+            least_stove_length = Least_event_stove
+        else:
+            Greatest_stove_length = Least_event_stove
+            least_stove_length = Greatest_event_stove
+
+        Merged_Stove_combined_Array = []
+        no_more_less_used_stove = 0
+        for tvv, cooking in enumerate(Greatest_stove_length):
+            if no_more_less_used_stove == 0:
+                if tvv > len(least_stove_length)-1:
+                    Merged_Stove_combined_Array.append(cooking)
+                    no_more_less_used_stove = 1
+                elif cooking == 1:
+                    Merged_Stove_combined_Array.append(cooking)
+                elif least_stove_length[tvv] == 1:
+                    Merged_Stove_combined_Array.append(least_stove_length[tvv])
+                else:
+                    Merged_Stove_combined_Array.append(cooking)
+            else:
+                Merged_Stove_combined_Array.append(cooking)
+        print('length of the merged stove---', len(Merged_Stove_combined_Array))
+        #going to use combined stove to get to the start and end values
         Merged_Stoves_start = []
         Merged_Stoves_end = []
-        Least_stove_counter = 0
-        Greatest_stove_counter = 0
+        for nexx, a in enumerate(Merged_Stove_combined_Array):
+            if nexx + 1 == len(Merged_Stove_combined_Array) - 1:
+                break
+            elif a == 0 and Merged_Stove_combined_Array[nexx + 1] == 1:
+                Merged_Stoves_start.append(nexx + 1)
+            elif a == 1 and  Merged_Stove_combined_Array[nexx + 1] == 0:
+                Merged_Stoves_end.append(nexx)
 
-        for event, Greatest_start_tv in enumerate(Greatest_event_stove_start):
-
-
-            least_start_tv = Least_event_Least_event_stove_start[Least_stove_counter]
-
-            Least_end_tv = Least_event_Least_event_stove_end[Least_stove_counter]
-            Greatest_end_tv = Greatest_event_stove_end[Greatest_stove_counter]
-
-            elif Greatest_start_tv < least_start_tv  < Greatest_end_tv:
-                Merged_Stoves.append(Greatest_start_tv)
-
-                if Least_end_tv > Greatest_end_tv and Least_end_tv > Greatest_start_tv:
-                    Merged_Stoves_end.append(Least_end_tv)
-                elif:  Least_end_tv < Greatest_end_tv:
-                    Merged_Stoves_end.append(Greatest_end_tv)
-
-                print(Merged_Stoves_end)
+        print(Merged_Stoves_start)
+        print(Merged_Stoves_end)

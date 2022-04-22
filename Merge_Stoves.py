@@ -39,10 +39,7 @@ for file in csv_R_m:
                     Household = rows[1]
                     print('the household id number is:  ',  (rows[1]))
         for idx, row in enumerate(csv_reader):
-            if int(0) in row:
-                id_number = (row[1])
-                print('the household id number is:  ',  (id_number))
-            elif '| Event Number |' in row:
+            if '| Event Number |' in row:
                 data_start= idx
                 break
 
@@ -51,6 +48,8 @@ for file in csv_R_m:
         print('-----------------  ',  get_me_data.iloc[0, 3])
         stove_1_start_times = get_me_data.iloc[:, 3]
         stove_1_end_times = get_me_data.iloc[:, 4]
+
+        # Certify that the household is using the second stove
 
         for ttt in exact_2_hh:
             Cooking_minute_2 = []
@@ -62,4 +61,49 @@ for file in csv_R_m:
                 break
             else:
                 second_exact = 0
-        print('Time vlaues for both starts',stove_1_start_times,stove_2_start_times, 'Time values for both end',stove_1_end_times, stove_2_end_times  )
+        print('Time vlaues for both starts',stove_1_start_times,stove_2_start_times, 'Time values for both end',stove_1_end_times, stove_2_end_times)
+
+        #Clariffy: Start and end varriables for each stove are the same length. Or, stove 1 and stove 2 can have different overall lengths, but their individaul start and end are the same array lengths 
+
+        if len(stove_1_start_times) > len(stove_2_start_times):
+            Greatest_event_stove_start = stove_1_start_times
+            Greatest_event_stove_end = stove_1_end_times
+
+            Least_event_stove_start = stove_2_start_times
+            Least_event_stove_end = stove_2_end_times
+        elif len(stove_1_start_times) < len(stove_2_start_times):
+            Greatest_event_stove_start = stove_2_start_times
+            Greatest_event_stove_end = stove_2_end_times
+            Least_event_stove_start = stove_1_start_times
+            Least_event_stove_end = stove_1_end_times
+        else:
+            Greatest_event_stove_start = stove_1_start_times
+            Greatest_event_stove_end = stove_1_end_times
+            Least_event_stove_start = stove_2_start_times
+            Least_event_stove_end = stove_2_end_times
+
+        #MERGING: if stove cooking events overlay, combine to new Time Value complete stove in variible - "Merged_Stoves_start" and Merged_Stove_end" 
+        #New Time Values are going to be used for raw dauly metrics to get complete metrics
+
+        Merged_Stoves_start = []
+        Merged_Stoves_end = []
+        Least_stove_counter = 0
+        Greatest_stove_counter = 0
+
+        for event, Greatest_start_tv in enumerate(Greatest_event_stove_start):
+
+
+            least_start_tv = Least_event_Least_event_stove_start[Least_stove_counter]
+
+            Least_end_tv = Least_event_Least_event_stove_end[Least_stove_counter]
+            Greatest_end_tv = Greatest_event_stove_end[Greatest_stove_counter]
+
+            elif Greatest_start_tv < least_start_tv  < Greatest_end_tv:
+                Merged_Stoves.append(Greatest_start_tv)
+
+                if Least_end_tv > Greatest_end_tv and Least_end_tv > Greatest_start_tv:
+                    Merged_Stoves_end.append(Least_end_tv)
+                elif:  Least_end_tv < Greatest_end_tv:
+                    Merged_Stoves_end.append(Greatest_end_tv)
+
+                print(Merged_Stoves_end)

@@ -45,7 +45,7 @@ for file in csv_R_m:
 
         
         get_me_data = (pd.read_csv(file, skiprows=2 ))
-        print('-----------------  ',  get_me_data.iloc[0, 3])
+        #print('-----------------  ',  get_me_data.iloc[0, 3])
         stove_1_start_times = get_me_data.iloc[:, 3]
         stove_1_end_times = get_me_data.iloc[:, 4]
 
@@ -61,7 +61,7 @@ for file in csv_R_m:
                 break
             else:
                 second_exact = 0
-        print('Time vlaues for both starts',stove_1_start_times,stove_2_start_times, 'Time values for both end',stove_1_end_times, stove_2_end_times)
+        #print('Time vlaues for both starts',stove_1_start_times,stove_2_start_times, 'Time values for both end',stove_1_end_times, stove_2_end_times)
 
         #Clariffy: Start and end varriables for each stove are the same length. Or, stove 1 and stove 2 can have different overall lengths, but their individaul start and end are the same array lengths 
 
@@ -165,3 +165,10 @@ for file in csv_R_m:
 
         print(Merged_Stoves_start)
         print(Merged_Stoves_end)
+
+
+        # getting the raw day metrics for the combined stoves
+        RAW_day_Path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_1_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(Household)+"_1_exact_3.55555.csv"
+        RAW_day = pd.read_csv(RAW_day_Path,  skiprows=2)
+        Fuel_Removed = RAW_day.iloc[:, 1]
+        print(Fuel_Removed)

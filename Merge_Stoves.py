@@ -171,6 +171,7 @@ for file in csv_R_m:
         RAW_day_Path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_1_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(Household)+"_1_exact_3.55555.csv"
         RAW_day = pd.read_csv(RAW_day_Path,  skiprows=2)
         Fuel_Removed = RAW_day.iloc[:, 1]
+        Temperature = RAW_day.iloc[:,4]
         Cook_compliance = RAW_day.iloc[:, 5]
         Kitchen_Compliance = RAW_day.iloc[:, 6]
         Cook_PM = RAW_day.iloc[:, 7]
@@ -180,6 +181,63 @@ for file in csv_R_m:
         total_cooking_time = sum(Merged_Stoves_end)
         Average_events_per_day = len(Merged_Stoves_start)/ (len(Merged_Stove_combined_Array)*24*60)
         Percentage_cooking = total_cooking_time/ len(Merged_Stove_combined_Array)
+        Average_Event_length = len(Merged_Stoves_start)/ total_cooking_time
+        Average_Cook_PM_per_Event = []
+        Average_Kitchen_PM_per_Event = []
+        Mean_Cook_PM_per_Event = []
+        Mean_Kitchen_PM_per_Event = []
+        STD_Cook_PM_per_Event = []
+        STD_Kitchen_PM_per_Event = []
+        Percentage_Cook_Compliance = []
+        Percentage_Kitchen_Compliance =[]
+        Fuel_Used_for_events_Non_filtered = []
+        #Start up
+        Median_Start_up_PM = []
+        Average_Startup_PM = [] 
+        Std_Start_Up_PM = []
+        #coolDown
+        Median_Cooldown_PM = []
+        Average_Cooldown_PM = []
+        STD_Cooldown_PM = []
 
+        RAW_EVENT_KITCHEN_PM = []
+        RAW_EVENT_KITCHEN_PM = [] 
+        Raw_Tempterature_event = []
+        Start_Up_minutes_Collected = []
+        Cooldown_minutes_Collected = []
+        
+        Sum_Start_up_Kitchen = []
+        Sum_Start_up_Cook = []
 
-        #for time_value, start in enumerate(Merged_Stoves_start):
+        Sum_Cooldown_Cook = []
+        Sum_Cooldown_Kitchen = []
+        for time_value, start in enumerate(Merged_Stoves_start):
+            Average_Cook_PM_per_Event.append((int((np.average([a for a in Cook_PM[start:Merged_Stoves_end[time_value]]]))*10))/10)
+            Average_Kitchen_PM_per_Event.append((int((np.average([a for a in Kitchen_PM[start:Merged_Stoves_end[time_value]]]))*10))/10)
+            Mean_Cook_PM_per_Event.append((int((np.mean([a for a in Cook_PM[start:Merged_Stoves_end[time_value]]]))*10))/10)
+            Mean_Kitchen_PM_per_Event.append((int((np.mean([a for a in Kitchen_PM[start:Merged_Stoves_end[time_value]]]))*10))/10)
+            STD_Cook_PM_per_Event.append((int((np.std([a for a in Cook_PM[start:Merged_Stoves_end[time_value]]]))*10))/10)
+            STD_Kitchen_PM_per_Event.append((int((np.std([a for a in Kitchen_PM[start:Merged_Stoves_end[time_value]]]))*10))/10)
+            Percentage_Cook_Compliance.append((int(((sum(Percentage_Cook_Compliance[start:Merged_Stoves_end[time_value]]))/(Merged_Stoves_end[time_value]-start))*100)))
+            Percentage_Kitchen_Compliance.append((int(((sum(Percentage_Kitchen_Compliance[start:Merged_Stoves_end[time_value]]))/(Merged_Stoves_end[time_value]-start))*100)))
+            Fuel_Used_for_events_Non_filtered.append(Fuel_Removed[start:Merged_Stoves_end[time_value]])
+            #Start up
+            Median_Start_up_PM = []
+            Average_Startup_PM = [] 
+            Std_Start_Up_PM = []
+            #coolDown
+            Median_Cooldown_PM = []
+            Average_Cooldown_PM = []
+            STD_Cooldown_PM = []
+
+            RAW_EVENT_KITCHEN_PM = []
+            RAW_EVENT_KITCHEN_PM = [] 
+            Raw_Tempterature_event
+            Start_Up_minutes_Collected = []
+            Cooldown_minutes_Collected = []
+        
+            Sum_Start_up_Kitchen = []
+            Sum_Start_up_Cook = []
+
+            Sum_Cooldown_Cook = []
+            Sum_Cooldown_Kitchen = []

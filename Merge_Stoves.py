@@ -67,6 +67,7 @@ Total_Sum_Start_up_Cook = []
 Total_Sum_Cooldown_Cook = []
 Total_Sum_Cooldown_Kitchen = []
 
+Total_average_Fuel_removed_before_Firefinder = []
 count_hh = 0
 for file in csv_R_m:
     if count_hh != 0:
@@ -221,7 +222,8 @@ for file in csv_R_m:
         Cook_PM = RAW_day.iloc[:, 7]
         Kitchen_PM = RAW_day.iloc[:, 8]
 
-        
+        Fuel_removal_countdown = Functions_malawi.FuelRemovalTime(Fuel_Removed,0)
+
         Hosuehold.append(Household)
         total_cooking_time.append(sum(Merged_Stove_combined_Array))
         Number_of_events.append(len(Merged_Stoves_end))
@@ -273,6 +275,11 @@ for file in csv_R_m:
         Raw_Kitchen_cooldown = []
         Raw_Cook_cooldown = []
         
+        Raw_Combined_Kitchen_Hapex = []
+        Raw_Combined_Temperature = []
+
+        Fuel_removed_before_firefinder = []
+
         event_num = 0
         for time_value, start in enumerate(Merged_Stoves_start):
 
@@ -317,6 +324,8 @@ for file in csv_R_m:
             Sum_Start_up_Kitchen.append(sum(Kitchen_PM[(time_value - 10): time_value]))
             Sum_Start_up_Cook.append(sum(Cook_PM[(time_value - 10): time_value]))
 
+            Fuel_removed_before_firefinder.append(Fuel_removal_countdown[start])
+
             Sum_Cooldown_Cook.append(sum(Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]))
             Sum_Cooldown_Kitchen.append(sum(Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]))
             print('median startup- ',Median_Kitchen_Start_up_PM[event_num],'-Average Startup-', Average_Kitchen_Startup_PM[event_num],'-average event pm-',
@@ -325,6 +334,6 @@ for file in csv_R_m:
             print('--------next event------')
             event_num = event_num + 1
 
-        Event_number = np.arange(0, event_num -1,1)
-        
+        Event_number_tally = np.arange(0, event_num,1)
+        print(Event_number_tally, event_num)
 

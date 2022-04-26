@@ -294,3 +294,21 @@ def flatten_list(_2d_list):
         else:
             flat_list.append(element)
     return flat_list
+
+def Local_Max_min(array):
+    gradienttt = np.gradient(array)
+    Mini_value = min(gradienttt)
+    Max_value = max(gradienttt)
+    Time_Vaue_min = gradienttt.index(Mini_value)
+    Time_Vaue_max = gradienttt.index(Max_value)
+
+    local_min_count = 0
+    local_maxima_count = 0
+
+    for tv, a in enumerate(np.gradienttt):
+        if a == 0:
+            if gradienttt[tv-1] < 0:
+                local_min_count = local_min_count + 1
+            elif gradienttt[tv-1] > 0:
+                local_maxima_count = local_maxima_count + 1
+    return Time_Vaue_min, Time_Vaue_max, local_min_count, local_maxima_count

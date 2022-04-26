@@ -278,6 +278,16 @@ for file in csv_R_m:
         Raw_Combined_Kitchen_Hapex = []
         Raw_Combined_Temperature = []
 
+        Whole_Kitchen_hapex_Min_tv = []
+        Whole_Kitchen_hapex_Min_count = []
+        Whole_Kitchen_hapex_Max_tv = []
+        Whole_Kitchen_hapex_Max_count = []
+
+        Whole_Temperture_Min_tv = []
+        Whole_Temperture_Min_count = []
+        Whole_Temperture_Max_tv = []
+        Whole_Temperture_Max_count = []
+
         Fuel_removed_before_firefinder = []
 
         event_num = 0
@@ -289,9 +299,9 @@ for file in csv_R_m:
             Median_Kitchen_PM_per_Event.append((int((np.median([a for a in Kitchen_PM[start:Merged_Stoves_end[time_value]]]))*10))/10)
             STD_Cook_PM_per_Event.append((int((np.std([a for a in Cook_PM[start:Merged_Stoves_end[time_value]]]))*10))/10)
             STD_Kitchen_PM_per_Event.append((int((np.std([a for a in Kitchen_PM[start:Merged_Stoves_end[time_value]]]))*10))/10)
-            Percentage_Cook_Compliance.append((int(((sum(Percentage_Cook_Compliance[start:Merged_Stoves_end[time_value]]))/(Merged_Stoves_end[time_value]-start))*100)))
-            Percentage_Kitchen_Compliance.append((int(((sum(Percentage_Kitchen_Compliance[start:Merged_Stoves_end[time_value]]))/(Merged_Stoves_end[time_value]-start))*100)))
-            Fuel_Used_for_events_Non_filtered.append(Fuel_Removed[start:Merged_Stoves_end[time_value]])
+            Percentage_Cook_Compliance.append((int(((sum([a for a in Cook_compliance[start:Merged_Stoves_end[time_value]]]))/(Merged_Stoves_end[time_value]-start))*100)))
+            Percentage_Kitchen_Compliance.append((int(((sum([a for a in Kitchen_Compliance[start:Merged_Stoves_end[time_value]]]))/(Merged_Stoves_end[time_value]-start))*100)))
+            Fuel_Used_for_events_Non_filtered.append(list([a for a in Fuel_Removed[start:Merged_Stoves_end[time_value]]]))
             #Start up
             Median_Kitchen_Start_up_PM.append((int((np.median([a for a in Kitchen_PM[(start - 10): start]]))*10))/10)
             Average_Kitchen_Startup_PM.append((int((np.average([a for a in Kitchen_PM[(start - 10): start]]))*10))/10)
@@ -309,14 +319,26 @@ for file in csv_R_m:
             Average_Cook_Cooldown_PM.append(np.average([a for a in Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]]))
             STD_Cook_Cooldown_PM.append(np.std([a for a in Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]]))
 
-            RAW_EVENT_KITCHEN_PM.append(Kitchen_PM[start:Merged_Stoves_end[time_value]])
-            RAW_EVENT_Cook_PM.append(Cook_PM[start:Merged_Stoves_end[time_value]])
-            Raw_Tempterature_event.append(Temperature[start:Merged_Stoves_end[time_value]])
-            Raw_Kitchen_start_up.append(Kitchen_PM[(time_value - 10): time_value])
-            Raw_Cook_start_up.append(Cook_PM[(time_value - 10): time_value])
-            Raw_Kitchen_cooldown.append(Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)])
-            Raw_Cook_cooldown.append(Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)])
+            RAW_EVENT_KITCHEN_PM.append([a for a in Kitchen_PM[start:Merged_Stoves_end[time_value]]])
+            RAW_EVENT_Cook_PM.append([a for a in Cook_PM[start:Merged_Stoves_end[time_value]]])
+            Raw_Tempterature_event.append([a for a in Temperature[start:Merged_Stoves_end[time_value]]])
+            Raw_Kitchen_start_up.append(Kitchen_PM[(start - 10): start])
+            Raw_Cook_start_up.append([a for a in Cook_PM[(start - 10): start]])
+            Raw_Kitchen_cooldown.append([a for a in Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]])
+            Raw_Cook_cooldown.append([a for a in Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]])
 
+            Raw_Combined_Kitchen_Hapex.append(list([a for a in Kitchen_PM[(start - 10):  (Merged_Stoves_end[time_value] + 30)]]))
+            Raw_Combined_Temperature.append([a for a in Temperature[(start - 10):  (Merged_Stoves_end[time_value] + 30)]])
+
+            print('length of raw combined', len(Raw_Combined_Kitchen_Hapex), len(Raw_Kitchen_start_up))
+            K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count = Functions_malawi.Local_Max_min(Raw_Combined_Kitchen_Hapex[event_num])
+
+            Whole_Kitchen_hapex_Min_tv.append(K_H_MIN_tv + (start-10))
+            Whole_Kitchen_hapex_Max_tv.append(K_H_MAX_tv + (start-10))
+            Whole_Kitchen_hapex_Min_count.append(K_H_MIN_Count)
+            Whole_Kitchen_hapex_Max_count.append(K_H_MAX_Count)
+            
+            
 
             Start_Up_minutes_Collected.append(len(Kitchen_PM[(time_value - 10): time_value]))
             Cooldown_minutes_Collected.append(len(Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]))
@@ -328,12 +350,14 @@ for file in csv_R_m:
 
             Sum_Cooldown_Cook.append(sum(Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]))
             Sum_Cooldown_Kitchen.append(sum(Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]))
+
             print('median startup- ',Median_Kitchen_Start_up_PM[event_num],'-Average Startup-', Average_Kitchen_Startup_PM[event_num],'-average event pm-',
                   Average_Kitchen_PM_per_Event[event_num],'median event pm-',Median_Kitchen_PM_per_Event[event_num], 'length of event-',length_of_event[event_num],
                   'min--Median cooldown-',Median_Kitchen_Cooldown_PM[event_num],'Average Cooldown-',Average_Kitchen_Startup_PM[event_num])
-            print('--------next event------')
+            print('--------next event------',K_H_MIN_tv+ (start-10),'min- TV -max' ,K_H_MAX_tv ,K_H_MIN_Count ,'Min- count -Max',K_H_MAX_Count)
             event_num = event_num + 1
 
         Event_number_tally = np.arange(0, event_num,1)
         print(Event_number_tally, event_num)
 
+        

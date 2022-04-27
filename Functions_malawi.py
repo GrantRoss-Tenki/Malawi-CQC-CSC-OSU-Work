@@ -313,3 +313,17 @@ def Local_Max_min(arrayyyy):
             local_maxima_count = local_maxima_count + 1
 
     return (Time_Vaue_min[0]), (Time_Vaue_max[0]), local_min_count, local_maxima_count
+
+
+def StartUp_max_Next_min(Hapex):
+    Hap = list(np.gradient(Hapex))
+    StartUp_max = max(Hap[0:21])
+    StartUp_max_TV = (np.where(Hap == StartUp_max))
+    for tt, grad in enumerate(Hap):
+        if tt == StartUp_max_TV:
+            for s_tv, s_grad in enumerate(Hap[tt:]):
+                if Hap[s_tv -1] < 0 and s_grad >0:
+                    Next_min = tt + s_tv
+                    break
+
+    return StartUp_max_TV, Next_min

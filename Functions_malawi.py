@@ -295,7 +295,9 @@ def flatten_list(_2d_list):
             flat_list.append(element)
     return flat_list
 
-def Local_Max_min(arrayyyy):
+def Local_Max_min(arrayyyy, start):
+    # the array needs be a whole spread meaning the startup (10 min before ) Fire finder and cool down (30 after) 
+    # *** the array is not just firefinder*****
     array = (arrayyyy)
     gradienttt = list(np.gradient(array))
     Mini_value = min(gradienttt)
@@ -305,25 +307,41 @@ def Local_Max_min(arrayyyy):
 
     local_min_count = 0
     local_maxima_count = 0
-
-    for tv, a in enumerate(gradienttt):
+    # the for loop is for determining the number of local minmums and maximums 
+    # local max and mins are determined by the gradient
+    for tv, a in enumerate(gradienttt,):
         if gradienttt[tv-1] < 0 and a > 0:
             local_min_count = local_min_count + 1
         elif gradienttt[tv-1] > 0 and a < 0:
             local_maxima_count = local_maxima_count + 1
 
-    return (Time_Vaue_min[0]), (Time_Vaue_max[0]), local_min_count, local_maxima_count
+    return (Time_Vaue_min[0]+(start-10)), (Time_Vaue_max[0]+(start -10)), local_min_count, local_maxima_count
 
 
-def StartUp_max_Next_min(Hapex):
+def StartUp_max_Next_min(Hapex,start):
+    # the Hapex needs be a whole spread meaning the startup (10 min before ) Fire finder and cool down (30 after) 
+    # *** the array is not just firefinder*****
+    # NOTE---- this function has the same input as the "Local_Max_min" with differnt names
     Hap = list(np.gradient(Hapex))
     StartUp_max = max(Hap[0:21])
     StartUp_max_TV = (np.where(Hap == StartUp_max))
+    #print('---------=--=-=-=---==-------',StartUp_max_TV)
+    found_min = 0
     for tt, grad in enumerate(Hap):
-        if tt == StartUp_max_TV:
+        if tt == StartUp_max_TV[0]:
+            
             for s_tv, s_grad in enumerate(Hap[tt:]):
-                if Hap[s_tv -1] < 0 and s_grad >0:
-                    Next_min = tt + s_tv
+                next_tt = tt + s_tv
+                if Hap[next_tt -1] < 0 and s_grad > 0:
+                    Next_min_TV = tt + s_tv
+                    found_min = 1
                     break
 
-    return StartUp_max_TV, Next_min
+        if found_min == 0:
+            Next_min_TV = -1000
+    print('`/`/`*/`/`*`/`~*/~*~/~~~~~~~/*~/~*/~',StartUp_max_TV[0],Next_min_TV )
+    return (StartUp_max_TV[0] +(start - 10)), (Next_min_TV + (start -10))
+
+#def SteadyState_Finder(Whole_Hapex, WHole_Max_Time_Value):
+
+ #   After_max = [H for H in Whole_Hapex[WHole_Max_Time_Value:]]

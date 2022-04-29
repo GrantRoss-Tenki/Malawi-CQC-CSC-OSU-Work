@@ -355,7 +355,7 @@ for file in csv_R_m:
             print('median startup- ',Median_Kitchen_Start_up_PM[event_num],'-Average Startup-', Average_Kitchen_Startup_PM[event_num],'-average event pm-',
                   Average_Kitchen_PM_per_Event[event_num],'median event pm-',Median_Kitchen_PM_per_Event[event_num], 'length of event-',length_of_event[event_num],
                   'min--Median cooldown-',Median_Kitchen_Cooldown_PM[event_num],'Average Cooldown-',Average_Kitchen_Startup_PM[event_num])
-            print('--------next event------',K_H_MIN_tv,'min- TV -max' ,K_H_MAX_tv ,K_H_MIN_Count ,'Min- count -Max',K_H_MAX_Count, 'Startup max tv', K_Hapex_Startup_max, 'Startup next min',K_Hapex_Next_Startup_min)
+            print('--------next event------',K_H_MIN_tv,'min- TV -max' ,K_H_MAX_tv ,K_H_MIN_Count[-1] ,'Min- array last value -Max',K_H_MAX_Count[-1], 'Startup max tv', K_Hapex_Startup_max, 'Startup next min',K_Hapex_Next_Startup_min)
             event_num = event_num + 1
 
         Event_number_tally = np.arange(0, event_num,1)

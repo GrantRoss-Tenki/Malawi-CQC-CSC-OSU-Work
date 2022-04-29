@@ -339,9 +339,35 @@ def StartUp_max_Next_min(Hapex,start):
 
         if found_min == 0:
             Next_min_TV = -1000
-    print('`/`/`*/`/`*`/`~*/~*~/~~~~~~~/*~/~*/~',StartUp_max_TV[0],Next_min_TV )
+    
     return (StartUp_max_TV[0] +(start - 10)), (Next_min_TV + (start -10))
 
-#def SteadyState_Finder(Whole_Hapex, WHole_Max_Time_Value):
+def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array, Loca_Max_array, startup_max, start):
 
- #   After_max = [H for H in Whole_Hapex[WHole_Max_Time_Value:]]
+    Medain_of_Max_Hapex = np.median(Combined_event_Hapex[int(startup_max):])
+    Max_reverse = list(reversed(Loca_Max_array))
+    Min_reverse = list(reversed(Local_min_array))
+    Min_reverse_count = 0
+    stop = 0
+
+    Gradient_Hapex = list(np.gradient(Combined_event_Hapex))
+    for tv_rev, rev_hapex in enumerate(reversed(Combined_event_Hapex)):
+        if stop == 1:
+            break
+        elif (len(Combined_event_Hapex)- tv_rev) == Min_reverse[Min_reverse_count]:
+            for tv_max, rev_max in enumerate(Max_reverse):
+                if (Min_reverse[Min_reverse_count] - window) <= rev_max <= (Min_reverse[Min_reverse_count] + window):
+                    if Combined_event_Hapex[rev_max] > Medain_of_Max_Hapex and Combined_event_Hapex[Min_reverse[Min_reverse_count-1]] < Medain_of_Max_Hapex:
+                        Steady_window_gradient = np.array([a for a in Gradient_Hapex[rev_max:Min_reverse[Min_reverse_count-1]]])
+                        mini_window_gradient_array = [(min(Steady_window_gradient))]
+
+                        for tv_steady, steady_grad in enumerate(Steady_window_gradient):
+                            if steady_grad == mini_window_gradient_array:
+                                where_is_the_MinSlope = tv_steady + rev_max
+                                stop = 1
+                                break
+
+                if stop == 1:
+                    break
+
+    return (where_is_the_MinSlope + start)

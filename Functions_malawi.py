@@ -305,15 +305,15 @@ def Local_Max_min(arrayyyy, start):
     Time_Vaue_min = (np.where(gradienttt == Mini_value))
     Time_Vaue_max = (np.where(gradienttt == Max_value))
 
-    local_min_count = 0
-    local_maxima_count = 0
+    local_min_count = []
+    local_maxima_count = []
     # the for loop is for determining the number of local minmums and maximums 
     # local max and mins are determined by the gradient
     for tv, a in enumerate(gradienttt,):
         if gradienttt[tv-1] < 0 and a > 0:
-            local_min_count = local_min_count + 1
+            local_min_count.append(tv + (start -10))
         elif gradienttt[tv-1] > 0 and a < 0:
-            local_maxima_count = local_maxima_count + 1
+            local_maxima_count.append(tv + (start -10))
 
     return (Time_Vaue_min[0]+(start-10)), (Time_Vaue_max[0]+(start -10)), local_min_count, local_maxima_count
 

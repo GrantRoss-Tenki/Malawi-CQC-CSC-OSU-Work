@@ -351,6 +351,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array, Loca_Max_a
     stop = 0
 
     Gradient_Hapex = list(np.gradient(Combined_event_Hapex))
+
     for tv_rev, rev_hapex in enumerate(reversed(Combined_event_Hapex)):
         if stop == 1:
             break
@@ -369,5 +370,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array, Loca_Max_a
 
                 if stop == 1:
                     break
+        if stop == 0:
+            where_is_the_MinSlope = (start -10) + (len(Combined_event_Hapex) -30)
 
-    return (where_is_the_MinSlope + start)
+    return (where_is_the_MinSlope + (start-10))

@@ -358,6 +358,8 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array, Loca_Max_a
     for tv_1, hapex_vauue in enumerate(where_grad):
         if hapex_vauue == where: 
             where_is_the_MinSlope = tv_1 + Max_reverse[0]
+        else:
+            where_is_the_MinSlope = Min_reverse[0]
 
     for tv_rev, rev_hapex in enumerate(reversed(Combined_event_Hapex)):
         if stop == 0:

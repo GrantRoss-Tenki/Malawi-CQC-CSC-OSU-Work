@@ -349,28 +349,36 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array, Loca_Max_a
     Min_reverse = list(reversed(Local_min_array))
     Min_reverse_count = 0
     stop = 0
-
+    
     Gradient_Hapex = list(np.gradient(Combined_event_Hapex))
+    
+    where_grad = np.array([y for y in (Gradient_Hapex[int(Max_reverse[0]):int(Min_reverse[0])])])
+    print('from function, this is the array i am looking at', Gradient_Hapex[int(Max_reverse[0]):int(Min_reverse[0])],int(Max_reverse[0]),int(Min_reverse[0])  )
+    where = [(min(where_grad))]
+    for tv_1, hapex_vauue in enumerate(where_grad):
+        if hapex_vauue == where: 
+            where_is_the_MinSlope = tv_1 + Max_reverse[0]
 
     for tv_rev, rev_hapex in enumerate(reversed(Combined_event_Hapex)):
-        if stop == 1:
-            break
+        if stop == 0:
+            continue
+
         elif (len(Combined_event_Hapex)- tv_rev) == Min_reverse[Min_reverse_count]:
             for tv_max, rev_max in enumerate(Max_reverse):
-                if (Min_reverse[Min_reverse_count] - window) <= rev_max <= (Min_reverse[Min_reverse_count] + window):
+                if rev_max <= (Min_reverse[Min_reverse_count] + window): #(Min_reverse[Min_reverse_count] - window) <= 
                     if Combined_event_Hapex[rev_max] > Medain_of_Max_Hapex and Combined_event_Hapex[Min_reverse[Min_reverse_count-1]] < Medain_of_Max_Hapex:
                         Steady_window_gradient = np.array([a for a in Gradient_Hapex[rev_max:Min_reverse[Min_reverse_count-1]]])
                         mini_window_gradient_array = [(min(Steady_window_gradient))]
 
+                        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',Steady_window_gradient )
                         for tv_steady, steady_grad in enumerate(Steady_window_gradient):
                             if steady_grad == mini_window_gradient_array:
                                 where_is_the_MinSlope = tv_steady + rev_max
                                 stop = 1
+                                
+
                                 break
 
                 if stop == 1:
                     break
-        if stop == 0:
-            where_is_the_MinSlope = (start -10) + (len(Combined_event_Hapex) -30)
-
     return (where_is_the_MinSlope + (start-10))

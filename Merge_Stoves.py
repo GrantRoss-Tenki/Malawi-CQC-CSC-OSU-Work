@@ -330,13 +330,13 @@ for file in csv_R_m:
             Raw_Combined_Kitchen_Hapex.append(list([a for a in Kitchen_PM[(start - 10):  (Merged_Stoves_end[time_value] + 30)]]))
             Raw_Combined_Temperature.append([a for a in Temperature[(start - 10):  (Merged_Stoves_end[time_value] + 30)]])
 
-            print('length of raw combined', len(Raw_Combined_Kitchen_Hapex), len(Raw_Kitchen_start_up))
+            #print('length of raw combined', len(Raw_Combined_Kitchen_Hapex), len(Raw_Kitchen_start_up))
             K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count  = Functions_malawi.Local_Max_min(Raw_Combined_Kitchen_Hapex[event_num], start)
             K_Hapex_Startup_max, K_Hapex_Next_Startup_min = Functions_malawi.StartUp_max_Next_min(Raw_Combined_Kitchen_Hapex[event_num], start)
-            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',K_H_MAX_Count, K_H_MIN_Count )
+            #print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',K_H_MAX_Count, K_H_MIN_Count )
             Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Raw_Combined_Kitchen_Hapex[event_num], 7, K_H_MIN_Count, K_H_MAX_Count,K_Hapex_Startup_max,start  )
 
-            print('here is the time vlaue for the steady state', Steady_start_Time_value)
+            #print('here is the time vlaue for the steady state', Steady_start_Time_value)
 
             Whole_Kitchen_hapex_Min_tv.append(K_H_MIN_tv + (start-10))
             Whole_Kitchen_hapex_Max_tv.append(K_H_MAX_tv + (start-10))

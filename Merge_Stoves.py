@@ -333,8 +333,8 @@ for file in csv_R_m:
             #print('length of raw combined', len(Raw_Combined_Kitchen_Hapex), len(Raw_Kitchen_start_up))
             K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count  = Functions_malawi.Local_Max_min(Raw_Combined_Kitchen_Hapex[event_num], start)
             K_Hapex_Startup_max, K_Hapex_Next_Startup_min = Functions_malawi.StartUp_max_Next_min(Raw_Combined_Kitchen_Hapex[event_num], start)
-            #print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',K_H_MAX_Count, K_H_MIN_Count )
-            Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Raw_Combined_Kitchen_Hapex[event_num], 7, K_H_MIN_Count, K_H_MAX_Count, start)
+            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',K_H_MAX_Count, K_H_MIN_Count )
+            Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Raw_Combined_Kitchen_Hapex[event_num], , K_H_MIN_Count,K_Hapex_Startup_max ,K_H_MAX_Count, start)
 
             print('here is the time vlaue for the steady state', Steady_start_Time_value)
 

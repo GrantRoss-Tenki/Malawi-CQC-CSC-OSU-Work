@@ -19,5 +19,5 @@ K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count  = Functions_malawi.Local_M
 
 K_Hapex_Startup_max, K_Hapex_Next_Startup_min = Functions_malawi.StartUp_max_Next_min(csv, start)
 print(K_H_MAX_Count,K_H_MIN_Count,K_Hapex_Startup_max  )
-Steady_start_Time_value = Functions_malawi.SteadyState_Finder(csv, 7, K_H_MIN_Count,K_Hapex_Startup_max, K_H_MAX_Count,start)
+Steady_start_Time_value = Functions_malawi.SteadyState_Finder(csv, 35, K_H_MIN_Count,K_Hapex_Startup_max, K_H_MAX_Count,start)
 print('Here is the Steady State: ',Steady_start_Time_value)

@@ -364,7 +364,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
     max_grad_where = np.where(Gradient_Hapex == max_grad)
     max_PM = np.where(Combined_event_Hapex == max(Combined_event_Hapex))
     
-    Medain_of_Max_Hapex = np.median(Combined_event_Hapex[int(max_grad_where[0]):])
+    Medain_of_Max_Hapex = np.median(Combined_event_Hapex)
 
     print(startup,'max hapex',max_PM[0],max_grad_where, Combined_event_Hapex[0],'median',Medain_of_Max_Hapex, startup)
 
@@ -381,38 +381,48 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
             where_is_the_MinSlope = tv_1 + Max_reverse[0]
         else:
             where_is_the_MinSlope = Min_reverse[0]
-
+    how_many_steady_state = []
     for tv_rev, rev_hapex in enumerate(reversed(Combined_event_Hapex)):
-        if stop == 1:
-           
-            break
+        #if stop == 1:
+        #    print('next')
+            #continue
+            #break
 
-        elif (len(Combined_event_Hapex)- tv_rev) == Min_reverse[Min_reverse_count]:
+        if (len(Combined_event_Hapex)- tv_rev) == Min_reverse[Min_reverse_count]:
             for tv_max, rev_max in enumerate(Max_reverse):
                 if  (Min_reverse[Min_reverse_count] - window) <= rev_max <= (Min_reverse[Min_reverse_count] + window):
                     #print('is this the good max', Combined_event_Hapex[rev_max], rev_max, Combined_event_Hapex[Min_reverse[Min_reverse_count-1]], Min_reverse[Min_reverse_count-1])
-                    if rev_max > Min_reverse[Min_reverse_count-1]:
-                        Final_last_slope = [t for t in Gradient_Hapex[rev_max:]]
+                    if rev_max > Min_reverse[Min_reverse_count] and Min_reverse_count > len(Min_reverse):
+                        Final_last_slope = [t for t in Gradient_Hapex[Min_reverse[Min_reverse_count]:]]
                         min_last_slope = min(Final_last_slope)
                         where_last_slope = np.where(Final_last_slope == min_last_slope)
                         where_is_the_MinSlope = rev_max + where_last_slope[0]
                         stop = 1
 
                     elif Combined_event_Hapex[rev_max] > Medain_of_Max_Hapex and Combined_event_Hapex[Min_reverse[Min_reverse_count-1]] < Medain_of_Max_Hapex:
-                        Steady_window_gradient = np.array([a for a in Gradient_Hapex[rev_max:Min_reverse[Min_reverse_count-1]]])
+                        if rev_max < Min_reverse[Min_reverse_count-1]:
+                            two = Min_reverse[Min_reverse_count-1]
+                            one = rev_max
+                        else:
+                            one = Min_reverse[Min_reverse_count-1]
+                            two = rev_max
+                        print('------------- it made it here-------------', rev_max, Min_reverse[Min_reverse_count])
+                        Steady_window_gradient = np.array([a for a in Gradient_Hapex[one:two]])
                         mini_window_gradient_array = [(min(Steady_window_gradient))]
-
+                        print('------------- it made it here-------------', rev_max, Min_reverse[Min_reverse_count])
                        
                         for tv_steady, steady_grad in enumerate(Steady_window_gradient):
                             if steady_grad == mini_window_gradient_array:
                                 stop = 1
                                 where_is_the_MinSlope = tv_steady + rev_max
                                 #print('~~~~~~~~~~~~~~~~~~~~~~~~~',where_is_the_MinSlope,tv_steady,rev_max,steady_grad)
-                                    
-                                break
+                                how_many_steady_state.append(where_is_the_MinSlope)
+                                #break
 
-                if stop == 1:
-                    break
+                #if stop == 1:
+                #    continue
+                    #break
                 
             Min_reverse_count = Min_reverse_count +1
+            print('here are the steady states', how_many_steady_state)
     return (where_is_the_MinSlope + (start-10))

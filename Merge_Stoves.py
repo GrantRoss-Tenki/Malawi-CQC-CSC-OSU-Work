@@ -334,7 +334,7 @@ for file in csv_R_m:
             K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count  = Functions_malawi.Local_Max_min(Raw_Combined_Kitchen_Hapex[event_num], start)
             K_Hapex_Startup_max, K_Hapex_Next_Startup_min = Functions_malawi.StartUp_max_Next_min(Raw_Combined_Kitchen_Hapex[event_num], start)
             #print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',K_H_MAX_Count, K_H_MIN_Count )
-            Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Raw_Combined_Kitchen_Hapex[event_num], 7, K_H_MIN_Count, K_H_MAX_Count,start  )
+            Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Raw_Combined_Kitchen_Hapex[event_num], 7, K_H_MIN_Count, K_H_MAX_Count, start)
 
             print('here is the time vlaue for the steady state', Steady_start_Time_value)
 

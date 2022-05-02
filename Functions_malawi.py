@@ -343,11 +343,7 @@ def StartUp_max_Next_min(Hapex,start):
     return (StartUp_max_TV[0] +(start - 10)), (Next_min_TV + (start -10))
 
 def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Loca_Max_array, start):
-    max_PM = np.where(Combined_event_Hapex == max(Combined_event_Hapex))
-    
-    Medain_of_Max_Hapex = np.median(Combined_event_Hapex[int(max_PM[0]):])
-    meadian_start_up = np.median(Combined_event_Hapex[int(startup[0]):])
-    print('max hapex',max_PM[0],startup[0], Combined_event_Hapex[0],'median',Medain_of_Max_Hapex, startup, meadian_start_up)
+
     max_array_scale = []
     for g in Loca_Max_array:
         max_array_scale.append(g- (start-10))
@@ -363,7 +359,15 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
     stop = 0
     
     Gradient_Hapex = (np.gradient(Combined_event_Hapex))
-    #print('start', start,Minn_reverse_first,Maxx_reverse_first)
+ 
+    max_grad = max(list(Gradient_Hapex))
+    max_grad_where = np.where(Gradient_Hapex == max_grad)
+    max_PM = np.where(Combined_event_Hapex == max(Combined_event_Hapex))
+    
+    Medain_of_Max_Hapex = np.median(Combined_event_Hapex[int(max_grad_where[0]):])
+
+    print(startup,'max hapex',max_PM[0],max_grad_where, Combined_event_Hapex[0],'median',Medain_of_Max_Hapex, startup)
+
 
     if Minn_reverse_first > Maxx_reverse_first:
         where_grad = Gradient_Hapex[Maxx_reverse_first:Minn_reverse_first]
@@ -386,9 +390,15 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
         elif (len(Combined_event_Hapex)- tv_rev) == Min_reverse[Min_reverse_count]:
             for tv_max, rev_max in enumerate(Max_reverse):
                 if  (Min_reverse[Min_reverse_count] - window) <= rev_max <= (Min_reverse[Min_reverse_count] + window):
-                    print('is this the good max', Combined_event_Hapex[rev_max], rev_max, Combined_event_Hapex[Min_reverse[Min_reverse_count-1]], Min_reverse[Min_reverse_count-1])
+                    #print('is this the good max', Combined_event_Hapex[rev_max], rev_max, Combined_event_Hapex[Min_reverse[Min_reverse_count-1]], Min_reverse[Min_reverse_count-1])
+                    if rev_max > Min_reverse[Min_reverse_count-1]:
+                        Final_last_slope = [t for t in Gradient_Hapex[rev_max:]]
+                        min_last_slope = min(Final_last_slope)
+                        where_last_slope = np.where(Final_last_slope == min_last_slope)
+                        where_is_the_MinSlope = rev_max + where_last_slope[0]
+                        stop = 1
 
-                    if Combined_event_Hapex[rev_max] > Medain_of_Max_Hapex and Combined_event_Hapex[Min_reverse[Min_reverse_count-1]] < Medain_of_Max_Hapex:
+                    elif Combined_event_Hapex[rev_max] > Medain_of_Max_Hapex and Combined_event_Hapex[Min_reverse[Min_reverse_count-1]] < Medain_of_Max_Hapex:
                         Steady_window_gradient = np.array([a for a in Gradient_Hapex[rev_max:Min_reverse[Min_reverse_count-1]]])
                         mini_window_gradient_array = [(min(Steady_window_gradient))]
 
@@ -397,7 +407,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
                             if steady_grad == mini_window_gradient_array:
                                 stop = 1
                                 where_is_the_MinSlope = tv_steady + rev_max
-                                print('~~~~~~~~~~~~~~~~~~~~~~~~~',where_is_the_MinSlope,tv_steady,rev_max,steady_grad)
+                                #print('~~~~~~~~~~~~~~~~~~~~~~~~~',where_is_the_MinSlope,tv_steady,rev_max,steady_grad)
                                     
                                 break
 

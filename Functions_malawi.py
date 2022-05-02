@@ -389,11 +389,9 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
     max_reverse_array_count = []
     for tv_rev, rev_hapex in enumerate(reversed(Combined_event_Hapex)):
         if (len(Combined_event_Hapex) - tv_rev) < max_grad_where[0]:
-        #    print('next')
-            #continue
             break
 
-        elif (len(Combined_event_Hapex)- tv_rev) == Min_reverse[Min_reverse_count]:
+        elif (len(Combined_event_Hapex)-1- tv_rev) == Min_reverse[Min_reverse_count]:
             for tv_max, rev_max in enumerate(Max_reverse):
                 if  (Min_reverse[Min_reverse_count] - window) <= rev_max <= (Min_reverse[Min_reverse_count] + window):
                     #print('is this the good max', Combined_event_Hapex[rev_max], rev_max, Combined_event_Hapex[Min_reverse[Min_reverse_count-1]], Min_reverse[Min_reverse_count-1])
@@ -402,7 +400,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
                         min_last_slope = min(Final_last_slope)
                         where_last_slope = np.where(Final_last_slope == min_last_slope)
                         where_is_the_MinSlope = rev_max + where_last_slope[0]
-                        stop = 1
+                        stop = where_is_the_MinSlope
 
                     elif Combined_event_Hapex[rev_max] > Medain_of_Max_Hapex and Combined_event_Hapex[Min_reverse[Min_reverse_count]] < Medain_of_Max_Hapex:
                         if rev_max < Min_reverse[Min_reverse_count]:
@@ -428,7 +426,8 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
                                 clossest_max_median = np.where((max_reverse_array_count) == max((max_reverse_array_count)))
                                 stop = how_many_steady_state[-1]
                                 #break
-
+                else:
+                    continue
                 #if :
                 #    continue
                     #break
@@ -437,6 +436,17 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
             
     
     print('here are the steady states', how_many_steady_state,min_reverse_array_count,max_reverse_array_count,clossest_min_median[0], clossest_max_median[0])
+    last_filter = []
     if len(how_many_steady_state) > 1:
-        where_is_the_MinSlope = how_many_steady_state[int(clossest_min_median[0])]
+        for nec in how_many_steady_state:
+            filtering = 0
+            for hapex_pm in Combined_event_Hapex[nec:]:
+                if hapex_pm > Medain_of_Max_Hapex:
+                    filtering = 1
+                    break
+            if filtering == 0:
+                last_filter.append(nec)
+        print('last_filter ',list(set(last_filter)) )
+
+        where_is_the_MinSlope = min(list(set(last_filter)))
     return (where_is_the_MinSlope + (start-10))

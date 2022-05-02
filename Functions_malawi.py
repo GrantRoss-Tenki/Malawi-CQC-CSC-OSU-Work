@@ -342,19 +342,36 @@ def StartUp_max_Next_min(Hapex,start):
     
     return (StartUp_max_TV[0] +(start - 10)), (Next_min_TV + (start -10))
 
-def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array, Loca_Max_array, startup_max, start):
+def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Loca_Max_array, start):
+    max_PM = np.where(Combined_event_Hapex == max(Combined_event_Hapex))
+    
+    Medain_of_Max_Hapex = np.median(Combined_event_Hapex[int(max_PM[0]):])
+    meadian_start_up = np.median(Combined_event_Hapex[int(startup[0]):])
+    print('max hapex',max_PM[0],startup[0], Combined_event_Hapex[0],'median',Medain_of_Max_Hapex, startup, meadian_start_up)
+    max_array_scale = []
+    for g in Loca_Max_array:
+        max_array_scale.append(g- (start-10))
+    min_array_scale = [] 
+    for h in Local_min_array:
+        min_array_scale.append(h-(start - 10))
 
-    Medain_of_Max_Hapex = np.median(Combined_event_Hapex[int(startup_max):])
     Max_reverse = list(reversed(Loca_Max_array))
     Min_reverse = list(reversed(Local_min_array))
+    Minn_reverse_first = min_array_scale[-1]
+    Maxx_reverse_first = max_array_scale[-1]
     Min_reverse_count = 0
     stop = 0
     
-    Gradient_Hapex = list(np.gradient(Combined_event_Hapex))
-    
-    where_grad = np.array([y for y in (Gradient_Hapex[int(Max_reverse[0]):int(Min_reverse[0])])])
-    print('from function, this is the array i am looking at', Gradient_Hapex[int(Max_reverse[0]):int(Min_reverse[0])],int(Max_reverse[0]),int(Min_reverse[0])  )
-    where = [(min(where_grad))]
+    Gradient_Hapex = (np.gradient(Combined_event_Hapex))
+    #print('start', start,Minn_reverse_first,Maxx_reverse_first)
+
+    if Minn_reverse_first > Maxx_reverse_first:
+        where_grad = Gradient_Hapex[Maxx_reverse_first:Minn_reverse_first]
+    elif Minn_reverse_first < Maxx_reverse_first:
+        where_grad = Gradient_Hapex[Minn_reverse_first:Maxx_reverse_first]
+
+    #print('from function, this is the array i am looking at' ,where_grad)
+    where = min(where_grad)
     for tv_1, hapex_vauue in enumerate(where_grad):
         if hapex_vauue == where: 
             where_is_the_MinSlope = tv_1 + Max_reverse[0]
@@ -362,25 +379,30 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array, Loca_Max_a
             where_is_the_MinSlope = Min_reverse[0]
 
     for tv_rev, rev_hapex in enumerate(reversed(Combined_event_Hapex)):
-        if stop == 0:
-            continue
+        if stop == 1:
+           
+            break
 
         elif (len(Combined_event_Hapex)- tv_rev) == Min_reverse[Min_reverse_count]:
             for tv_max, rev_max in enumerate(Max_reverse):
-                if rev_max <= (Min_reverse[Min_reverse_count] + window): #(Min_reverse[Min_reverse_count] - window) <= 
+                if  (Min_reverse[Min_reverse_count] - window) <= rev_max <= (Min_reverse[Min_reverse_count] + window):
+                    print('is this the good max', Combined_event_Hapex[rev_max], rev_max, Combined_event_Hapex[Min_reverse[Min_reverse_count-1]], Min_reverse[Min_reverse_count-1])
+
                     if Combined_event_Hapex[rev_max] > Medain_of_Max_Hapex and Combined_event_Hapex[Min_reverse[Min_reverse_count-1]] < Medain_of_Max_Hapex:
                         Steady_window_gradient = np.array([a for a in Gradient_Hapex[rev_max:Min_reverse[Min_reverse_count-1]]])
                         mini_window_gradient_array = [(min(Steady_window_gradient))]
 
-                        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',Steady_window_gradient )
+                       
                         for tv_steady, steady_grad in enumerate(Steady_window_gradient):
                             if steady_grad == mini_window_gradient_array:
-                                where_is_the_MinSlope = tv_steady + rev_max
                                 stop = 1
-                                
-
+                                where_is_the_MinSlope = tv_steady + rev_max
+                                print('~~~~~~~~~~~~~~~~~~~~~~~~~',where_is_the_MinSlope,tv_steady,rev_max,steady_grad)
+                                    
                                 break
 
                 if stop == 1:
                     break
+                
+            Min_reverse_count = Min_reverse_count +1
     return (where_is_the_MinSlope + (start-10))

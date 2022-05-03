@@ -15,9 +15,22 @@ import Functions_malawi
 # the first step is to get the time Values for a double stove Household.
 
 
-Phase = "4N"
-if Phase== "4N":
+Phase = "2N"
+start_spread = 10
+cooldown_Length = 30
+
+if Phase== "2N":
+    exact_2_hh = [1007]
+elif Phase== "3N":
+    exact_2_hh = [1001]
+elif Phase== "4N":
     exact_2_hh = [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1011, 1013, 1014, 1016, 1017, 1018, 1019, 1021, 1022, 1023, 1024, 1025, 1026, 1028, 1029, 1030, 1031, 1032, 1033, 1035, 1036, 1037, 1038, 1039]
+elif Phase== "2H":
+    exact_2_hh = [2006]
+elif Phase== "3H":
+    exact_2_hh = [2001, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015]
+else:
+    exact_2_hh = [0]
 
 os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_1_exact/HH_summary_Event")
 
@@ -67,13 +80,11 @@ Total_Sum_Start_up_Cook = []
 Total_Sum_Cooldown_Cook = []
 Total_Sum_Cooldown_Kitchen = []
 
-Total_average_Fuel_removed_before_Firefinder = []
+Spacer_for_data_frame = []
+
 count_hh = 0
 for file in csv_R_m:
-    if count_hh != 0:
-        break
-    else:
-        count_hh = 1 + count_hh
+    count_hh = 1 + count_hh
     with open(file, 'r') as f:
         csv_reader = csv.reader(f)
         hh_gimme = reader(f)
@@ -103,99 +114,128 @@ for file in csv_R_m:
                 second_exact_2 = pd.read_csv(stove_2_path,  skiprows=2)
                 stove_2_start_times = second_exact_2.iloc[:, 3]
                 stove_2_end_times = second_exact_2.iloc[:, 4]
+                second_exact = 1
                 break
             else:
                 second_exact = 0
+                stove_2_start_times = []
         #print('Time vlaues for both starts',stove_1_start_times,stove_2_start_times, 'Time values for both end',stove_1_end_times, stove_2_end_times)
 
         #Clariffy: Start and end varriables for each stove are the same length. Or, stove 1 and stove 2 can have different overall lengths, but their individaul start and end are the same array lengths 
+        if second_exact != 0:
+            if len(stove_1_start_times) > len(stove_2_start_times):
+                Greatest_event_stove_start = stove_1_start_times
+                Greatest_event_stove_end = stove_1_end_times
 
-        if len(stove_1_start_times) > len(stove_2_start_times):
-            Greatest_event_stove_start = stove_1_start_times
-            Greatest_event_stove_end = stove_1_end_times
-
-            Least_event_stove_start = stove_2_start_times
-            Least_event_stove_end = stove_2_end_times
-        elif len(stove_1_start_times) < len(stove_2_start_times):
-            Greatest_event_stove_start = stove_2_start_times
-            Greatest_event_stove_end = stove_2_end_times
-            Least_event_stove_start = stove_1_start_times
-            Least_event_stove_end = stove_1_end_times
+                Least_event_stove_start = stove_2_start_times
+                Least_event_stove_end = stove_2_end_times
+            elif len(stove_1_start_times) < len(stove_2_start_times):
+                Greatest_event_stove_start = stove_2_start_times
+                Greatest_event_stove_end = stove_2_end_times
+                Least_event_stove_start = stove_1_start_times
+                Least_event_stove_end = stove_1_end_times
+            else:
+                Greatest_event_stove_start = stove_1_start_times
+                Greatest_event_stove_end = stove_1_end_times
+                Least_event_stove_start = stove_2_start_times
+                Least_event_stove_end = stove_2_end_times
         else:
             Greatest_event_stove_start = stove_1_start_times
             Greatest_event_stove_end = stove_1_end_times
-            Least_event_stove_start = stove_2_start_times
-            Least_event_stove_end = stove_2_end_times
 
         #MERGING: if stove cooking events overlay, combine to new Time Value complete stove in variible - "Merged_Stoves_start" and Merged_Stove_end" 
         #New Time Values are going to be used for raw dauly metrics to get complete metrics
 
         Collection_length = np.arange(0, Greatest_event_stove_end.iloc[-1]+45, 1)
 
-        Greatest_event_stove = []
-        Greatest_event_count = 0
-        No_more_cooking = 0
-        for tv in Collection_length:
-            if No_more_cooking == 0:
-                if (tv >= int(Greatest_event_stove_start[Greatest_event_count])) and (tv <= int(Greatest_event_stove_end[Greatest_event_count])):
-                    Greatest_event_stove.append(1)
-                elif (tv > int(Greatest_event_stove_end[Greatest_event_count])) or tv == Greatest_event_stove_end.iloc[-1]:
-                    if Greatest_event_count + 1 == len(Greatest_event_stove_end):
-                        No_more_cooking = 1
-                    elif Greatest_event_count <=  len(Greatest_event_stove_end):
-                        Greatest_event_count = Greatest_event_count + 1 
+        
+        if second_exact != 0:
+            Greatest_event_stove = []
+            Greatest_event_count = 0
+            No_more_cooking = 0
+            for tv in Collection_length:
+                if No_more_cooking == 0:
+                    if (tv >= int(Greatest_event_stove_start[Greatest_event_count])) and (tv <= int(Greatest_event_stove_end[Greatest_event_count])):
                         Greatest_event_stove.append(1)
+                    elif (tv > int(Greatest_event_stove_end[Greatest_event_count])) or tv == Greatest_event_stove_end.iloc[-1]:
+                        if Greatest_event_count + 1 == len(Greatest_event_stove_end):
+                            No_more_cooking = 1
+                        elif Greatest_event_count <=  len(Greatest_event_stove_end):
+                            Greatest_event_count = Greatest_event_count + 1 
+                            Greatest_event_stove.append(1)
+                    else:
+                        Greatest_event_stove.append(0)
                 else:
                     Greatest_event_stove.append(0)
-            else:
-                Greatest_event_stove.append(0)
 
-        print(len(Greatest_event_stove_end),len(Greatest_event_stove), Greatest_event_count)
+            #print(len(Greatest_event_stove_end),len(Greatest_event_stove), Greatest_event_count)
 
-        Collection_length_least = np.arange(0, Least_event_stove_end.iloc[-1]+45, 1)
-        Least_event_stove = []
-        Least_event_count = 0
-        No_more_cooking = 0
-        for tv in Collection_length_least:
-            if No_more_cooking == 0:
-                if (tv >= int(Least_event_stove_start[Least_event_count])) and (tv <= int(Least_event_stove_end[Least_event_count])):
-                    Least_event_stove.append(1)
-                elif (tv > int(Least_event_stove_end[Least_event_count])) or tv == Least_event_stove_end.iloc[-1]:
-                    if Least_event_count + 1 == len(Least_event_stove_end):
-                        No_more_cooking = 1
-                    elif Least_event_count <=  len(Least_event_stove_end):
-                        Least_event_count = Least_event_count + 1 
+            Collection_length_least = np.arange(0, Least_event_stove_end.iloc[-1]+45, 1)
+            Least_event_stove = []
+            Least_event_count = 0
+            No_more_cooking = 0
+            for tv in Collection_length_least:
+                if No_more_cooking == 0:
+                    if (tv >= int(Least_event_stove_start[Least_event_count])) and (tv <= int(Least_event_stove_end[Least_event_count])):
                         Least_event_stove.append(1)
+                    elif (tv > int(Least_event_stove_end[Least_event_count])) or tv == Least_event_stove_end.iloc[-1]:
+                        if Least_event_count + 1 == len(Least_event_stove_end):
+                            No_more_cooking = 1
+                        elif Least_event_count <=  len(Least_event_stove_end):
+                            Least_event_count = Least_event_count + 1 
+                            Least_event_stove.append(1)
+                    else:
+                        Least_event_stove.append(0)
                 else:
                     Least_event_stove.append(0)
+
+            #print(len(Least_event_stove_end),len(Least_event_stove), Least_event_count)
+
+            Merged_Stove_combined_Array = []
+            if len(Greatest_event_stove) > len(Least_event_stove):
+                Greatest_stove_length = Greatest_event_stove
+                least_stove_length = Least_event_stove
             else:
-                Least_event_stove.append(0)
+                Greatest_stove_length = Least_event_stove
+                least_stove_length = Greatest_event_stove
 
-        print(len(Least_event_stove_end),len(Least_event_stove), Least_event_count)
-
-        Merged_Stove_combined_Array = []
-        if len(Greatest_event_stove) > len(Least_event_stove):
-            Greatest_stove_length = Greatest_event_stove
-            least_stove_length = Least_event_stove
-        else:
-            Greatest_stove_length = Least_event_stove
-            least_stove_length = Greatest_event_stove
-
-        Merged_Stove_combined_Array = []
-        no_more_less_used_stove = 0
-        for tvv, cooking in enumerate(Greatest_stove_length):
-            if no_more_less_used_stove == 0:
-                if tvv > len(least_stove_length)-1:
-                    Merged_Stove_combined_Array.append(cooking)
-                    no_more_less_used_stove = 1
-                elif cooking == 1:
-                    Merged_Stove_combined_Array.append(cooking)
-                elif least_stove_length[tvv] == 1:
-                    Merged_Stove_combined_Array.append(least_stove_length[tvv])
+            Merged_Stove_combined_Array = []
+            no_more_less_used_stove = 0
+            for tvv, cooking in enumerate(Greatest_stove_length):
+                if no_more_less_used_stove == 0:
+                    if tvv > len(least_stove_length)-1:
+                        Merged_Stove_combined_Array.append(cooking)
+                        no_more_less_used_stove = 1
+                    elif cooking == 1:
+                        Merged_Stove_combined_Array.append(cooking)
+                    elif least_stove_length[tvv] == 1:
+                        Merged_Stove_combined_Array.append(least_stove_length[tvv])
+                    else:
+                        Merged_Stove_combined_Array.append(cooking)
                 else:
                     Merged_Stove_combined_Array.append(cooking)
-            else:
-                Merged_Stove_combined_Array.append(cooking)
+        else: 
+            Merged_Stove_combined_Array = []
+            Greatest_event_count = 0
+            No_more_cooking = 0
+            for tv in Collection_length:
+                if No_more_cooking == 0:
+                    if (tv >= int(Greatest_event_stove_start[Greatest_event_count])) and (tv <= int(Greatest_event_stove_end[Greatest_event_count])):
+                        Merged_Stove_combined_Array.append(1)
+                    elif (tv > int(Greatest_event_stove_end[Greatest_event_count])) or tv == Greatest_event_stove_end.iloc[-1]:
+                        if Greatest_event_count + 1 == len(Greatest_event_stove_end):
+                            No_more_cooking = 1
+                        elif Greatest_event_count <=  len(Greatest_event_stove_end):
+                            Greatest_event_count = Greatest_event_count + 1 
+                            Merged_Stove_combined_Array.append(1)
+                    else:
+                        Merged_Stove_combined_Array.append(0)
+                else:
+                    Merged_Stove_combined_Array.append(0)
+
+
+
+
         print('length of the merged stove---', len(Merged_Stove_combined_Array))
         #going to use combined stove to get to the start and end values
         Merged_Stoves_start = []
@@ -208,9 +248,6 @@ for file in csv_R_m:
             elif a == 1 and  Merged_Stove_combined_Array[nexx + 1] == 0:
                 Merged_Stoves_end.append(nexx)
 
-        print(Merged_Stoves_start)
-        print(Merged_Stoves_end)
-
 
         # getting the raw day metrics for the combined stoves
         RAW_day_Path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_1_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(Household)+"_1_exact_3.55555.csv"
@@ -221,15 +258,13 @@ for file in csv_R_m:
         Kitchen_Compliance = RAW_day.iloc[:, 6]
         Cook_PM = RAW_day.iloc[:, 7]
         Kitchen_PM = RAW_day.iloc[:, 8]
+        if Fuel_Removed[3] == -1:
+            no_fuel = 1
+        else:
+            no_fuel = 0
+        Fuel_removal_countdown = Functions_malawi.FuelRemovalTime(Fuel_Removed,no_fuel)
 
-        Fuel_removal_countdown = Functions_malawi.FuelRemovalTime(Fuel_Removed,0)
-
-        Hosuehold.append(Household)
-        total_cooking_time.append(sum(Merged_Stove_combined_Array))
-        Number_of_events.append(len(Merged_Stoves_end))
-        Average_events_per_day.append(len(Merged_Stoves_start)/ (len(Merged_Stove_combined_Array))/(24*60))
-        Percentage_cooking.append(sum(Merged_Stove_combined_Array)/ len(Merged_Stove_combined_Array))
-        Average_Event_length.append(len(Merged_Stoves_start)/ sum(Merged_Stove_combined_Array)) 
+        
         
         Average_Cook_PM_per_Event = []
         Average_Kitchen_PM_per_Event = []
@@ -277,6 +312,10 @@ for file in csv_R_m:
         
         Raw_Combined_Kitchen_Hapex = []
         Raw_Combined_Temperature = []
+        Raw_Fuel_removal_Events_combined = []
+        Raw_Cook_Compliance = []
+        Raw_Kitchen_Compliance = []
+
 
         Whole_Kitchen_hapex_Min_tv = []
         Whole_Kitchen_hapex_Min_count = []
@@ -301,60 +340,62 @@ for file in csv_R_m:
             STD_Kitchen_PM_per_Event.append((int((np.std([a for a in Kitchen_PM[start:Merged_Stoves_end[time_value]]]))*10))/10)
             Percentage_Cook_Compliance.append((int(((sum([a for a in Cook_compliance[start:Merged_Stoves_end[time_value]]]))/(Merged_Stoves_end[time_value]-start))*100)))
             Percentage_Kitchen_Compliance.append((int(((sum([a for a in Kitchen_Compliance[start:Merged_Stoves_end[time_value]]]))/(Merged_Stoves_end[time_value]-start))*100)))
-            Fuel_Used_for_events_Non_filtered.append(list([a for a in Fuel_Removed[start:Merged_Stoves_end[time_value]]]))
+            count_fuel = []
+            for f_tv, f in enumerate(Fuel_Removed[(start - start_spread):Merged_Stoves_end[time_value]]):
+                if f_tv + 1 == Merged_Stoves_end[time_value] - (start - start_spread):
+                    count_fuel.append(f)
+                    break
+                elif f != Fuel_Removed[f_tv+1]:
+                    count_fuel.append(f)
+
+            Fuel_Used_for_events_Non_filtered.append(sum(count_fuel))
             #Start up
-            Median_Kitchen_Start_up_PM.append((int((np.median([a for a in Kitchen_PM[(start - 10): start]]))*10))/10)
-            Average_Kitchen_Startup_PM.append((int((np.average([a for a in Kitchen_PM[(start - 10): start]]))*10))/10)
+            Median_Kitchen_Start_up_PM.append((int((np.median([a for a in Kitchen_PM[(start - start_spread): start]]))*10))/10)
+            Average_Kitchen_Startup_PM.append((int((np.average([a for a in Kitchen_PM[(start - start_spread): start]]))*10))/10)
             length_of_event.append(Merged_Stoves_end[time_value]-start)
             
-            Std_Kitchen_Start_Up_PM.append(np.std([a for a in Kitchen_PM[(start - 10): start]]))
-            Median_Cook_Start_up_PM.append(np.median([a for a in Cook_PM[(start - 10): start]]))
-            Average_Cook_Startup_PM.append(np.average([a for a in Cook_PM[(start - 10): start]]))
-            Std_Cook_Start_Up_PM.append(np.std([a for a in Cook_PM[(start - 10): start]]))
+            Std_Kitchen_Start_Up_PM.append(np.std([a for a in Kitchen_PM[(start - start_spread): start]]))
+            Median_Cook_Start_up_PM.append(np.median([a for a in Cook_PM[(start - start_spread): start]]))
+            Average_Cook_Startup_PM.append(np.average([a for a in Cook_PM[(start - start_spread): start]]))
+            Std_Cook_Start_Up_PM.append(np.std([a for a in Cook_PM[(start - start_spread): start]]))
             #CoolDown
-            Median_Kitchen_Cooldown_PM.append(np.median([a for a in Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]]))
-            Average_Kitchen_Cooldown_PM.append(np.average([a for a in Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]]))
-            STD_Kitchen_Cooldown_PM.append(np.std([a for a in Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]]))
-            Median_Cook_Cooldown_PM.append(np.median([a for a in Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]]))
-            Average_Cook_Cooldown_PM.append(np.average([a for a in Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]]))
-            STD_Cook_Cooldown_PM.append(np.std([a for a in Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]]))
+            Median_Kitchen_Cooldown_PM.append(np.median([a for a in Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + cooldown_Length)]]))
+            Average_Kitchen_Cooldown_PM.append(np.average([a for a in Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + cooldown_Length)]]))
+            STD_Kitchen_Cooldown_PM.append(np.std([a for a in Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + cooldown_Length)]]))
+            Median_Cook_Cooldown_PM.append(np.median([a for a in Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + cooldown_Length)]]))
+            Average_Cook_Cooldown_PM.append(np.average([a for a in Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + cooldown_Length)]]))
+            STD_Cook_Cooldown_PM.append(np.std([a for a in Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + cooldown_Length)]]))
 
-            RAW_EVENT_KITCHEN_PM.append([a for a in Kitchen_PM[start:Merged_Stoves_end[time_value]]])
-            RAW_EVENT_Cook_PM.append([a for a in Cook_PM[start:Merged_Stoves_end[time_value]]])
-            Raw_Tempterature_event.append([a for a in Temperature[start:Merged_Stoves_end[time_value]]])
-            Raw_Kitchen_start_up.append(Kitchen_PM[(start - 10): start])
-            Raw_Cook_start_up.append([a for a in Cook_PM[(start - 10): start]])
-            Raw_Kitchen_cooldown.append([a for a in Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]])
-            Raw_Cook_cooldown.append([a for a in Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]])
+            RAW_EVENT_KITCHEN_PM.extend([a for a in Kitchen_PM[start:Merged_Stoves_end[time_value]]])
+            RAW_EVENT_Cook_PM.extend([a for a in Cook_PM[start:Merged_Stoves_end[time_value]]])
+            Raw_Tempterature_event.extend([a for a in Temperature[start:Merged_Stoves_end[time_value]]])
 
-            Raw_Combined_Kitchen_Hapex.append(list([a for a in Kitchen_PM[(start - 10):  (Merged_Stoves_end[time_value] + 30)]]))
-            Raw_Combined_Temperature.append([a for a in Temperature[(start - 10):  (Merged_Stoves_end[time_value] + 30)]])
+            Raw_Kitchen_start_up.extend(Kitchen_PM[(start - start_spread): start])
+            Raw_Cook_start_up.extend([a for a in Cook_PM[(start - start_spread): start]])
+            Raw_Kitchen_cooldown.extend([a for a in Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + cooldown_Length)]])
+            Raw_Cook_cooldown.extend([a for a in Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + cooldown_Length)]])
 
-            #print('length of raw combined', len(Raw_Combined_Kitchen_Hapex), len(Raw_Kitchen_start_up))
-            K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count  = Functions_malawi.Local_Max_min(Raw_Combined_Kitchen_Hapex[event_num], start)
-            K_Hapex_Startup_max, K_Hapex_Next_Startup_min = Functions_malawi.StartUp_max_Next_min(Raw_Combined_Kitchen_Hapex[event_num], start)
-            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',K_H_MAX_Count, K_H_MIN_Count )
-            Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Raw_Combined_Kitchen_Hapex[event_num], , K_H_MIN_Count,K_Hapex_Startup_max ,K_H_MAX_Count, start)
+            Raw_Combined_Kitchen_Hapex.extend(([a for a in Kitchen_PM[(start - start_spread):  (Merged_Stoves_end[time_value] + cooldown_Length)]]))
+            Raw_Combined_Temperature.extend([a for a in Temperature[(start - start_spread):  (Merged_Stoves_end[time_value] + cooldown_Length)]])
+            Raw_Fuel_removal_Events_combined.extend(Fuel_Used_for_events_Non_filtered)
+            Raw_Cook_Compliance.extend([a for a in Cook_compliance[start:Merged_Stoves_end[time_value]]])
+            Raw_Kitchen_Compliance.extend([a for a in Kitchen_Compliance[start:Merged_Stoves_end[time_value]]])
 
-            print('here is the time vlaue for the steady state', Steady_start_Time_value)
 
-            Whole_Kitchen_hapex_Min_tv.append(K_H_MIN_tv + (start-10))
-            Whole_Kitchen_hapex_Max_tv.append(K_H_MAX_tv + (start-10))
-            Whole_Kitchen_hapex_Min_count.append(K_H_MIN_Count)
-            Whole_Kitchen_hapex_Max_count.append(K_H_MAX_Count)
-            
-            
+            #this section is for steady state and max value --- going to have to be put in later or next
 
-            Start_Up_minutes_Collected.append(len(Kitchen_PM[(time_value - 10): time_value]))
-            Cooldown_minutes_Collected.append(len(Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]))
+            Start_Up_minutes_Collected.append(len(Kitchen_PM[(time_value - start_spread): time_value]))
+            Cooldown_minutes_Collected.append(len(Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + cooldown_Length)]))
         
-            Sum_Start_up_Kitchen.append(sum(Kitchen_PM[(time_value - 10): time_value]))
-            Sum_Start_up_Cook.append(sum(Cook_PM[(time_value - 10): time_value]))
+            Sum_Start_up_Kitchen.append(sum(Kitchen_PM[(time_value - start_spread): time_value]))
+            Sum_Start_up_Cook.append(sum(Cook_PM[(time_value - start_spread): time_value]))
+            if no_fuel != 1:
+                Fuel_removed_before_firefinder.append(Fuel_removal_countdown[start])
+            else:
+                Fuel_removed_before_firefinder.append(-1)
 
-            Fuel_removed_before_firefinder.append(Fuel_removal_countdown[start])
-
-            Sum_Cooldown_Cook.append(sum(Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]))
-            Sum_Cooldown_Kitchen.append(sum(Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + 30)]))
+            Sum_Cooldown_Cook.append(sum(Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + cooldown_Length)]))
+            Sum_Cooldown_Kitchen.append(sum(Cook_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + cooldown_Length)]))
 
             #print('median startup- ',Median_Kitchen_Start_up_PM[event_num],'-Average Startup-', Average_Kitchen_Startup_PM[event_num],'-average event pm-',
                   #Average_Kitchen_PM_per_Event[event_num],'median event pm-',Median_Kitchen_PM_per_Event[event_num], 'length of event-',length_of_event[event_num],
@@ -363,6 +404,86 @@ for file in csv_R_m:
             event_num = event_num + 1
 
         Event_number_tally = np.arange(0, event_num,1)
-        print(Event_number_tally, event_num)
+        #print(Event_number_tally, event_num)
+    
+    Hosuehold.append(Household)
+    total_cooking_time.append(sum(Merged_Stove_combined_Array))
+    Number_of_events.append(len(Merged_Stoves_end))
+    Average_events_per_day.append(len(Merged_Stoves_start)/ ((len(Merged_Stove_combined_Array))/(24*60)))
+    Percentage_cooking.append(int((sum(Merged_Stove_combined_Array)/ len(Merged_Stove_combined_Array))*100))
+    Average_Event_length.append(len(Merged_Stoves_start)/ sum(Merged_Stove_combined_Array)) 
 
+    Total_Average_Cook_PM_per_Event.append(np.average(RAW_EVENT_Cook_PM))
+    Total_Average_Kitchen_PM_per_Event.append(np.average(RAW_EVENT_KITCHEN_PM))
+    Total_Medain_Cook_PM_per_Event.append(np.median(RAW_EVENT_Cook_PM))
+    Total_Median_Kitchen_PM_per_Event.append(np.median(RAW_EVENT_KITCHEN_PM))
+    Total_STD_Cook_PM_per_Event.append(np.std(RAW_EVENT_Cook_PM))
+    Total_STD_Kitchen_PM_per_Event.append(np.std(RAW_EVENT_KITCHEN_PM))
+    Total_Percentage_Cook_Compliance.append(int((sum(Raw_Cook_Compliance))/(len(Raw_Cook_Compliance))*100))
+    Total_Percentage_Kitchen_Compliance.append(int((sum(Raw_Kitchen_Compliance))/(len(Raw_Kitchen_Compliance))*100))
+
+
+    Total_Fuel_Used_for_events_Non_filtered.append(sum(Raw_Fuel_removal_Events_combined))
+
+    #Start up
+    Total_Median_Kitchen_Start_up_PM.append(np.median(Raw_Kitchen_start_up))
+    Total_Average_Kitchen_Startup_PM.append(np.average(Raw_Kitchen_start_up))
+    Total_Std_Kitchen_Start_Up_PM.append(np.std(Raw_Kitchen_start_up))
+
+    Total_Median_Cook_Start_up_PM.append(np.median(Raw_Cook_start_up))
+    Total_Average_Cook_Startup_PM.append(np.average(Raw_Cook_start_up))
+    Total_Std_Cook_Start_Up_PM.append(np.std(Raw_Cook_start_up))
+    #coolDown
+    Total_Median_Kitchen_Cooldown_PM.append(np.median(Raw_Kitchen_cooldown))
+    Total_Average_Kitchen_Cooldown_PM.append(np.average(Raw_Kitchen_cooldown))
+    Total_STD_Kitchen_Cooldown_PM.append(np.std(Raw_Kitchen_cooldown))
+
+    Total_Median_Cook_Cooldown_PM.append(np.median(Raw_Cook_cooldown))
+    Total_Average_Cook_Cooldown_PM.append(np.average(Raw_Cook_cooldown))
+    Total_STD_Cook_Cooldown_PM.append(np.std(Raw_Cook_cooldown))
+
+    Total_Start_Up_minutes_Collected.append(len(Raw_Kitchen_start_up))
+    Total_Cooldown_minutes_Collected.append(len(Raw_Kitchen_cooldown))
         
+    Total_Sum_Start_up_Kitchen.append(sum(Raw_Kitchen_start_up))
+    Total_Sum_Start_up_Cook.append(sum(Raw_Cook_start_up))
+
+    Total_Sum_Cooldown_Cook.append(sum(Raw_Cook_cooldown))
+    Total_Sum_Cooldown_Kitchen.append(sum(Raw_Kitchen_cooldown))
+
+    Spacer_for_data_frame.append('-')
+
+Combined_stove_whole_metric = {'Household': Hosuehold, 'Total Cooking times (minues)':total_cooking_time,
+                               'Number of Events':Number_of_events, 'Events per day': Average_events_per_day,
+                               'Percentage Cooking per Day':Percentage_cooking, 'Event Metrics':Spacer_for_data_frame,
+                               'Average Event Length (minutes)':Average_Event_length,
+                               'Average Cook PM per Event':Total_Average_Cook_PM_per_Event, 
+                              'Average Kitchen PM per Event': Total_Average_Kitchen_PM_per_Event,
+                              'Median Cook PM per Event':Total_Medain_Cook_PM_per_Event,
+                             'Median Kitchen PM per Event': Total_Median_Kitchen_PM_per_Event, 
+                             'STD Cook PM per Event':Total_STD_Cook_PM_per_Event,
+                             'STD Kitchen PM per Event': Total_STD_Kitchen_PM_per_Event,
+                             '(%) Cook Compliance per Event': Total_Percentage_Cook_Compliance,
+                             '(%) Kitchen Compliance per Event': Total_Percentage_Kitchen_Compliance,
+                             'Sum of Fuel removed for each Event': Total_Fuel_Used_for_events_Non_filtered,
+                             'Startup': Spacer_for_data_frame, 'Median Kitchen Start up':Total_Median_Kitchen_Start_up_PM,
+                             'Average Kitchen Start up':Total_Average_Kitchen_Startup_PM, 
+                             'STD Kitchen Start up':Total_Std_Kitchen_Start_Up_PM,'Kitchen Start up Sum':Total_Sum_Start_up_Kitchen,
+                             'Median Cook Start up':Total_Median_Cook_Start_up_PM,
+                             'Average Cook Start up':Total_Average_Cook_Startup_PM,
+                             'STD Cook Start up': Total_Std_Cook_Start_Up_PM,'Cook Start up Sum':Total_Sum_Start_up_Cook,
+                             'Minutes Start up Collected':Total_Start_Up_minutes_Collected,
+                             'CoolDown':Spacer_for_data_frame, 'Median Kitchen Cooldown':Total_Median_Kitchen_Cooldown_PM,
+                             'Average Kitchen Cooldown': Total_Average_Kitchen_Cooldown_PM,
+                             'STD Kitchen Cooldown':Total_STD_Kitchen_Cooldown_PM, 
+                             'Kitchen Cooldown Sum': Total_Sum_Cooldown_Kitchen, 
+                             'Median Cook Cooldown':Total_Median_Cook_Cooldown_PM,
+                             'Average Cook Cooldown': Total_Average_Cook_Cooldown_PM,
+                             'STD Cook Cooldown':Total_STD_Cook_Cooldown_PM,
+                            'Cook Cooldown Sum':Total_Sum_Cooldown_Cook,
+                            'Minutes Cooldown Collected': Total_Cooldown_minutes_Collected}
+
+DF_Combined_stove_whole_metric = pd.DataFrame(Combined_stove_whole_metric)
+
+Path_export_combined_stove = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Combined_Stove_Whole.csv"
+DF_Combined_stove_whole_metric.to_csv(Path_export_combined_stove, index=False, mode='a')

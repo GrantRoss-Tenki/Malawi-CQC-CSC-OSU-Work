@@ -15,7 +15,7 @@ import Functions_malawi
 # the first step is to get the time Values for a double stove Household.
 
 
-Phase = "2N"
+Phase = "3N"
 start_spread = 10
 cooldown_Length = 30
 
@@ -146,7 +146,7 @@ for file in csv_R_m:
         #MERGING: if stove cooking events overlay, combine to new Time Value complete stove in variible - "Merged_Stoves_start" and Merged_Stove_end" 
         #New Time Values are going to be used for raw dauly metrics to get complete metrics
 
-        Collection_length = np.arange(0, Greatest_event_stove_end.iloc[-1]+45, 1)
+        Collection_length = np.arange(0, Greatest_event_stove_end.iloc[-1]+cooldown_Length +1, 1)
 
         
         if second_exact != 0:
@@ -170,7 +170,7 @@ for file in csv_R_m:
 
             #print(len(Greatest_event_stove_end),len(Greatest_event_stove), Greatest_event_count)
 
-            Collection_length_least = np.arange(0, Least_event_stove_end.iloc[-1]+45, 1)
+            Collection_length_least = np.arange(0, Least_event_stove_end.iloc[-1]+cooldown_Length +1, 1)
             Least_event_stove = []
             Least_event_count = 0
             No_more_cooking = 0
@@ -263,7 +263,7 @@ for file in csv_R_m:
         else:
             no_fuel = 0
         Fuel_removal_countdown = Functions_malawi.FuelRemovalTime(Fuel_Removed,no_fuel)
-
+        print('cook pm', Cook_PM[4])
         
         
         Average_Cook_PM_per_Event = []
@@ -485,5 +485,5 @@ Combined_stove_whole_metric = {'Household': Hosuehold, 'Total Cooking times (min
 
 DF_Combined_stove_whole_metric = pd.DataFrame(Combined_stove_whole_metric)
 
-Path_export_combined_stove = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Combined_Stove_Whole.csv"
+Path_export_combined_stove = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Combined_Stove_Whole_"+Phase+".csv"
 DF_Combined_stove_whole_metric.to_csv(Path_export_combined_stove, index=False, mode='a')

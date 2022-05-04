@@ -15,7 +15,7 @@ import Functions_malawi
 # the first step is to get the time Values for a double stove Household.
 
 
-Phase = "3N"
+Phase = "1N"
 start_spread = 10
 cooldown_Length = 30
 

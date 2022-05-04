@@ -15,7 +15,7 @@ import Functions_malawi
 # the first step is to get the time Values for a double stove Household.
 
 
-Phase = "1N"
+Phase = "4N"
 start_spread = 10
 cooldown_Length = 30
 
@@ -419,7 +419,7 @@ for file in csv_R_m:
             event_num = event_num + 1
 
         Event_number_tally = np.arange(0, event_num,1)
-    print('count fuel',Fuel_Used_for_events_Non_filtered, sum(Fuel_Used_for_events_Non_filtered))
+    #print('count fuel',Fuel_Used_for_events_Non_filtered, sum(Fuel_Used_for_events_Non_filtered))
     
     Hosuehold.append(Household)
     total_cooking_time.append(sum(Merged_Stove_combined_Array))

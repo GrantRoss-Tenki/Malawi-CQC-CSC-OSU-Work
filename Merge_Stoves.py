@@ -411,7 +411,7 @@ for file in csv_R_m:
     Number_of_events.append(len(Merged_Stoves_end))
     Average_events_per_day.append(len(Merged_Stoves_start)/ ((len(Merged_Stove_combined_Array))/(24*60)))
     Percentage_cooking.append(int((sum(Merged_Stove_combined_Array)/ len(Merged_Stove_combined_Array))*100))
-    Average_Event_length.append(len(Merged_Stoves_start)/ sum(Merged_Stove_combined_Array)) 
+    Average_Event_length.append(sum(Merged_Stove_combined_Array)/ len(Merged_Stoves_start)) 
 
     Total_Average_Cook_PM_per_Event.append(np.average(RAW_EVENT_Cook_PM))
     Total_Average_Kitchen_PM_per_Event.append(np.average(RAW_EVENT_KITCHEN_PM))

@@ -55,7 +55,7 @@ Total_Percentage_Kitchen_Compliance =[]
 
 
 Total_Fuel_Used_for_events_Non_filtered = []
-
+Total_Fuel_removed_before_event = []
 #Start up
 Total_Median_Kitchen_Start_up_PM = []
 Total_Average_Kitchen_Startup_PM = [] 
@@ -73,7 +73,7 @@ Total_STD_Cook_Cooldown_PM = []
 
 Total_Start_Up_minutes_Collected = []
 Total_Cooldown_minutes_Collected = []
-        
+
 Total_Sum_Start_up_Kitchen = []
 Total_Sum_Start_up_Cook = []
 
@@ -252,16 +252,19 @@ for file in csv_R_m:
         # getting the raw day metrics for the combined stoves
         RAW_day_Path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_1_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(Household)+"_1_exact_3.55555.csv"
         RAW_day = pd.read_csv(RAW_day_Path,  skiprows=2)
-        Fuel_Removed = RAW_day.iloc[:, 1]
+        Fuel = RAW_day.iloc[:, 0]
         Temperature = RAW_day.iloc[:,4]
         Cook_compliance = RAW_day.iloc[:, 5]
         Kitchen_Compliance = RAW_day.iloc[:, 6]
         Cook_PM = RAW_day.iloc[:, 7]
         Kitchen_PM = RAW_day.iloc[:, 8]
-        if Fuel_Removed[3] == -1:
+
+        if Fuel[3] == -1:
             no_fuel = 1
         else:
             no_fuel = 0
+
+        Fuel_Removed, mean_count_Fuel = Functions_malawi.FUEL_REMOVAL(Fuel, 0.005, 5, no_fuel)
         Fuel_removal_countdown = Functions_malawi.FuelRemovalTime(Fuel_Removed,no_fuel)
         print('cook pm', Cook_PM[4])
         
@@ -310,6 +313,7 @@ for file in csv_R_m:
         Raw_Kitchen_cooldown = []
         Raw_Cook_cooldown = []
         
+
         Raw_Combined_Kitchen_Hapex = []
         Raw_Combined_Temperature = []
         Raw_Fuel_removal_Events_combined = []
@@ -328,7 +332,7 @@ for file in csv_R_m:
         Whole_Temperture_Max_count = []
 
         Fuel_removed_before_firefinder = []
-
+        Raw_Fuel_removed_before_event = []
         event_num = 0
         for time_value, start in enumerate(Merged_Stoves_start):
 
@@ -341,14 +345,25 @@ for file in csv_R_m:
             Percentage_Cook_Compliance.append((int(((sum([a for a in Cook_compliance[start:Merged_Stoves_end[time_value]]]))/(Merged_Stoves_end[time_value]-start))*100)))
             Percentage_Kitchen_Compliance.append((int(((sum([a for a in Kitchen_Compliance[start:Merged_Stoves_end[time_value]]]))/(Merged_Stoves_end[time_value]-start))*100)))
             count_fuel = []
-            for f_tv, f in enumerate(Fuel_Removed[(start - start_spread):Merged_Stoves_end[time_value]]):
-                if f_tv + 1 == Merged_Stoves_end[time_value] - (start - start_spread):
-                    count_fuel.append(f)
-                    break
-                elif f != Fuel_Removed[f_tv+1]:
-                    count_fuel.append(f)
-
-            Fuel_Used_for_events_Non_filtered.append(sum(count_fuel))
+           
+            end_event = 0
+            if no_fuel != 1:
+                EVENT_FUEL_REMOVED = list(Fuel_Removed[(start - start_spread):Merged_Stoves_end[time_value]])
+                Raw_Fuel_removed_before_event.append(Fuel_removal_countdown[(start - start_spread)])
+                for f_tv, f in enumerate(EVENT_FUEL_REMOVED):
+                    if f_tv + 1 == len(EVENT_FUEL_REMOVED):
+                        if f != EVENT_FUEL_REMOVED[-1]:
+                            count_fuel.append(f)
+                            end_event = 1
+                        break
+                    elif f != EVENT_FUEL_REMOVED[f_tv+1] and end_event == 0:
+                        count_fuel.append(f)
+                Fuel_Used_for_events_Non_filtered.append(sum(count_fuel))
+            else:
+                count_fuel.append(-1)
+                Raw_Fuel_removed_before_event.append(-1)
+                Fuel_Used_for_events_Non_filtered.append(-1)
+            
             #Start up
             Median_Kitchen_Start_up_PM.append((int((np.median([a for a in Kitchen_PM[(start - start_spread): start]]))*10))/10)
             Average_Kitchen_Startup_PM.append((int((np.average([a for a in Kitchen_PM[(start - start_spread): start]]))*10))/10)
@@ -404,7 +419,7 @@ for file in csv_R_m:
             event_num = event_num + 1
 
         Event_number_tally = np.arange(0, event_num,1)
-        #print(Event_number_tally, event_num)
+    print('count fuel',Fuel_Used_for_events_Non_filtered, sum(Fuel_Used_for_events_Non_filtered))
     
     Hosuehold.append(Household)
     total_cooking_time.append(sum(Merged_Stove_combined_Array))
@@ -422,9 +437,12 @@ for file in csv_R_m:
     Total_Percentage_Cook_Compliance.append(int((sum(Raw_Cook_Compliance))/(len(Raw_Cook_Compliance))*100))
     Total_Percentage_Kitchen_Compliance.append(int((sum(Raw_Kitchen_Compliance))/(len(Raw_Kitchen_Compliance))*100))
 
-
-    Total_Fuel_Used_for_events_Non_filtered.append(sum(Raw_Fuel_removal_Events_combined))
-
+    if no_fuel != 1:
+        Total_Fuel_Used_for_events_Non_filtered.append(sum(Fuel_Used_for_events_Non_filtered))
+        Total_Fuel_removed_before_event.append(np.average(Raw_Fuel_removed_before_event))
+    else:
+        Total_Fuel_Used_for_events_Non_filtered.append(-1)
+        Total_Fuel_removed_before_event.append(-1)
     #Start up
     Total_Median_Kitchen_Start_up_PM.append(np.median(Raw_Kitchen_start_up))
     Total_Average_Kitchen_Startup_PM.append(np.average(Raw_Kitchen_start_up))
@@ -466,6 +484,7 @@ Combined_stove_whole_metric = {'Household': Hosuehold, 'Total Cooking times (min
                              '(%) Cook Compliance per Event': Total_Percentage_Cook_Compliance,
                              '(%) Kitchen Compliance per Event': Total_Percentage_Kitchen_Compliance,
                              'Sum of Fuel removed for each Event': Total_Fuel_Used_for_events_Non_filtered,
+                             'Average Time Fuel was removed before event (min)':Total_Fuel_removed_before_event,
                              'Startup': Spacer_for_data_frame, 'Median Kitchen Start up':Total_Median_Kitchen_Start_up_PM,
                              'Average Kitchen Start up':Total_Average_Kitchen_Startup_PM, 
                              'STD Kitchen Start up':Total_Std_Kitchen_Start_Up_PM,'Kitchen Start up Sum':Total_Sum_Start_up_Kitchen,

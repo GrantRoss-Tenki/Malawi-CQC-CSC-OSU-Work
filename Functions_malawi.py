@@ -38,7 +38,7 @@ def FireFinder(temp, Usage, cooking_threshold, length_decrease, start_threshold,
         neg_slope = 0
         for t,s in enumerate(Temp_slope):
             if s <= 1:
-                if temp[t] < 127 and temp[t] > cooking_threshold:
+                if temp[t] < 127:#: and temp[t] >= cooking_threshold:
                     neg_slope = neg_slope +1
                 else:
                     neg_slope = 0
@@ -463,8 +463,9 @@ def Squish_usage(Phase, Houseold, First_usage, Second_usage):
         exact_2_hh = [0]
     
     for hh in exact_2_hh:
-        if int(Houseold) == hh:
+        if int(Houseold) == int(hh):
             Second_exact = 0
+            break
         else:
             Second_exact = 1
 
@@ -476,17 +477,20 @@ def Squish_usage(Phase, Houseold, First_usage, Second_usage):
            Greatest_stove = First_usage
            least_stove = Second_usage
 
-        Collection_length = np.arange(0, len(Greatest_stove), 1)
+        Collection_length = np.arange(0, len(Greatest_stove)-1, 1)
         Squish_array = []
+        print('length of least and collection legnth', len(least_stove), len(Collection_length))
         for tv in Collection_length:
-            if tv > len(least_stove):
+            if tv == len(least_stove):
                 Squish_array.append(Greatest_stove[tv:])
                 break
-            elif Greatest_stove[tv] == 1 or least_stove[tv] == 1:
+            elif (Greatest_stove[tv] == 1):
+                Squish_array.append(1)
+            elif (least_stove[tv] == 1):
                 Squish_array.append(1)
             else:
                 Squish_array.append(0)
-    else:
+    elif Second_exact == 1:
         if First_usage[2] == -1:
             Squish_array = -1
         else:

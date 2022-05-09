@@ -45,6 +45,9 @@ else:
     min_CE_length = 8
     window_slope = 12
 
+# I want the following metrics for all day phases
+Household_phase = []
+ 
 
 os.chdir("E:/24_hour_pump/"+Phase+"/Raw_pump_Time")
 Day_met_path = os.getcwd()
@@ -89,9 +92,11 @@ for file in csv_R_m:
         Usage_1 = Stove_1.iloc[:,1]
         Stove_1_ff, S_1_start, S_1_end = Functions_malawi.FireFinder(Temp_1, Usage_1, cooking_threshold, length_decrease, start_threshold,
                                                                      end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        Stove_1_number_of_events = len(S_1_start)
         Usage_2 = Stove_2.iloc[:,1]
         Stove_2_ff, S_2_start, S_2_end = Functions_malawi.FireFinder(Temp_2, Usage_2, cooking_threshold, length_decrease, start_threshold,
                                                                      end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        Stove_2_number_of_events = len(S_2_start)
     else:
         path_exact_1 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Exact_1_"+str(household)+"_"+Phase+"_.csv"
         Stove_1 = pd.read_csv(path_exact_1, skiprows = 2)
@@ -99,11 +104,21 @@ for file in csv_R_m:
         Usage_1 = Stove_1.iloc[:,1]
         Stove_1_ff, S_1_start, S_1_end = Functions_malawi.FireFinder(Temp_1, Usage_1, cooking_threshold, length_decrease, start_threshold,
                                                                      end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        Stove_1_number_of_events = len(S_1_start)
         Stove_2_ff = []
+
+        Stove_2_number_of_events = 0
         for length in (np.arange(0,len(Stove_1_ff),1)):
             Stove_2_ff.append(-1)
 
     Merge_stoves = Functions_malawi.Squish_usage(Phase,household,Stove_1_ff, Stove_2_ff)
+    event = 0
+    for tvv, one in enumerate(Merge_stoves):
+        if tvv +1 == len(Merge_stoves):
+            break
+        elif one == 0 and Merge_stoves[tvv +1] == 1:
+            if Merge_stoves[tvv +min_CE_length] == 1:
+                event = event + 1
 
-print(sum(Stove_1_ff), sum(Merge_stoves) )
+    print(sum(Stove_1_ff), sum(Merge_stoves),sum(Stove_2_ff),event,Stove_1_number_of_events,Stove_2_number_of_events)
         

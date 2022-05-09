@@ -64,30 +64,46 @@ for file in csv_R_m:
         home.append((int(h)))
 
     household = Functions_malawi.flatten_list(home)
-    print('this si the household', household)
+    print('this is the household', household)
     for second in exact_2_hh:
         if second == household:
             second_exact = 0
-
+            break
 
         else:
             second_exact = 1
 
 
+    print(second_exact)
 
-    path_exact_1 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Exact_1_"+str(household)+"_"+Phase+"_.csv"
-    path_exact_2 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Second_stove/Exact_2_"+str(household)+"_"+Phase+"_.csv"
-    Stove_1 = pd.read_csv(path_exact_1, skiprows = 2)
-    Stove_2 = pd.read_csv(path_exact_2, skiprows = 2)
-    Temp = Stove_1.iloc[:,1]
-    Usage_1 = Stove_1.iloc[:,2]
-    Usage_2 = Stove_2.iloc[:,2]
-    print(Usage_1[2])
+
+    
 
     if second_exact != 1:
-        Stove_1_ff, S_1_start, S_1_end = Functions_malawi.FireFinder(Temp, Usage_1, cooking_threshold, length_decrease, start_threshold,
+        path_exact_1 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Exact_1_"+str(household)+"_"+Phase+"_.csv"
+        path_exact_2 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Second_stove/Exact_2_"+str(household)+"_"+Phase+"_.csv"
+        Stove_1 = pd.read_csv(path_exact_1, skiprows = 2)
+        Stove_2 = pd.read_csv(path_exact_2, skiprows = 2)
+        Temp_1 = Stove_1.iloc[:,0]
+        Temp_2 = Stove_2.iloc[:,0]
+        Usage_1 = Stove_1.iloc[:,1]
+        Stove_1_ff, S_1_start, S_1_end = Functions_malawi.FireFinder(Temp_1, Usage_1, cooking_threshold, length_decrease, start_threshold,
                                                                      end_threshold, merge_CE_threshold, min_CE_length, window_slope)
-        Stove_2_ff, S_2_start, S_2_end = Functions_malawi.FireFinder(Temp, Usage_2, cooking_threshold, length_decrease, start_threshold,
+        Usage_2 = Stove_2.iloc[:,1]
+        Stove_2_ff, S_2_start, S_2_end = Functions_malawi.FireFinder(Temp_2, Usage_2, cooking_threshold, length_decrease, start_threshold,
                                                                      end_threshold, merge_CE_threshold, min_CE_length, window_slope)
-print(home,household,second_exact )
+    else:
+        path_exact_1 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Exact_1_"+str(household)+"_"+Phase+"_.csv"
+        Stove_1 = pd.read_csv(path_exact_1, skiprows = 2)
+        Temp_1 = Stove_1.iloc[:,0]
+        Usage_1 = Stove_1.iloc[:,1]
+        Stove_1_ff, S_1_start, S_1_end = Functions_malawi.FireFinder(Temp_1, Usage_1, cooking_threshold, length_decrease, start_threshold,
+                                                                     end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        Stove_2_ff = []
+        for length in (np.arange(0,len(Stove_1_ff),1)):
+            Stove_2_ff.append(-1)
+
+    Merge_stoves = Functions_malawi.Squish_usage(Phase,household,Stove_1_ff, Stove_2_ff)
+
+print(sum(Stove_1_ff), sum(Merge_stoves) )
         

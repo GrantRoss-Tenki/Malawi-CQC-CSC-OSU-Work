@@ -452,3 +452,49 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
             print('it di not work-----:()')
 
     return (where_is_the_MinSlope)
+
+def Squish_usage(Phase, Houseold, First_usage, Second_usage):
+    if Phase== "2N":
+        exact_2_hh = [1007]
+    elif Phase== "3N":
+        exact_2_hh = [1001]
+    elif Phase== "4N":
+        exact_2_hh = [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1011, 1013, 1014, 1016, 1017, 1018, 1019, 1021, 1022, 1023, 1024, 1025, 1026, 1028, 1029, 1030, 1031, 1032, 1033, 1035, 1036, 1037, 1038, 1039]
+    elif Phase== "2H":
+        exact_2_hh = [2006]
+    elif Phase== "3H":
+        exact_2_hh = [2001, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015]
+    else:
+        exact_2_hh = [0]
+    
+    for hh in exact_2_hh:
+        if int(Houseold) == hh:
+            Second_exact = 0
+        else:
+            Second_exact = 1
+
+    if Second_exact != 1:
+        if len(First_usage) > len(Second_usage):
+           Greatest_stove = First_usage
+           least_stove = Second_usage
+        else:
+           Greatest_stove = First_usage
+           least_stove = Second_usage
+
+        Collection_length = np.arange(0, len(Greatest_stove), 1)
+        Squish_array = []
+        for tv in Collection_length:
+            if tv > len(least_stove):
+                Squish_array.append(Greatest_stove[tv:])
+                break
+            elif Greatest_stove[tv] == 1 or least_stove == 1:
+                Squish_array.append(1)
+            else:
+                Squish_array.append(0)
+    else:
+        if First_usage[2] == -1:
+            Squish_array = -1
+        else:
+            Squish_array = First_usage
+
+    return Squish_array

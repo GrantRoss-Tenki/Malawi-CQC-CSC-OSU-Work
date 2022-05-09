@@ -482,7 +482,7 @@ def Squish_usage(Phase, Houseold, First_usage, Second_usage):
             if tv > len(least_stove):
                 Squish_array.append(Greatest_stove[tv:])
                 break
-            elif Greatest_stove[tv] == 1 or least_stove == 1:
+            elif Greatest_stove[tv] == 1 or least_stove[tv] == 1:
                 Squish_array.append(1)
             else:
                 Squish_array.append(0)

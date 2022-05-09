@@ -77,8 +77,8 @@ for file in csv_R_m:
 
     path_exact_1 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Exact_1_"+str(household)+"_"+Phase+"_.csv"
     path_exact_2 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Second_stove/Exact_2_"+str(household)+"_"+Phase+"_.csv"
-    Stove_1 = pd.read_csv(path_exact_1, skiprows = 1)
-    Stove_2 = pd.read_csv(path_exact_2, skiprows = 1)
+    Stove_1 = pd.read_csv(path_exact_1, skiprows = 2)
+    Stove_2 = pd.read_csv(path_exact_2, skiprows = 2)
     Temp = Stove_1.iloc[:,1]
     Usage_1 = Stove_1.iloc[:,2]
     Usage_2 = Stove_2.iloc[:,2]

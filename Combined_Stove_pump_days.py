@@ -47,7 +47,10 @@ else:
 
 # I want the following metrics for all day phases
 Household_phase = []
- 
+Total_Combined_Cooking_times = []
+Total_Combined_Cooking_events = []
+Total_Combined_Time_per_event = []
+Two_Stove_Combined = []
 
 os.chdir("E:/24_hour_pump/"+Phase+"/Raw_pump_Time")
 Day_met_path = os.getcwd()
@@ -76,8 +79,6 @@ for file in csv_R_m:
         else:
             second_exact = 1
 
-
-    print(second_exact)
 
 
     
@@ -119,6 +120,16 @@ for file in csv_R_m:
         elif one == 0 and Merge_stoves[tvv +1] == 1:
             if Merge_stoves[tvv +min_CE_length] == 1:
                 event = event + 1
+        elif tvv == 0 and Merge_stoves[tvv +min_CE_length] == 1:
+            event = event + 1
 
-    print(sum(Stove_1_ff), sum(Merge_stoves),sum(Stove_2_ff),event,Stove_1_number_of_events,Stove_2_number_of_events)
-        
+    #print(sum(Merge_stoves),sum(Stove_2_ff),event, Stove_1_number_of_events  +Stove_2_number_of_events)
+    Household_phase.append(household)
+    Total_Combined_Cooking_times.append(sum(Merge_stoves))
+    Total_Combined_Cooking_events.append(event)
+    Total_Combined_Time_per_event.append(sum(Merge_stoves)/event)
+    Two_Stove_Combined.append(2- second_exact)
+
+Output_CSV = {'Household':Household_phase, 'Stoves Used':Two_Stove_Combined,'Total Combined Cooking times':Total_Combined_Cooking_times, 'Total Combined Events':Total_Combined_Cooking_events, 'Cooking times per event':Total_Combined_Time_per_event}
+DF_output = pd.DataFrame(Output_CSV)
+print(DF_output)

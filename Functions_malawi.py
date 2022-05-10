@@ -38,7 +38,7 @@ def FireFinder(temp, Usage, cooking_threshold, length_decrease, start_threshold,
         neg_slope = 0
         for t,s in enumerate(Temp_slope):
             if s <= 1:
-                if temp[t] < 127:#: and temp[t] >= cooking_threshold:
+                if temp[t] < 127:# and temp[t] >= cooking_threshold:
                     neg_slope = neg_slope +1
                 else:
                     neg_slope = 0

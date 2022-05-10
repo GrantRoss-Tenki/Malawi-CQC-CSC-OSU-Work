@@ -12,7 +12,7 @@ from pathlib import Path, PureWindowsPath
 import Functions_malawi
 
 
-Phase = "4N"
+Phase = "3N"
 
 if Phase== "2N":
    exact_2_hh = [1007]

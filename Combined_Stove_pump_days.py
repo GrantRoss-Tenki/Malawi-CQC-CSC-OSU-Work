@@ -112,18 +112,18 @@ for file in csv_R_m:
         for length in (np.arange(0,len(Stove_1_ff),1)):
             Stove_2_ff.append(-1)
 
-    Merge_stoves = Functions_malawi.Squish_usage(Phase,household,Stove_1_ff, Stove_2_ff)
+    Merge_stoves,event  = Functions_malawi.Squish_usage(Phase,household,Stove_1_ff, Stove_2_ff, min_CE_length)
     event = 0
-    for tvv, one in enumerate(Merge_stoves):
-        if tvv +1 == len(Merge_stoves):
-            break
-        elif one == 0 and Merge_stoves[tvv +1] == 1:
-            if Merge_stoves[tvv +min_CE_length] == 1:
-                event = event + 1
-        elif tvv == 0 and Merge_stoves[tvv +min_CE_length] == 1:
-            event = event + 1
+    #for tvv, one in enumerate(Merge_stoves):
+    #    if tvv +1 == len(Merge_stoves):
+    #        break
+    #    elif one == 0 and Merge_stoves[tvv +1] == 1:
+    #        if Merge_stoves[tvv +min_CE_length] == 1:
+    #            event = event + 1
+    #    elif tvv == 0 and Merge_stoves[tvv +min_CE_length] == 1:
+    #        event = event + 1
 
-    #print(sum(Merge_stoves),sum(Stove_2_ff),event, Stove_1_number_of_events  +Stove_2_number_of_events)
+    ##print(sum(Merge_stoves),sum(Stove_2_ff),event, Stove_1_number_of_events  +Stove_2_number_of_events)
     Household_phase.append(household)
     Total_Combined_Cooking_times.append(sum(Merge_stoves))
     Total_Combined_Cooking_events.append(event)

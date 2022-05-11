@@ -52,6 +52,13 @@ Total_Combined_Cooking_events = []
 Total_Combined_Time_per_event = []
 Two_Stove_Combined = []
 
+Phase_total_Combined_cooking_times = []
+Phase_Total_Combined_Cooking_events = []
+Phase_Total_Combined_Time_per_event = []
+Phase_times_per_day = []
+
+
+
 os.chdir("E:/24_hour_pump/"+Phase+"/Raw_pump_Time")
 Day_met_path = os.getcwd()
 csv_R_m = glob.glob(os.path.join(Day_met_path, "*.csv"))
@@ -98,6 +105,25 @@ for file in csv_R_m:
         Stove_2_ff, S_2_start, S_2_end = Functions_malawi.FireFinder(Temp_2, Usage_2, cooking_threshold, length_decrease, start_threshold,
                                                                      end_threshold, merge_CE_threshold, min_CE_length, window_slope)
         Stove_2_number_of_events = len(S_2_start)
+
+        # for phase metrics
+
+        Phase_path_stove_1 = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_1_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(household)+"_1_exact_3.55555.csv"
+        Phase_path_stove_2 = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_2_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(household)+"_2_exact_3.55555.csv"
+        Phase_stove_1 = pd.read_csv(Phase_path_stove_1, skiprows=4)
+        Phase_stove_2 = pd.read_csv(Phase_path_stove_2, skiprows=4)
+        Phase_temp_1 = Phase_stove_1[:, 4]
+        Phase_first_ff_1 = Phase_stove_1[:, 3]
+        Phase_temp_2 = Phase_stove_2[:, 4]
+        Phase_first_ff_2 = Phase_stove_2[:, 3]
+
+        Phase_stove_1, Phase_S_1_start, Phase_S_1_end = Functions_malawi.FireFinder(Phase_temp_1, Phase_first_ff_1, cooking_threshold, length_decrease, start_threshold,
+                                                                     end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+
+        Phase_stove_1_number_of_events = len(Phase_S_1_start)
+        Phase_stove_2, Phase_S_2_start, Phase_S_2_end = Functions_malawi.FireFinder(Phase_temp_2, Phase_first_ff_2, cooking_threshold, length_decrease, start_threshold,
+                                                                     end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        Phase_stove_2_number_of_events = len(Phase_S_2_start)
     else:
         path_exact_1 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Exact_1_"+str(household)+"_"+Phase+"_.csv"
         Stove_1 = pd.read_csv(path_exact_1, skiprows = 2)
@@ -111,9 +137,28 @@ for file in csv_R_m:
         Stove_2_number_of_events = 0
         for length in (np.arange(0,len(Stove_1_ff),1)):
             Stove_2_ff.append(-1)
+        # for phase metrics
+
+        Phase_path_stove_1 = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_1_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(household)+"_1_exact_3.55555.csv"
+        Phase_stove_1 = pd.read_csv(Phase_path_stove_1, skiprows=4)
+
+        Phase_temp_1 = Phase_stove_1[:, 4]
+        Phase_first_ff_1 = Phase_stove_1[:, 3]
+
+
+        Phase_stove_1, Phase_S_1_start, Phase_S_1_end = Functions_malawi.FireFinder(Phase_temp_1, Phase_first_ff_1, cooking_threshold, length_decrease, start_threshold,
+                                                                     end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        Phase_stove_1_number_of_events = len(Phase_S_1_start)
+        Phase_stove_2 = []
+        Phase_2_number_of_events = 0
+        for length in (np.arange(0,len(Phase_stove_1),1)):
+            Phase_stove_2.append(-1)
 
     Merge_stoves,event  = Functions_malawi.Squish_usage(Phase,household,Stove_1_ff, Stove_2_ff, min_CE_length)
-    event = 0
+    #for phase metrics, i am going to get the specific 24 hour increments
+    day_integer = int(len(Phase_stove_1)/ (24*60))
+    Phase_merge_stoves, Phase_event = Functions_malawi.Squish_usage(Phase,household,Phase_stove_1[:(day_integer*24*60)], Phase_stove_2[:(day_integer*24*60)], min_CE_length)
+    #event = 0
     #for tvv, one in enumerate(Merge_stoves):
     #    if tvv +1 == len(Merge_stoves):
     #        break
@@ -130,6 +175,19 @@ for file in csv_R_m:
     Total_Combined_Time_per_event.append(sum(Merge_stoves)/event)
     Two_Stove_Combined.append(2- second_exact)
 
-Output_CSV = {'Household':Household_phase, 'Stoves Used':Two_Stove_Combined,'Total Combined Cooking times':Total_Combined_Cooking_times, 'Total Combined Events':Total_Combined_Cooking_events, 'Cooking times per event':Total_Combined_Time_per_event}
+    Phase_total_Combined_cooking_times.append(sum(Phase_merge_stoves))
+    Phase_Total_Combined_Cooking_events.append(Phase_event)
+    Phase_Total_Combined_Time_per_event.append(sum(Phase_merge_stoves)/Phase_event)
+    Phase_times_per_day.append(sum(Phase_merge_stoves)/day_integer)
+    print('Going to verify the phase cooking times using the same process')
+# the reasoning for this next section is to verify this method of merging events
+# the first iteration in "Merge Stove.py" worked with the spectific event times
+# this is going ot use the raw files and pump them through firefinder to merge cooking events in the "Functions_malawi.py"
+
+    
+Output_CSV = {'Household pump':Household_phase, 'Stoves Used':Two_Stove_Combined,'Pump day Combined Cooking times':Total_Combined_Cooking_times, 
+              'Pump Combined Events':Total_Combined_Cooking_events, 'Pump times per event':Total_Combined_Time_per_event,
+              'Phase Combined Cooking times':Phase_total_Combined_cooking_times, 'Phase Combined Events':Phase_Total_Combined_Cooking_events,
+              'Phase times per event':Phase_Total_Combined_Time_per_event,'Phase times per day':Phase_times_per_day}
 DF_output = pd.DataFrame(Output_CSV)
 print(DF_output)

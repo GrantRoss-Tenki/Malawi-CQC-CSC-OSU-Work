@@ -448,7 +448,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
 
     return (where_is_the_MinSlope)
 
-def Squish_usage(Phase, Houseold, First_usage, Second_usage):
+def Squish_usage(Phase, Houseold, First_usage, Second_usage, min_CE_length):
     if Phase== "2N":
         exact_2_hh = [1007]
     elif Phase== "3N":
@@ -495,5 +495,14 @@ def Squish_usage(Phase, Houseold, First_usage, Second_usage):
             Squish_array = -1
         else:
             Squish_array = First_usage
-
-    return Squish_array
+    event = 0 
+    for tvv, one in enumerate(Squish_array):
+        if tvv +1 == len(Squish_array):
+            break
+        elif one == 0 and Squish_array[tvv +1] == 1:
+            if Squish_array[tvv + min_CE_length] == 1:
+                event = event +1
+        elif tvv == 0 and Squish_array[tvv + min_CE_length] == 1:
+            event = event +1
+        
+    return Squish_array, event

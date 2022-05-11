@@ -32,6 +32,24 @@ elif Phase== "3H":
 else:
     exact_2_hh = [0]
 
+
+if Phase  == ("2N") or Phase == "3N" or Phase == "3N" or Phase == "4N":
+    cooking_threshold = 5
+    length_decrease = 40
+    start_threshold = 1
+    end_threshold = -5
+    merge_CE_threshold = 60
+    min_CE_length = 5
+    window_slope = 8
+else:
+    cooking_threshold = 1
+    length_decrease = 10
+    start_threshold = 1
+    end_threshold = -5
+    merge_CE_threshold = 40
+    min_CE_length = 8
+    window_slope = 12
+
 os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_1_exact/HH_summary_Event")
 
 Day_met_path = os.getcwd()

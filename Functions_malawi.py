@@ -479,15 +479,16 @@ def Squish_usage(Phase, Houseold, First_usage, Second_usage, min_CE_length):
 
         Collection_length = np.arange(0, len(Greatest_stove)-1, 1)
         Squish_array = []
+        Two_stove_once =[]
         print('length of least and collection legnth', len(least_stove), len(Collection_length))
         for tv in Collection_length:
             if tv == len(least_stove):
                 Squish_array.append(Greatest_stove[tv:])
                 break
-            elif (Greatest_stove[tv] == 1):
+            elif (Greatest_stove[tv] == 1) or (least_stove[tv] == 1):
                 Squish_array.append(1)
-            elif (least_stove[tv] == 1):
-                Squish_array.append(1)
+                if (Greatest_stove[tv] == 1) and (least_stove[tv] == 1):
+                    Two_stove_once.append(1)
             else:
                 Squish_array.append(0)
     elif Second_exact == 1:
@@ -505,4 +506,4 @@ def Squish_usage(Phase, Houseold, First_usage, Second_usage, min_CE_length):
         elif tvv == 0 and Squish_array[tvv + min_CE_length - 1] == 1:
             event = event +1
         
-    return Squish_array, event
+    return Squish_array, event, Two_stove_once

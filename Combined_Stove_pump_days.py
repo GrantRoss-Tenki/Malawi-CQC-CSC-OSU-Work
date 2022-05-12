@@ -12,7 +12,7 @@ from pathlib import Path, PureWindowsPath
 import Functions_malawi
 
 
-Phase = "3N"
+Phase = "4N"
 
 if Phase== "2N":
    exact_2_hh = [1007]
@@ -112,10 +112,10 @@ for file in csv_R_m:
         Phase_path_stove_2 = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_2_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(household)+"_2_exact_3.55555.csv"
         Phase_stove_1 = pd.read_csv(Phase_path_stove_1, skiprows=4)
         Phase_stove_2 = pd.read_csv(Phase_path_stove_2, skiprows=4)
-        Phase_temp_1 = Phase_stove_1[:, 4]
-        Phase_first_ff_1 = Phase_stove_1[:, 3]
-        Phase_temp_2 = Phase_stove_2[:, 4]
-        Phase_first_ff_2 = Phase_stove_2[:, 3]
+        Phase_temp_1 = Phase_stove_1.iloc[:, 4]
+        Phase_first_ff_1 = Phase_stove_1.iloc[:, 3]
+        Phase_temp_2 = Phase_stove_2.iloc[:, 4]
+        Phase_first_ff_2 = Phase_stove_2.iloc[:, 3]
 
         Phase_stove_1, Phase_S_1_start, Phase_S_1_end = Functions_malawi.FireFinder(Phase_temp_1, Phase_first_ff_1, cooking_threshold, length_decrease, start_threshold,
                                                                      end_threshold, merge_CE_threshold, min_CE_length, window_slope)
@@ -142,8 +142,8 @@ for file in csv_R_m:
         Phase_path_stove_1 = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_1_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(household)+"_1_exact_3.55555.csv"
         Phase_stove_1 = pd.read_csv(Phase_path_stove_1, skiprows=4)
 
-        Phase_temp_1 = Phase_stove_1[:, 4]
-        Phase_first_ff_1 = Phase_stove_1[:, 3]
+        Phase_temp_1 = Phase_stove_1.iloc[:, 4]
+        Phase_first_ff_1 = Phase_stove_1.iloc[:, 3]
 
 
         Phase_stove_1, Phase_S_1_start, Phase_S_1_end = Functions_malawi.FireFinder(Phase_temp_1, Phase_first_ff_1, cooking_threshold, length_decrease, start_threshold,
@@ -156,7 +156,8 @@ for file in csv_R_m:
 
     Merge_stoves,event  = Functions_malawi.Squish_usage(Phase,household,Stove_1_ff, Stove_2_ff, min_CE_length)
     #for phase metrics, i am going to get the specific 24 hour increments
-    day_integer = int(len(Phase_stove_1)/ (24*60))
+    day_integer = int((len(Phase_first_ff_1)/ (24*60))+1)
+    print('How many dyas calculated???  ',day_integer )
     Phase_merge_stoves, Phase_event = Functions_malawi.Squish_usage(Phase,household,Phase_stove_1[:(day_integer*24*60)], Phase_stove_2[:(day_integer*24*60)], min_CE_length)
     #event = 0
     #for tvv, one in enumerate(Merge_stoves):

@@ -500,9 +500,9 @@ def Squish_usage(Phase, Houseold, First_usage, Second_usage, min_CE_length):
         if tvv +1 == len(Squish_array):
             break
         elif one == 0 and Squish_array[tvv +1] == 1:
-            if Squish_array[tvv + min_CE_length] == 1:
+            if Squish_array[tvv + min_CE_length-1] == 1:
                 event = event +1
-        elif tvv == 0 and Squish_array[tvv + min_CE_length] == 1:
+        elif tvv == 0 and Squish_array[tvv + min_CE_length - 1] == 1:
             event = event +1
         
     return Squish_array, event

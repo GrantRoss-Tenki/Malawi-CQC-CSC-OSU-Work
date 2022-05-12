@@ -12,7 +12,7 @@ from pathlib import Path, PureWindowsPath
 import Functions_malawi
 
 
-Phase = "4N"
+Phase = "3N"
 
 if Phase== "2N":
    exact_2_hh = [1007]
@@ -192,16 +192,28 @@ for file in csv_R_m:
     #        event = event + 1
 
     ##print(sum(Merge_stoves),sum(Stove_2_ff),event, Stove_1_number_of_events  +Stove_2_number_of_events)
-    Household_phase.append(household)
-    Total_Combined_Cooking_times.append(sum(Merge_stoves))
-    Total_Combined_Cooking_events.append(event)
-    Total_Combined_Time_per_event.append(sum(Merge_stoves)/event)
-    Two_Stove_Combined.append(2- second_exact)
+    if len(Phase_S_1_start) != 0:
+        Household_phase.append(household)
+        Total_Combined_Cooking_times.append(sum(Merge_stoves))
+        Total_Combined_Cooking_events.append(event)
+        Total_Combined_Time_per_event.append(sum(Merge_stoves)/event)
+        Two_Stove_Combined.append(2- second_exact)
 
-    Phase_total_Combined_cooking_times.append(sum(Phase_merge_stoves))
-    Phase_Total_Combined_Cooking_events.append(Phase_event)
-    Phase_Total_Combined_Time_per_event.append(sum(Phase_merge_stoves)/Phase_event)
-    Phase_times_per_day.append(sum(Phase_merge_stoves)/day_integer)
+        Phase_total_Combined_cooking_times.append(sum(Phase_merge_stoves))
+        Phase_Total_Combined_Cooking_events.append(Phase_event)
+        Phase_Total_Combined_Time_per_event.append(sum(Phase_merge_stoves)/Phase_event)
+        Phase_times_per_day.append(sum(Phase_merge_stoves)/day_integer)
+    else:
+        Household_phase.append(household)
+        Total_Combined_Cooking_times.append(-1)
+        Total_Combined_Cooking_events.append(-1)
+        Total_Combined_Time_per_event.append(-1)
+        Two_Stove_Combined.append(-1)
+
+        Phase_total_Combined_cooking_times.append(-1)
+        Phase_Total_Combined_Cooking_events.append(-1)
+        Phase_Total_Combined_Time_per_event.append(-1)
+        Phase_times_per_day.append(-1)
     print('Going to verify the phase cooking times using the same process')
 # the reasoning for this next section is to verify this method of merging events
 # the first iteration in "Merge Stove.py" worked with the spectific event times

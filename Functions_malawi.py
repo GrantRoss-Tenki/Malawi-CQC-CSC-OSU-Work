@@ -494,9 +494,10 @@ def Squish_usage(Phase, Houseold, First_usage, Second_usage, min_CE_length):
     elif Second_exact == 1:
         if First_usage[2] == -1:
             Squish_array = -1
-            Two_stove_once = -1
+            Two_stove_once = [-1, -1]
         else:
             Squish_array = First_usage
+            Two_stove_once = [-1, -1]
     event = 0 
     for tvv, one in enumerate(Squish_array):
         if tvv +1 == len(Squish_array):

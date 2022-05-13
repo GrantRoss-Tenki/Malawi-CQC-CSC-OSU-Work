@@ -38,7 +38,7 @@ def FireFinder(temp, Usage, cooking_threshold, length_decrease, start_threshold,
         neg_slope = 0
         for t,s in enumerate(Temp_slope):
             if s <= 1:
-                if temp[t] < 127:# and temp[t] > cooking_threshold:
+                if temp[t] < 127:# and temp[t] >= cooking_threshold:
                     neg_slope = neg_slope +1
                 else:
                     neg_slope = 0
@@ -281,3 +281,231 @@ def Olivier_Fuel_Algo(Fuel_KG_nf, Thresold, min_average_spread,No_fuel):
             Olivier_filter = -1
             
         return Olivier_filter
+
+
+def flatten_list(_2d_list):
+    s = [str(i) for i in _2d_list]
+
+    flat_list = int(''.join(s))
+
+    return flat_list
+
+def Local_Max_min(arrayyyy, start):
+    # the array needs be a whole spread meaning the startup (10 min before ) Fire finder and cool down (30 after) 
+    # *** the array is not just firefinder*****
+    array = (arrayyyy)
+    gradienttt = list(np.gradient(array))
+    Mini_value = min(gradienttt)
+    Max_value = max(gradienttt)
+    Time_Vaue_min = (np.where(gradienttt == Mini_value))
+    Time_Vaue_max = (np.where(gradienttt == Max_value))
+
+    local_min_count = []
+    local_maxima_count = []
+    # the for loop is for determining the number of local minmums and maximums 
+    # local max and mins are determined by the gradient
+    for tv, a in enumerate(gradienttt,):
+        if gradienttt[tv-1] < 0 and a > 0:
+            local_min_count.append(tv + (start -10))
+        elif gradienttt[tv-1] > 0 and a < 0:
+            local_maxima_count.append(tv + (start -10))
+
+    return (Time_Vaue_min[0]+(start-10)), (Time_Vaue_max[0]+(start -10)), local_min_count, local_maxima_count
+
+
+def StartUp_max_Next_min(Hapex,start):
+    # the Hapex needs be a whole spread meaning the startup (10 min before ) Fire finder and cool down (30 after) 
+    # *** the array is not just firefinder*****
+    # NOTE---- this function has the same input as the "Local_Max_min" with differnt names
+    Hap = list(np.gradient(Hapex))
+    StartUp_max = max(Hap[0:21])
+    StartUp_max_TV = (np.where(Hap == StartUp_max))
+    #print('---------=--=-=-=---==-------',StartUp_max_TV)
+    found_min = 0
+    for tt, grad in enumerate(Hap):
+        if tt == StartUp_max_TV[0]:
+            
+            for s_tv, s_grad in enumerate(Hap[tt:]):
+                next_tt = tt + s_tv
+                if Hap[next_tt -1] < 0 and s_grad > 0:
+                    Next_min_TV = tt + s_tv
+                    found_min = 1
+                    break
+
+        if found_min == 0:
+            Next_min_TV = -1000
+    
+    return (StartUp_max_TV[0] +(start - 10)), (Next_min_TV + (start -10))
+
+
+
+
+def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Loca_Max_array, start):
+
+    max_array_scale = []
+    for g in Loca_Max_array:
+        max_array_scale.append(g- (start-10))
+    min_array_scale = [] 
+    for h in Local_min_array:
+        min_array_scale.append(h-(start - 10))
+
+    Max_reverse = list(reversed(Loca_Max_array))
+    Min_reverse = list(reversed(Local_min_array))
+    Minn_reverse_first = min_array_scale[-1]
+    Maxx_reverse_first = max_array_scale[-1]
+    Min_reverse_count = 0
+    stop = [0]
+    
+    Gradient_Hapex = (np.gradient(Combined_event_Hapex))
+ 
+    max_grad = max(list(Gradient_Hapex))
+    max_grad_where = np.where(Gradient_Hapex == max_grad)
+    max_PM = np.where(Combined_event_Hapex == max(Combined_event_Hapex))
+    
+    Medain_of_Max_Hapex = np.median(Combined_event_Hapex[int(max_grad_where[0]):])
+
+    print(startup,'max hapex',max_PM[0],max_grad_where, Combined_event_Hapex[0],'median',Medain_of_Max_Hapex, startup)
+
+
+    if Minn_reverse_first > Maxx_reverse_first:
+        where_grad = Gradient_Hapex[Maxx_reverse_first:Minn_reverse_first]
+    elif Minn_reverse_first < Maxx_reverse_first:
+        where_grad = Gradient_Hapex[Minn_reverse_first:Maxx_reverse_first]
+
+    #print('from function, this is the array i am looking at' ,where_grad)
+    where = min(where_grad)
+    for tv_1, hapex_vauue in enumerate(where_grad):
+        if hapex_vauue == where: 
+            where_is_the_MinSlope = tv_1 + Max_reverse[0]
+        else:
+            where_is_the_MinSlope = Min_reverse[0]
+    how_many_steady_state = []
+    min_reverse_array_count = []
+    max_reverse_array_count = []
+    for tv_rev, rev_hapex in enumerate(reversed(Combined_event_Hapex)):
+        if (len(Combined_event_Hapex) - tv_rev) < max_grad_where[0]:
+            break
+
+        elif (len(Combined_event_Hapex)-1- tv_rev) == Min_reverse[Min_reverse_count]:
+            for tv_max, rev_max in enumerate(Max_reverse):
+                if  (Min_reverse[Min_reverse_count] - window) <= rev_max <= (Min_reverse[Min_reverse_count] + window):
+                    #print('is this the good max', Combined_event_Hapex[rev_max], rev_max, Combined_event_Hapex[Min_reverse[Min_reverse_count-1]], Min_reverse[Min_reverse_count-1])
+                    if rev_max > Min_reverse[Min_reverse_count] and Min_reverse_count > len(Min_reverse):
+                        Final_last_slope = [t for t in Gradient_Hapex[Min_reverse[Min_reverse_count]:]]
+                        min_last_slope = min(Final_last_slope)
+                        where_last_slope = np.where(Final_last_slope == min_last_slope)
+                        where_is_the_MinSlope = rev_max + where_last_slope[0]
+                        stop = where_is_the_MinSlope
+
+                    elif Combined_event_Hapex[rev_max] > Medain_of_Max_Hapex and Combined_event_Hapex[Min_reverse[Min_reverse_count]] < Medain_of_Max_Hapex:
+                        if rev_max < Min_reverse[Min_reverse_count]:
+                            two = Min_reverse[Min_reverse_count]
+                            one = rev_max
+                            
+                        else:
+                            continue
+                        print('------------- it made it here-------------', (len(Combined_event_Hapex) - tv_rev), one, two)
+                        Steady_window_gradient = np.array([a for a in Gradient_Hapex[one:two]])
+                        #mini_window_gradient_array = [(min(Steady_window_gradient))]
+                        mini_window_gradient_array, idx = min([(abs(val), idx) for (idx, val) in enumerate(Steady_window_gradient)])
+                        #print('------------- it made it here-------values----', idx, Combined_event_Hapex[one], Combined_event_Hapex[two])
+                       
+                        for tv_steady, steady_grad in enumerate(Steady_window_gradient):
+                            if idx == tv_steady and rev_max > max_grad_where[0] and stop != tv_steady + rev_max:
+                                
+                                where_is_the_MinSlope = tv_steady + rev_max
+                                how_many_steady_state.append(where_is_the_MinSlope)
+                                min_reverse_array_count.append(Combined_event_Hapex[two])
+                                max_reverse_array_count.append(Combined_event_Hapex[one])
+                                clossest_min_median = np.where((min_reverse_array_count) == min((min_reverse_array_count)))
+                                clossest_max_median = np.where((max_reverse_array_count) == max((max_reverse_array_count)))
+                                stop = how_many_steady_state[-1]
+                                #break
+                else:
+                    continue
+                
+            Min_reverse_count = Min_reverse_count +1
+            
+    
+    #print('here are the steady states', how_many_steady_state,min_reverse_array_count,max_reverse_array_count,clossest_min_median[0], clossest_max_median[0])
+    last_filter = []
+    if len(how_many_steady_state) > 1:
+        for nec in how_many_steady_state:
+            filtering = 0
+            for hapex_pm in Combined_event_Hapex[nec:]:
+                if hapex_pm > Medain_of_Max_Hapex:
+                    #where_is_the_MinSlope = 
+                    filtering = 1
+                    break
+            if filtering == 0:
+                last_filter.append(nec)
+        print('last_filter ',list(set(last_filter)),how_many_steady_state  )
+        if len(last_filter) > 1:
+            where_is_the_MinSlope = min((set(last_filter)))
+        else:
+            where_is_the_MinSlope = Min_reverse[0]
+            print('it di not work-----:()')
+
+    return (where_is_the_MinSlope)
+
+def Squish_usage(Phase, Houseold, First_usage, Second_usage, min_CE_length):
+    if Phase== "2N":
+        exact_2_hh = [1007]
+    elif Phase== "3N":
+        exact_2_hh = [1001]
+    elif Phase== "4N":
+        exact_2_hh = [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1011, 1013, 1014, 1016, 1017, 1018, 1019, 1021, 1022, 1023, 1024, 1025, 1026, 1028, 1029, 1030, 1031, 1032, 1033, 1035, 1036, 1037, 1038, 1039]
+    elif Phase== "2H":
+        exact_2_hh = [2006]
+    elif Phase== "3H":
+        exact_2_hh = [2001, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015]
+    else:
+        exact_2_hh = [0]
+    
+    for hh in exact_2_hh:
+        if int(Houseold) == int(hh):
+            Second_exact = 0
+            break
+        else:
+            Second_exact = 1
+
+    if Second_exact != 1:
+        if len(First_usage) > len(Second_usage):
+           Greatest_stove = First_usage
+           least_stove = Second_usage
+        else:
+           Greatest_stove = First_usage
+           least_stove = Second_usage
+
+        Collection_length = np.arange(0, len(Greatest_stove)-1, 1)
+        Squish_array = []
+        Two_stove_once =[]
+        print('length of least and collection legnth', len(least_stove), len(Collection_length))
+        for tv in Collection_length:
+            if tv == len(least_stove):
+                Squish_array.append(Greatest_stove[tv:])
+                break
+            elif (Greatest_stove[tv] == 1) or (least_stove[tv] == 1):
+                Squish_array.append(1)
+                if (Greatest_stove[tv] == 1) and (least_stove[tv] == 1):
+                    Two_stove_once.append(1)
+            else:
+                Squish_array.append(0)
+    elif Second_exact == 1:
+        if First_usage[2] == -1:
+            Squish_array = -1
+            Two_stove_once = [-1, -1]
+        else:
+            Squish_array = First_usage
+            Two_stove_once = [-1, -1]
+    event = 0 
+    for tvv, one in enumerate(Squish_array):
+        if tvv +1 == len(Squish_array):
+            break
+        elif one == 0 and Squish_array[tvv +1] == 1:
+            if Squish_array[tvv + min_CE_length-1] == 1:
+                event = event +1
+        elif tvv == 0 and Squish_array[tvv + min_CE_length - 1] == 1:
+            event = event +1
+        
+    return Squish_array, event, Two_stove_once

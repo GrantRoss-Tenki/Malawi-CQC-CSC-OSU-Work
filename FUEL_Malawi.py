@@ -379,7 +379,7 @@ for file_s in csv_E_S:
     if np.average(Event_SUM_data.iloc[:,1]) != -1:
         Fuel_removed = Event_SUM_data.iloc[:,1]
         KG_per_event.append(((int(sum(Fuel_removed)/how_many_events))*1000)/1000)
-        HH_Time_Fuel_remove.append(Event_SUM_data.iloc[:, 1])
+        HH_Time_Fuel_remove.append(Event_SUM_data.iloc[:, 2])
         #HH_Time_Fuel_Insert.append(Event_SUM_data.iloc[:, 3])
         T_E_Fuel_used_Event.extend(Fuel_removed)
         T_E_removed_Time.extend(Event_SUM_data.iloc[:, 2])
@@ -415,7 +415,8 @@ HH_Avg_PP_five_cook = []
 HH_Avg_PM_five_kit = []
 HH_STD_PP_five_cook = []
 HH_STD_PM_five_kit = []
-
+HH_SUM_PM_Five_kit = []
+HH_SUM_PM_Five_cook = []
 
 
 os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_E_first_five")
@@ -445,18 +446,22 @@ for file_5 in csv_E_5:
         HH_Avg_PP_five_cook.append((int((np.average(Event_5_data.iloc[:, 0])) * 100)) / 100)
         HH_STD_PP_five_cook.append((int((stat.stdev(Event_5_data.iloc[:, 0])) * 100)) / 100)
         T_Five_Cook_PM.extend(Event_5_data.iloc[:, 0])
+        HH_SUM_PM_Five_cook.append(int(sum(Event_5_data.iloc[:, 0])))
     else:
         HH_Avg_PP_five_cook.append(-1)
         HH_STD_PP_five_cook.append(-1)
+        HH_SUM_PM_Five_cook.append(-1)
 
     #Kitchen HAPEx Collection
     if np.average(Event_5_data.iloc[:, 1]) != -1:
         HH_Avg_PM_five_kit.append((int((np.average(Event_5_data.iloc[:, 1])) * 100)) / 100)
         HH_STD_PM_five_kit.append((int((stat.stdev(Event_5_data.iloc[:, 1])) * 100)) / 100)
         T_Five_KIT_PM.extend((Event_5_data.iloc[:, 1]))
+        HH_SUM_PM_Five_kit.append(int(sum(Event_5_data.iloc[:, 1])))
     else:
         HH_Avg_PM_five_kit.append(-1)
         HH_STD_PM_five_kit.append(-1)
+        HH_SUM_PM_Five_kit.append(-1)
 
     Event_5_data = pd.read_csv(file_5, skiprows=data_start)
     ID_Five_Event = id_number_5
@@ -469,10 +474,12 @@ T_CoolDown_Cook_PM = []
 T_CoolDown_KIT_PM = []
 HH_Avg_PP_CoolDown_cook = []
 HH_Avg_PM_CoolDown_kit = []
+HH_SUM_PM_Cooldown_kit = []
+HH_SUM_PM_Cooldown_cook = []
 HH_STD_PP_CoolDown_cook = []
 HH_STD_PM_CoolDown_kit = []
 
-
+CoolDown_length = []
 
 os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Compiler_"+Exact_num+"_exact/Raw_E_Cooldown")
 # For Hood portion
@@ -487,29 +494,35 @@ for file_5 in csv_E_5:
         for idx, row in enumerate(csv_reader):
             if '0' in row:
                 id_number_5 = (row[1])
+                
             elif '30 Cooldown spread (Cook PM)' in row:
                 data_start = idx
 
                 break
     Event_5_data = pd.read_csv(file_5, skiprows=data_start)
+    CoolDown_length.append(int(len(Event_5_data.iloc[:, 0])))
+    print('here is the ID number before cooldown',id_number_5, len(Event_5_data.iloc[:, 0]))
     #Cook HAPEx Collection
     if np.average(Event_5_data.iloc[:, 0]) != -1:
         HH_Avg_PP_CoolDown_cook.append((int((np.average(Event_5_data.iloc[:, 0])) * 100)) / 100)
         HH_STD_PP_CoolDown_cook.append((int((stat.stdev(Event_5_data.iloc[:, 0])) * 100)) / 100)
         T_CoolDown_Cook_PM.extend(Event_5_data.iloc[:, 0])
+        HH_SUM_PM_Cooldown_cook.append(int(sum(Event_5_data.iloc[:, 0])))
     else:
         HH_Avg_PP_CoolDown_cook.append(-1)
         HH_STD_PP_CoolDown_cook.append(-1)
-
+        HH_SUM_PM_Cooldown_cook.append(-1)
     #Kitchen HAPEx Collection
-    if np.average(Event_5_data.iloc[:, 1]) != -1:
-        HH_Avg_PM_CoolDown_kit.append((int((np.average(Event_5_data.iloc[:, 1])) * 100)) / 100)
-        HH_STD_PM_CoolDown_kit.append((int((stat.stdev(Event_5_data.iloc[:, 1])) * 100)) / 100)
-        T_CoolDown_KIT_PM.extend((Event_5_data.iloc[:, 1]))
+    #print(Event_5_data.iloc[5, 1])
+    if Event_5_data.iloc[5, 1] != -1:
+        HH_Avg_PM_CoolDown_kit.append(np.average(Event_5_data.iloc[:, 1]))# * 100)) / 100)
+        HH_STD_PM_CoolDown_kit.append((((stat.stdev(Event_5_data.iloc[:, 1])))))# * 100)) / 100)
+        T_CoolDown_KIT_PM.extend(Event_5_data.iloc[:, 1])
+        HH_SUM_PM_Cooldown_kit.append(int(sum(Event_5_data.iloc[:, 1])))
     else:
         HH_Avg_PM_CoolDown_kit.append(-1)
         HH_STD_PM_CoolDown_kit.append(-1)
-
+        HH_SUM_PM_Cooldown_kit.append(-1)
     Event_5_data = pd.read_csv(file_5, skiprows=data_start)
     ID_Five_Event = id_number_5
 
@@ -657,32 +670,37 @@ for HH_num, HH in enumerate(ID_HH_EM):
         a_v_g_event_per_day = -1
         TT_cooking = -1
         S_T_D_length_cooking_event = -1
-    HH_dict_event[HH] = {'Number of Events Observed':N_Of_events_O,\
-                  'Average Events per day (Events/day)':a_v_g_event_per_day,\
-                  'Total time cooking (minutes)': TT_cooking,\
-                  'Percentage of Cooking per day (minutes)': ((int(((HH_Cooking_length[HH_num])/(HH_total_time_f_collection[HH_num]))*100))/100),
-                  'Average length of Each Cooking Event (minutes)': np.average(HH_avg_cooking_length[HH_num]), \
-                    'STD length of Each Cooking Event(minutes)': S_T_D_length_cooking_event, \
-                    'Average Cook PM Per Event' : HH_E_avg_cook_PM[HH_num],\
-                    'STD Cook PM per Event' : HH_E_std_cook_PM[HH_num],
-                  'Average Kitchen PM per Event':HH_E_avg_Kit_PM[HH_num],\
-                   'STD Kitchen PM per Event': HH_E_std_Kit_PM[HH_num],\
-                   'Percentage Compliance for Kitchen Per Event': HH_E_avg_Kit_comp[HH_num],
-                  'Percentage Compliance of Cook per Event': HH_E_avg_cook_comp[HH_num],\
-                  'Fuel Used for all events':KG_removed_sum[HH_num] ,
-                   'Average Fuel Used per event':Avg_fuel_per_event_used,
-                    'Average Time Fuel was removed before Cooking (minutes)': a_v_g_time_fuel_removed,
-                         'Average Cook PM for First Five minutes of Cooking' : HH_Avg_PP_five_cook[HH_num],
-                         'STD Cook PM for First Five minutes of Cooking' : HH_STD_PP_five_cook[HH_num],
-                         'Average Kitchen PM for First Five minutes of Cooking' : HH_Avg_PM_five_kit[HH_num],
-                         'STD Kitchen PM for First Five minutes of Cooking' : HH_STD_PM_five_kit[HH_num],
-                         
-                        'Average Cook PM for Cooldown of Cooking' : HH_Avg_PP_CoolDown_cook[HH_num],
+
+    HH_dict_event[HH] = {'Number of Events Observed':N_Of_events_O,
+                         'Average Events per day (Events/day)': a_v_g_event_per_day,
+                         'Total time cooking (minutes)': TT_cooking,
+                         'Percentage of Cooking per day (minutes)': ((int(((HH_Cooking_length[HH_num])/(HH_total_time_f_collection[HH_num]))*100))/100),
+                         'Average length of Each Cooking Event (minutes)': np.average(HH_avg_cooking_length[HH_num]), \
+                         'STD length of Each Cooking Event(minutes)': S_T_D_length_cooking_event, \
+                         'Average Cook PM Per Event' : HH_E_avg_cook_PM[HH_num],\
+                         'STD Cook PM per Event' : HH_E_std_cook_PM[HH_num],
+                         'Average Kitchen PM per Event':HH_E_avg_Kit_PM[HH_num],\
+                         'STD Kitchen PM per Event': HH_E_std_Kit_PM[HH_num],\
+                         'Percentage Compliance for Kitchen Per Event': HH_E_avg_Kit_comp[HH_num],
+                         'Percentage Compliance of Cook per Event': HH_E_avg_cook_comp[HH_num],\
+                         'Fuel Used for all events':KG_removed_sum[HH_num] ,
+                         'Average Fuel Used per event':Avg_fuel_per_event_used,
+                         'Average Time Fuel was removed before Cooking (minutes)': a_v_g_time_fuel_removed,
+                         'Average Cook PM for Start-Up of Cooking' : HH_Avg_PP_five_cook[HH_num],
+                         'STD Cook PM for Start-Up of Cooking' : HH_STD_PP_five_cook[HH_num],
+                         'Average Kitchen PM for Start-Up of Cooking' : HH_Avg_PM_five_kit[HH_num],
+                         'STD Kitchen PM for Start-Up of Cooking' : HH_STD_PM_five_kit[HH_num], 
+                         'Average Cook PM for Cooldown of Cooking' : HH_Avg_PP_CoolDown_cook[HH_num],
                          'STD Cook PM for Cooldown of Cooking' : HH_STD_PP_CoolDown_cook[HH_num],
                          'Average Kitchen PM for Cooldown of Cooking' : HH_Avg_PM_CoolDown_kit[HH_num],
-                         'STD Kitchen PM for Cooldown of Cooking' : HH_STD_PM_Cooldown_kit[HH_num]}
+                         'STD Kitchen PM for Cooldown of Cooking' : HH_STD_PM_CoolDown_kit[HH_num],
+                         'Sum of total 30 minute Cooldown (cook)': HH_SUM_PM_Cooldown_cook[HH_num],
+                         'Sum of total 30 minute Cooldown (kitchen)' : HH_SUM_PM_Cooldown_kit[HH_num],
+                         'CoolDown Minutes Coolected': CoolDown_length[HH_num],
+                         'Sum of total startup Kitchen':HH_SUM_PM_Five_kit[HH_num],
+                         'Sum of total startup Cook': HH_SUM_PM_Five_cook[HH_num]}                 
 
-
+    #print('length of average kitchen, cooldown lenght, fuel removed for origional dictionary',HH_dict_event)
 
 HH_Number_Event_metric_dict = {}
 HH_range_Event = range(len(ID_HH_EM))
@@ -821,14 +839,14 @@ print('Average Cook PM exposure per event (PM)', Total_Average_Event_cook_exposu
 Total_Average_Event_Kitchen_PM = (int(np.average(T_E_Kit_PM)*100)/100)
 print('Average Kitchen PM Exposure per event (PM)', Total_Average_Event_Kitchen_PM)
 
-Total_Average_first_five_Kit_PM = (int((((sum(T_Five_KIT_PM)))/(len(T_Five_KIT_PM)))*100)/100)
+Total_Average_first_five_Kit_PM = (int(np.average(T_Five_KIT_PM))) #(((sum(T_Five_KIT_PM)))/(len(T_Five_KIT_PM)))*100)/100)
 print('Average Kitchen PM for the 10 Minute Start-Up of cooking (PM)', Total_Average_first_five_Kit_PM)
-Total_Average_first_five_Cook_PM = (int((((sum(T_Five_Cook_PM)))/(len(T_Five_Cook_PM)))*100)/100)
+Total_Average_first_five_Cook_PM = (int(np.average(T_Five_Cook_PM))) #(((sum(T_Five_Cook_PM)))/(len(T_Five_Cook_PM)))*100)/100)
 print('Average Cook PM for the 10 Minute Start-Up of cooking (PM)', Total_Average_first_five_Cook_PM)
 
-Total_Average_Cooldown_Kit_PM = (int((((sum(T_Cooldown_KIT_PM)))/(len(T_Cooldown_KIT_PM)))*100)/100)
+Total_Average_Cooldown_Kit_PM = (int(np.average(T_CoolDown_KIT_PM)))#(((sum(T_Cooldown_KIT_PM)))/(len(T_Cooldown_KIT_PM)))*100)/100)
 print('Average Kitchen PM for the whole Cooldown of cooking (PM)', Total_Average_Cooldown_Kit_PM)
-Total_Average_Cooldown_Cook_PM = (int((((sum(T_CoolDown_Cook_PM)))/(len(T_CoolDown_Cook_PM)))*100)/100)
+Total_Average_Cooldown_Cook_PM = (int(np .average(T_CoolDown_Cook_PM)))#(((sum(T_CoolDown_Cook_PM)))/(len(T_CoolDown_Cook_PM)))*100)/100)
 print('Average Cook PM for the whole Cooldown of cooking (PM)', Total_Average_Cooldown_Cook_PM)
 
 Total_Cook_Comp_Event = (int((sum(T_E_Cook_comp)/len((T_E_Cook_comp)))*100)/100)
@@ -947,13 +965,19 @@ HH_Event_Average_five_Cook_PM = []
 HH_Event_STD_five_Cook_PM = []
 HH_Event_Average_five_Kitchen_PM = []
 HH_Event_STD_five_Kithen_PM = []
-
-
-
+HH_Event_Average_Cooldown_Cook_PM = []
+HH_Event_STD_Cooldown_Cook_PM = []
+HH_Event_Average_Cooldown_Kitchen_PM = []
+HH_Event_STD_Cooldown_Kithen_PM = []
+HH_Event_SUM_CoolDown_Cook = []
+HH_Event_SUM_CoolDown_Kitchen = []
+HH_Event_Cooldown_Minutes_Collected = []
+HH_Event_SUM_Five_Cook = []
+HH_Event_SUM_Five_Kitchen = []
 
 for Num, hh in enumerate(HH_dict_event.keys()):
     Household_event.append(hh)
-    countings = np.arange(0, 21,1)
+    countings = np.arange(0, 28,1)
     for val in countings:
         if val == 0:
             HH_Event_number_Events_observed.append(HH_dict_event[hh]['Number of Events Observed'])
@@ -985,41 +1009,68 @@ for Num, hh in enumerate(HH_dict_event.keys()):
             HH_Event_Average_fuel_per_event.append(HH_dict_event[hh]['Average Fuel Used per event'])
         elif val == 14:
             HH_Event_Average_time_fuel_removed_before.append(HH_dict_event[hh]['Average Time Fuel was removed before Cooking (minutes)'])
-        # elif val == 15:
-        #     HH_Event_STD_time_fuel_removed_before.append(HH_dict_event[hh]['STD Time Fuel was removed before Cooking (minutes)'])
+        elif val == 15:
+            HH_Event_Average_five_Cook_PM.append(HH_dict_event[hh]['Average Cook PM for Start-Up of Cooking'])
         elif val == 16:
-            HH_Event_Average_five_Cook_PM.append(HH_dict_event[hh]['Average Cook PM for First Five minutes of Cooking'])
+            HH_Event_STD_five_Cook_PM.append(HH_dict_event[hh]['STD Cook PM for Start-Up of Cooking'])
         elif val == 17:
-            HH_Event_STD_five_Cook_PM.append(HH_dict_event[hh]['STD Cook PM for First Five minutes of Cooking' ])
+            HH_Event_Average_five_Kitchen_PM.append(HH_dict_event[hh]['Average Kitchen PM for Start-Up of Cooking' ])
         elif val == 18:
-            HH_Event_Average_five_Kitchen_PM.append(HH_dict_event[hh]['Average Kitchen PM for First Five minutes of Cooking' ])
+            HH_Event_STD_five_Kithen_PM.append(HH_dict_event[hh]['STD Kitchen PM for Start-Up of Cooking' ])
         elif val == 19:
-            HH_Event_STD_five_Kithen_PM.append(HH_dict_event[hh]['STD Kitchen PM for First Five minutes of Cooking' ])
+            HH_Event_Average_Cooldown_Cook_PM.append(HH_dict_event[hh]['Average Cook PM for Cooldown of Cooking'])
+        elif val == 20:
+            HH_Event_STD_Cooldown_Cook_PM.append(HH_dict_event[hh]['STD Cook PM for Cooldown of Cooking'])
+        elif val == 21:
+            HH_Event_Average_Cooldown_Kitchen_PM.append(HH_dict_event[hh]['Average Kitchen PM for Cooldown of Cooking'])
+        elif val == 22:
+            HH_Event_STD_Cooldown_Kithen_PM.append(HH_dict_event[hh]['STD Kitchen PM for Cooldown of Cooking'])
+        elif val == 23:
+            HH_Event_SUM_CoolDown_Cook.append(HH_dict_event[hh]['Sum of total 30 minute Cooldown (cook)'])
+        elif val == 24:
+           HH_Event_SUM_CoolDown_Kitchen.append(HH_dict_event[hh]['Sum of total 30 minute Cooldown (kitchen)'])
+        elif val == 25:
+           HH_Event_Cooldown_Minutes_Collected.append(HH_dict_event[hh]['CoolDown Minutes Coolected'])
+        elif val == 26:
+           HH_Event_SUM_Five_Kitchen.append(HH_dict_event[hh]['Sum of total startup Kitchen'])
+        elif val == 27:
+           HH_Event_SUM_Five_Cook.append(HH_dict_event[hh]['Sum of total startup Cook'])
 
-DataFrame_event_HH = {'Household humber': Household_event,'Number of Events Observed':HH_Event_number_Events_observed,\
-                  'Average Events per day (Events/day)':HH_Event_Average_Events_day,\
-                  'Total time cooking (minutes)': HH_Event_Total_time_cooking,\
+
+DataFrame_event_HH = {'Household number': Household_event,'Number of Events Observed':HH_Event_number_Events_observed,
+                   'Total time cooking (minutes)': HH_Event_Total_time_cooking,
+                   'Average Events per day (Events/day)':HH_Event_Average_Events_day,
                    'Percentage of Cooking per day (minutes)': HH_Event_percentage_cooking_per_day,
-                  'Average length of Each Cooking Event (minutes)': HH_Event_Average_Cooking_length, \
-                    'STD length of Each Cooking Event(minutes)': HH_Event_STD_Cooking_length, \
-                    'Average Cook PM Per Event' : HH_Event_Average_Cook_PM,\
-                    'STD Cook PM per Event' : HH_Event_STD_Cook_PM,
-                  'Average Kitchen PM per Event':HH_Event_Average_Kitchen_PM,\
-                   'STD Kitchen PM per Event': HH_Event_STD_Kitchen_PM,\
+                   'Average length of Each Cooking Event (minutes)': HH_Event_Average_Cooking_length, 
+                   'STD length of Each Cooking Event(minutes)': HH_Event_STD_Cooking_length, 
+                   'Average Cook PM Per Event' : HH_Event_Average_Cook_PM,
+                   'STD Cook PM per Event' : HH_Event_STD_Cook_PM,
+                   'Average Kitchen PM per Event':HH_Event_Average_Kitchen_PM,
+                   'STD Kitchen PM per Event': HH_Event_STD_Kitchen_PM,
                    'Percentage Compliance for Kitchen Per Event': HH_Event_Comp_Kitchen,
-                  'Percentage Compliance of Cook per Event': HH_Event_Comp_Cook,\
-                  'Fuel Used for all events': HH_Event_Fuel_used_all_events ,
+                   'Percentage Compliance of Cook per Event': HH_Event_Comp_Cook,
+                   'Fuel Used for all events': HH_Event_Fuel_used_all_events ,
                    'Average Fuel Used per event':HH_Event_Average_fuel_per_event,
-                    'Average Time Fuel was removed before Cooking (minutes)': HH_Event_Average_time_fuel_removed_before,
-                         'Average Cook PM for Start-up of Cooking' : HH_Event_Average_five_Cook_PM,
-                         'STD Cook PM for Start-up of Cooking' : HH_Event_STD_five_Cook_PM,
-                         'Average Kitchen PM for Start-up minutes of Cooking' : HH_Event_Average_five_Kitchen_PM,
-                         'STD Kitchen PM for Start-up minutes of Cooking' : HH_Event_STD_five_Kithen_PM,
+                   'Average Time Fuel was removed before Cooking (minutes)': HH_Event_Average_time_fuel_removed_before,
+                   'Average Cook PM for Start-up of Cooking' : HH_Event_Average_five_Cook_PM,
+                   'STD Cook PM for Start-up of Cooking' : HH_Event_STD_five_Cook_PM,
+                   'Average Kitchen PM for Start-up minutes of Cooking' : HH_Event_Average_five_Kitchen_PM,
+                   'STD Kitchen PM for Start-up minutes of Cooking' : HH_Event_STD_five_Kithen_PM,
+                   'Average Cook PM for Cooldown of Cooking' : HH_Event_Average_Cooldown_Cook_PM,
+                   'STD Cook PM for Cooldown of Cooking' : HH_Event_STD_Cooldown_Cook_PM,
+                   'Average Kitchen PM for Cooldown of Cooking' : HH_Event_Average_Cooldown_Kitchen_PM,
+                   'STD Kitchen PM for Cooldown of Cooking' : HH_Event_STD_Cooldown_Kithen_PM,
+                   'Cooldown Minutes Collected':HH_Event_Cooldown_Minutes_Collected,
+                   'Sum of Kitchen Startup': HH_Event_SUM_Five_Kitchen, 
+                   'Sum of Cook Startup':HH_Event_SUM_Five_Cook,
+                   'Sum of 30 Minutes CoolDown (Kitchen)':HH_Event_SUM_CoolDown_Kitchen,
+                   'Sum of 30 Minutes CoolDown (Cook)': HH_Event_SUM_CoolDown_Cook}
 
-                         'Average Cook PM for Cooldown of Cooking' : HH_Event_Average_Cooldown_Cook_PM,
-                         'STD Cook PM for Start-up of Cooking' : HH_Event_STD_five_Cook_PM,
-                         'Average Kitchen PM for Start-up minutes of Cooking' : HH_Event_Average_five_Kitchen_PM,
-                         'STD Kitchen PM for Start-up minutes of Cooking' : HH_Event_STD_five_Kithen_PM}
+print('length of fule used', len(HH_Event_Average_fuel_per_event))
+print('length of avg Kit Cooldown', len(HH_Event_Average_Cooldown_Kitchen_PM))
+print('length of sum kit', len(HH_Event_SUM_CoolDown_Kitchen))
+print('length of sum cook', len(HH_Event_SUM_CoolDown_Kitchen))
+print('length of sum cooldown minutes', len(HH_Event_Cooldown_Minutes_Collected))
 DF_event_HH = pd.DataFrame(DataFrame_event_HH)
 
 DataFrame_Event = {'Total Amount of minutes for cooking event that was sensed: (minutes)': Total_Amount_of_event_time_sensed,
@@ -1033,7 +1084,8 @@ DataFrame_Event = {'Total Amount of minutes for cooking event that was sensed: (
                    'Average Kitchen PM for the first five minutes of cooking (PM)': Total_Average_first_five_Kit_PM,
                    'Average Cook PM for the first five minutes of cooking (PM)': Total_Average_first_five_Cook_PM,
                    'Total percentage of Cook Compliance while Cooking(%)':(Total_Cook_Comp_Event)*100,
-                   'Total percentage of Kitchen Compliance  while Cooking (%)': Total_kitchen_comp_Event}
+                   'Total percentage of Kitchen Compliance  while Cooking (%)': Total_kitchen_comp_Event, 
+                   'Total average fuel removed before Cooking':np.average(T_E_removed_Time)}
 index_why_s = [0]
 DF_Event = pd.DataFrame(DataFrame_Event,index=index_why_s)
 
@@ -1047,19 +1099,19 @@ DataFrame_Event_rankings = {'Household that had the most cooking events': HH_Max
                           'Household that had the longest time between fuel removal and cooking': HH_max_Time_Fuel_removed,
                           'Household cook that had the highest PM for first five minutes': HH_max_Kit_First_PM,
                           'Household kitchen that had the highest PM for first five minutes': HH_max_Kit_First_PM}
-DF_Event_rankings = pd.DataFrame(DataFrame_Event_rankings)
+#DF_Event_rankings = pd.DataFrame(DataFrame_Event_rankings)
 
 Path_HH_Sum = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase
 if Exact_num == "1":
     File_name_phase_Day = str(Path_HH_Sum) + "/"+Phase+"_Summary_Day_"+Exact_num+"_exact"+".csv"
     #DF_day.to_csv(File_name_phase_Day)
     #DF_HH_day.to_csv(File_name_phase_Day,index=False, mode= 'a')
-    File_name_phase_Day_rank = str(Path_HH_Sum) + "/"+Phase+"_Summary_Day_rank_"+Exact_num+"_exact"+".csv"
-    DF_day_rankings.to_csv(File_name_phase_Day_rank,index=False,mode='a')
+    #File_name_phase_Day_rank = str(Path_HH_Sum) + "/"+Phase+"_Summary_Day_rank_"+Exact_num+"_exact"+".csv"
+    #DF_day_rankings.to_csv(File_name_phase_Day_rank,index=False,mode='a')
 
 
 File_name_phase_Event = str(Path_HH_Sum) + "/"+Phase+"_Summary_Event_"+Exact_num+"_exact"+".csv"
 DF_Event.to_csv(File_name_phase_Event,index=False,mode='a')
 DF_event_HH.to_csv(File_name_phase_Event,index=False, mode= 'a')
-File_name_phase_Event_rank = str(Path_HH_Sum) + "/"+Phase+"_Summary_Event_rank_"+Exact_num+"_exact"+".csv"
-DF_Event_rankings.to_csv(File_name_phase_Event_rank,index=False, mode= 'a')
+#File_name_phase_Event_rank = str(Path_HH_Sum) + "/"+Phase+"_Summary_Event_rank_"+Exact_num+"_exact"+".csv"
+#DF_Event_rankings.to_csv(File_name_phase_Event_rank,index=False, mode= 'a')

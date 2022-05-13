@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path, PureWindowsPath
 import Functions_malawi
-
-Phase = input("What Phase are we in? --type 1N-- ")
+ 
+Phase = input("What Phase are we in? ")
 print('Phase Number', Phase)
 
 if Phase  == ("2N") or Phase == "3N" or Phase == "3N" or Phase == "4N":
@@ -35,8 +35,23 @@ Folder_path_1 = Path(input("-Copy down the path of your -1N- folder  - Format sh
 path_on_windows_1 = PureWindowsPath(Folder_path_1)
 
 Folder_path_2 = Path(input("-Copy down the path for - 1N_1H_Survey_summary_.csv - Format should work for either Mac or Windows "))
+if Phase == '1N':
+    Survey = "1N_1H_Survey_summary_.csv"
+elif Phase == '1H':
+    Survey = "1H_Survey_summary_.csv"
+elif Phase == '2N':
+    Survey = "2N_Survey_summary_.csv"
+elif Phase == '2H':
+    Survey = "2H_Survey_summary_.csv"
+elif Phase == '3N':
+    Survey = "3N_Survey_summary_.csv"
+elif Phase == '3H':
+    Survey = "3H_Survey_summary_.csv"
+elif Phase == '4N':
+    Survey = "4N_Survey_summary_.csv"
+
 path_on_windows_22 = PureWindowsPath(Folder_path_2)
-path_on_windows_2 = os.path.join(path_on_windows_22, '1N_1H_Survey_summary_.csv')
+path_on_windows_2 = os.path.join(path_on_windows_22, Survey)
 # this is just for 1H
 if Phase == "1H":
     os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+ Phase +"/Collection Hapex Stich")

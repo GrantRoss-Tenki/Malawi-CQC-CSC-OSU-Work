@@ -12,7 +12,7 @@ from pathlib import Path, PureWindowsPath
 import Functions_malawi
 
 
-Phase = "3N"
+Phase = "1H"
 
 if Phase== "2N":
    exact_2_hh = [1007]
@@ -192,7 +192,7 @@ for file in csv_R_m:
     #        event = event + 1
 
     ##print(sum(Merge_stoves),sum(Stove_2_ff),event, Stove_1_number_of_events  +Stove_2_number_of_events)
-    if len(Phase_S_1_start) != 0:
+    if len(Phase_S_1_start) != 0 and event != 0 and Phase_event != 0:
         Household_phase.append(household)
         Total_Combined_Cooking_times.append(sum(Merge_stoves))
         Total_Combined_Cooking_events.append(event)

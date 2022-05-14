@@ -14,14 +14,14 @@ import glob
 from datetime import datetime
 
 
-Phase  = "1H"
+Phase  = "3H"
 computer = "personal"
 
 if computer == "work":
     USB = "D"
     os.chdir("C:/Users/rossgra/Box/OSU, CSC, CQC Project files/"+ Phase +"/Collection")
 else:
-    os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Collection Hapex Stich")
+    os.chdir("C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Collection")
     USB = "E"
 
 Day_met_path = os.getcwd()
@@ -39,7 +39,7 @@ Exact_1_sensor = []
 Exact_2_sensor = []
 time_value_start = []
 
-
+First_Stove = False
 #Cook_Hapex_sensor.append(Cook_HAPEx)
     #Kit_Hapex_sensor.append(Kitchen_HAPEx)
     #Fuel_Hapex_sensor.append(Fuel)
@@ -57,6 +57,8 @@ for file in csv_R_m:
             elif 'Stove Name:' in row:
                 EXACT_1 = row[1]
                 Exact_1_sensor.append(EXACT_1)
+                First_Stove = True
+                
                 if row[2] != '':
                     print(len(row))
                     print('this is the exact value', row[2])
@@ -279,17 +281,19 @@ for file in csv_R_m:
             PM_pump_time_cook.append(pm)
         else:
             PM_pump_time_cook.append(-1) 
-            
-    if Hapex_start_kit_value != -1:
-        #print(hh,Hapex_start_kit_value, Count_Day_ahead,len(WHOLE_FILE.iloc[:,exact_usage_col]))
+    print('------ stove name -----',First_Stove )   
+    print('---Pumo Day start',Hapex_start_kit_value, Count_Day_ahead,len(WHOLE_FILE.iloc[:,exact_usage_col]))
+
+    if First_Stove == True:
+        
         usage_array = []
         for use in (WHOLE_FILE.iloc[Hapex_start_kit_value:Count_Day_ahead,exact_usage_col]):
-            if Hapex_start_kit_value != -1:
+            #if Hapex_start_kit_value != -1:
                 usage_array.append(use)
         
         temp_aray = []
         for temp in (WHOLE_FILE.iloc[Hapex_start_kit_value:Count_Day_ahead,exact_tem_col]):
-            if Hapex_start_kit_value != -1:
+            #if Hapex_start_kit_value != -1:
                 temp_aray.append(temp)
     else:
         usage_array.append(-1)
@@ -299,16 +303,16 @@ for file in csv_R_m:
     if second_stove == True:
         if Phase == "4N" and int(ID_Number) == 1010:
             for use in (WHOLE_FILE.iloc[Hapex_start_kit_value:-1,8]):
-                if Hapex_start_kit_value != -1:
+                #if Hapex_start_kit_value != -1:
                     usage_array_2.append(use)
         else:
             for use in (WHOLE_FILE.iloc[Hapex_start_kit_value:Count_Day_ahead,8]):
-                if Hapex_start_kit_value != -1:
+                #if Hapex_start_kit_value != -1:
                     usage_array_2.append(use)
         
         
         for temp in (WHOLE_FILE.iloc[Hapex_start_kit_value:Count_Day_ahead,9]):
-            if Hapex_start_kit_value != -1:
+            #if Hapex_start_kit_value != -1:
                 temp_aray_2.append(temp)
                 
     print(kit_pm_col, type(kit_pm_col))
@@ -323,7 +327,7 @@ for file in csv_R_m:
     
     df_2 = {'Exact 2 Usage':usage_array_2, 'Exact 2 Temp':temp_aray_2}
     FF_2 = pd.DataFrame(df_2, columns=['Exact 2 Temp','Exact 2 Usage'])
-    Path_2 = USB+":/24_hour_pump/"+Phase+"/Raw_pump_Time/Exact_2_"+ID_Number+"_"+Phase+"_.csv"
+    Path_2 = USB+":/24_hour_pump/"+Phase+"/Raw_pump_Time/Second_stove/Exact_2_"+ID_Number+"_"+Phase+"_.csv"
     FF_2.to_csv(Path_2, index= False, mode='a')
     
     
@@ -355,4 +359,4 @@ FF_3 = pd.DataFrame(df_3, columns=['Household','Start Time Value for Pump instal
                                    'Time Pumped','Cook Hapex Sensor','Kitchen Hapex Sensor','Fuel Sensor','Exact 1 Sensor','Exact 2 Sensor'])
 
 Path_3 = USB+":/24_hour_pump/"+Phase+"/pump metrics_"+Phase+"_.csv"
-FF_3.to_csv(Path_3, index= False, mode='a')
+#FF_3.to_csv(Path_3, index= False, mode='a')

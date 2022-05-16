@@ -13,7 +13,7 @@ import Functions_malawi
 
 
 
-Phase = "3H"
+Phase = "1N"
 
 
 if Phase== "2N":
@@ -208,56 +208,61 @@ for file in csv_R_m:
 # the reasoning for this next section is to verify this method of merging events
 # the first iteration in "Merge Stove.py" worked with the spectific event times
 # this is going ot use the raw files and pump them through firefinder to merge cooking events in the "Functions_malawi.py"
-if Phase == "3H":
-    for a in [2004, 2005, 2012]:
-        path_exact_1 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Exact_1_"+str(household)+"_"+Phase+"_.csv"
-        path_exact_2 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Second_stove/Exact_2_"+str(household)+"_"+Phase+"_.csv"
-        Stove_1 = pd.read_csv(path_exact_1, skiprows = 2)
-        Stove_2 = pd.read_csv(path_exact_2, skiprows = 2)
-        Temp_1 = Stove_1.iloc[:,0]
-        Temp_2 = Stove_2.iloc[:,0]
-        Usage_1 = Stove_1.iloc[:,1]
-        Stove_1_ff, S_1_start, S_1_end = Functions_malawi.FireFinder(Temp_1, Usage_1, cooking_threshold, length_decrease, start_threshold,
-                                                                         end_threshold, merge_CE_threshold, min_CE_length, window_slope)
-        Stove_1_number_of_events = len(S_1_start)
-        Usage_2 = Stove_2.iloc[:,1]
-        Stove_2_ff, S_2_start, S_2_end = Functions_malawi.FireFinder(Temp_2, Usage_2, cooking_threshold, length_decrease, start_threshold,
-                                                                         end_threshold, merge_CE_threshold, min_CE_length, window_slope)
-        Stove_2_number_of_events = len(S_2_start)
-        Pump_Total_Unmerged_cooking_times.append(sum(Stove_2_ff) + sum(Stove_1_ff))
-        
+if Phase == "1N":
+    for a in [1003, 1019]:
+        #path_exact_1 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Exact_1_"+str(a)+"_"+Phase+"_.csv"
+        #path_exact_2 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Second_stove/Exact_2_"+str(a)+"_"+Phase+"_.csv"
+        #Stove_1 = pd.read_csv(path_exact_1, skiprows = 2)
+        #Stove_2 = pd.read_csv(path_exact_2, skiprows = 2)
+        #Temp_1 = Stove_1.iloc[:,0]
+        #Temp_2 = Stove_2.iloc[:,0]
+        #Usage_1 = Stove_1.iloc[:,1]
+        #Stove_1_ff, S_1_start, S_1_end = Functions_malawi.FireFinder(Temp_1, Usage_1, cooking_threshold, length_decrease, start_threshold,
+        #                                                                 end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        #Stove_1_number_of_events = len(S_1_start)
+        #Usage_2 = Stove_2.iloc[:,1]
+        #Stove_2_ff, S_2_start, S_2_end = Functions_malawi.FireFinder(Temp_2, Usage_2, cooking_threshold, length_decrease, start_threshold,
+                                                                         #end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        #Stove_2_number_of_events = len(S_2_start)
+        Pump_Total_Unmerged_cooking_times.append(-1)
+        second_exact = 0
             # for phase metrics
 
-        Phase_path_stove_1 = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_1_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(household)+"_1_exact_3.55555.csv"
-        Phase_path_stove_2 = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_2_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(household)+"_2_exact_3.55555.csv"
+        Phase_path_stove_1 = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_1_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(a)+"_1_exact_3.55555.csv"
+        #Phase_path_stove_2 = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_2_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(a)+"_2_exact_3.55555.csv"
         Phase_stove_1 = pd.read_csv(Phase_path_stove_1, skiprows=4)
-        Phase_stove_2 = pd.read_csv(Phase_path_stove_2, skiprows=4)
+        #Phase_stove_2 = pd.read_csv(Phase_path_stove_2, skiprows=4)
         Phase_temp_1 = Phase_stove_1.iloc[:, 4]
         Phase_first_ff_1 = Phase_stove_1.iloc[:, 3]
-        Phase_temp_2 = Phase_stove_2.iloc[:, 4]
-        Phase_first_ff_2 = Phase_stove_2.iloc[:, 3]
+        #Phase_temp_2 = Phase_stove_2.iloc[:, 4]
+        #Phase_first_ff_2 = Phase_stove_2.iloc[:, 3]
 
         Phase_stove_1, Phase_S_1_start, Phase_S_1_end = Functions_malawi.FireFinder(Phase_temp_1, Phase_first_ff_1, cooking_threshold, length_decrease, start_threshold,
                                                                          end_threshold, merge_CE_threshold, min_CE_length, window_slope)
 
         Phase_stove_1_number_of_events = len(Phase_S_1_start)
-        Phase_stove_2, Phase_S_2_start, Phase_S_2_end = Functions_malawi.FireFinder(Phase_temp_2, Phase_first_ff_2, cooking_threshold, length_decrease, start_threshold,
-                                                                         end_threshold, merge_CE_threshold, min_CE_length, window_slope)
-        Phase_stove_2_number_of_events = len(Phase_S_2_start)
-        Phase_Total_Unmerged_cooking_times.append(sum(Phase_stove_1) + sum(Phase_stove_2))
+        #Phase_stove_2, Phase_S_2_start, Phase_S_2_end = Functions_malawi.FireFinder(Phase_temp_2, Phase_first_ff_2, cooking_threshold, length_decrease, start_threshold,
+        #                                                                 end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        #Phase_stove_2_number_of_events = len(Phase_S_2_start)
+        Phase_Total_Unmerged_cooking_times.append(sum(Phase_stove_1))# + sum(Phase_stove_2))
 
         Phase_stove_1_times.append(sum(Phase_stove_1))
-        Phase_stove_2_times.append(sum(Phase_stove_2))
-        Pump_stove_1_times.append(sum(Stove_1_ff))
-        Pump_stove_2_times.append(sum(Stove_2_ff))
+        Phase_stove_2_times.append(-1)
+        Pump_stove_1_times.append(-1)
+        Pump_stove_2_times.append(-1)
         
-        Merge_stoves,event, overlap_pump  = Functions_malawi.Squish_usage(Phase,household,Stove_1_ff, Stove_2_ff, min_CE_length)
+        #Merge_stoves,event, overlap_pump  = Functions_malawi.Squish_usage(Phase,household,Stove_1_ff, Stove_2_ff, min_CE_length)
         #for phase metrics, i am going to get the specific 24 hour increments
         day_integer = int((len(Phase_first_ff_1)/ (24*60))+1)
         print('How many dyas calculated???  ',day_integer )
-        Phase_merge_stoves, Phase_event, overlap_phase = Functions_malawi.Squish_usage(Phase,household,Phase_stove_1[:(day_integer*24*60)], Phase_stove_2[:(day_integer*24*60)], min_CE_length)
-        Phase_overlap.append(sum(overlap_phase))
-        Pump_stove_Overlap.append(sum(overlap_pump))
+        #Phase_merge_stoves, Phase_event, overlap_phase = Functions_malawi.Squish_usage(Phase,a,Phase_stove_1[:(day_integer*24*60)], Phase_stove_2[:(day_integer*24*60)], min_CE_length)
+        #Phase_overlap.append(sum(overlap_phase))
+
+        Phase_merge_stoves = (Phase_stove_1)
+        Phase_event = Phase_stove_1_number_of_events
+
+        Phase_overlap.append(-1)
+        Pump_stove_Overlap.append(-1)
     
         #event = 0
         #for tvv, one in enumerate(Merge_stoves):
@@ -271,15 +276,16 @@ if Phase == "3H":
 
         ##print(sum(Merge_stoves),sum(Stove_2_ff),event, Stove_1_number_of_events  +Stove_2_number_of_events)
         Household_phase.append(a)
-        Total_Combined_Cooking_times.append(sum(Merge_stoves))
-        Total_Combined_Cooking_events.append(event)
-        Total_Combined_Time_per_event.append(sum(Merge_stoves)/event)
+        Total_Combined_Cooking_times.append(-1)
+        Total_Combined_Cooking_events.append(-1)
+        Total_Combined_Time_per_event.append(-1)
         Two_Stove_Combined.append(2- second_exact)
 
         Phase_total_Combined_cooking_times.append(sum(Phase_merge_stoves))
         Phase_Total_Combined_Cooking_events.append(Phase_event)
         Phase_Total_Combined_Time_per_event.append(sum(Phase_merge_stoves)/Phase_event)
         Phase_times_per_day.append(sum(Phase_merge_stoves)/day_integer)
+
 Output_CSV = {'Household pump':Household_phase, 'Stoves Used':Two_Stove_Combined,'Pump day Combined Cooking times':Total_Combined_Cooking_times, 
               'Pump Combined Events':Total_Combined_Cooking_events,'Unmerged Pump Day Cooking Times':Pump_Total_Unmerged_cooking_times ,'Overlap Pump Day':Pump_stove_Overlap,'Pump times per event':Total_Combined_Time_per_event,
               'Phase Combined Cooking times':Phase_total_Combined_cooking_times,'Pump Day Stove 1 Times':Pump_stove_1_times,'Pump Day Stove 2 Times':Pump_stove_2_times, 'Phase Combined Events':Phase_Total_Combined_Cooking_events,

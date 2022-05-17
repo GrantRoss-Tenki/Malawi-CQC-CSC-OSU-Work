@@ -13,7 +13,7 @@ import Functions_malawi
 
 
 
-Phase = "1N"
+Phase = "3H"
 
 
 if Phase== "2N":
@@ -66,6 +66,8 @@ Pump_Total_Unmerged_cooking_times = []
 Phase_overlap = []
 Phase_stove_1_times = []
 Phase_stove_2_times = []
+Total_days_colleted = []
+Total_events_collected = []
 
 os.chdir("E:/24_hour_pump/"+Phase+"/Raw_pump_Time")
 Day_met_path = os.getcwd()
@@ -139,6 +141,8 @@ for file in csv_R_m:
         Phase_stove_2_times.append(sum(Phase_stove_2))
         Pump_stove_1_times.append(sum(Stove_1_ff))
         Pump_stove_2_times.append(sum(Stove_2_ff))
+
+        Total_events_collected.append(Phase_stove_1_number_of_events + Phase_stove_2_number_of_events)
     else:
         path_exact_1 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Exact_1_"+str(household)+"_"+Phase+"_.csv"
         Stove_1 = pd.read_csv(path_exact_1, skiprows = 2)
@@ -174,7 +178,7 @@ for file in csv_R_m:
         Phase_stove_2_times.append(-1)
         Pump_stove_1_times.append(sum(Stove_1_ff))
         Pump_stove_2_times.append(-1)
-
+        Total_events_collected.append(Phase_stove_1_number_of_events)
     Merge_stoves,event, overlap_pump  = Functions_malawi.Squish_usage(Phase,household,Stove_1_ff, Stove_2_ff, min_CE_length)
     #for phase metrics, i am going to get the specific 24 hour increments
     day_integer = int((len(Phase_first_ff_1)/ (24*60))+1)
@@ -199,7 +203,7 @@ for file in csv_R_m:
     Total_Combined_Cooking_events.append(event)
     Total_Combined_Time_per_event.append(sum(Merge_stoves)/event)
     Two_Stove_Combined.append(2- second_exact)
-
+    Total_days_colleted.append(day_integer)
     Phase_total_Combined_cooking_times.append(sum(Phase_merge_stoves))
     Phase_Total_Combined_Cooking_events.append(Phase_event)
     Phase_Total_Combined_Time_per_event.append(sum(Phase_merge_stoves)/Phase_event)
@@ -209,7 +213,7 @@ for file in csv_R_m:
 # the first iteration in "Merge Stove.py" worked with the spectific event times
 # this is going ot use the raw files and pump them through firefinder to merge cooking events in the "Functions_malawi.py"
 if Phase == "1N":
-    for a in [1003, 1019]:
+    for a in [2004, 2005, 2012]:
         #path_exact_1 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Exact_1_"+str(a)+"_"+Phase+"_.csv"
         #path_exact_2 = "E:/24_hour_pump/"+Phase+"/Raw_pump_Time/Second_stove/Exact_2_"+str(a)+"_"+Phase+"_.csv"
         #Stove_1 = pd.read_csv(path_exact_1, skiprows = 2)
@@ -280,7 +284,7 @@ if Phase == "1N":
         Total_Combined_Cooking_events.append(-1)
         Total_Combined_Time_per_event.append(-1)
         Two_Stove_Combined.append(2- second_exact)
-
+        #Total_events_collected.append(Phase_stove_1_number_of_events
         Phase_total_Combined_cooking_times.append(sum(Phase_merge_stoves))
         Phase_Total_Combined_Cooking_events.append(Phase_event)
         Phase_Total_Combined_Time_per_event.append(sum(Phase_merge_stoves)/Phase_event)
@@ -290,7 +294,7 @@ Output_CSV = {'Household pump':Household_phase, 'Stoves Used':Two_Stove_Combined
               'Pump Combined Events':Total_Combined_Cooking_events,'Unmerged Pump Day Cooking Times':Pump_Total_Unmerged_cooking_times ,'Overlap Pump Day':Pump_stove_Overlap,'Pump times per event':Total_Combined_Time_per_event,
               'Phase Combined Cooking times':Phase_total_Combined_cooking_times,'Pump Day Stove 1 Times':Pump_stove_1_times,'Pump Day Stove 2 Times':Pump_stove_2_times, 'Phase Combined Events':Phase_Total_Combined_Cooking_events,
               'Phase times per event':Phase_Total_Combined_Time_per_event,'Phase times per day':Phase_times_per_day, 'Unmerged Phase Day Cooking times':Phase_Total_Unmerged_cooking_times, 'Overlap Phase':Phase_overlap,
-             'Phase Stove 1 time':Phase_stove_1_times, 'Phase Stove 2 time':Phase_stove_2_times}
+             'Phase Stove 1 time':Phase_stove_1_times, 'Phase Stove 2 time':Phase_stove_2_times, 'Un_merged events':Total_events_collected, 'Days Collected':Total_days_colleted}
 DF_output = pd.DataFrame(Output_CSV)
 print(DF_output)
 

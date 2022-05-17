@@ -414,6 +414,13 @@ for file in csv_R_m:
             Raw_Cook_Compliance.extend([a for a in Cook_compliance[start:Merged_Stoves_end[time_value]]])
             Raw_Kitchen_Compliance.extend([a for a in Kitchen_Compliance[start:Merged_Stoves_end[time_value]]])
 
+            Kitchen_hapex_min_spread = []
+            five_minue_count = 0
+            for minute, hapex in enumerate(Kitchen_PM[Merged_Stoves_end[time_value]:(Merged_Stoves_end[time_value] + cooldown_Length)]):
+                if five_minue_count == 5:
+                    five_minue_count = 0
+                else:
+                    five_minue_count = five_minue_count + 1
 
             #this section is for steady state and max value --- going to have to be put in later or next
 
@@ -523,4 +530,4 @@ Combined_stove_whole_metric = {'Household': Hosuehold, 'Total Cooking times (min
 DF_Combined_stove_whole_metric = pd.DataFrame(Combined_stove_whole_metric)
 
 Path_export_combined_stove = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Combined_Stove_Whole_"+Phase+".csv"
-DF_Combined_stove_whole_metric.to_csv(Path_export_combined_stove, index=False, mode='a')
+#DF_Combined_stove_whole_metric.to_csv(Path_export_combined_stove, index=False, mode='a')

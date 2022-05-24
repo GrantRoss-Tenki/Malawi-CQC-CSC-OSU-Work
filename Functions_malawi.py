@@ -18,7 +18,7 @@ def FireFinder(temp, Usage, cooking_threshold, length_decrease, start_threshold,
         else:
             No_exact = 1
         Temp_slope = []
-        print('minutes sensed-', n)
+        #print('minutes sensed-', n)
         count = 1
         for t, us in enumerate(Usage):
             if window_slope < (n+1) - t:

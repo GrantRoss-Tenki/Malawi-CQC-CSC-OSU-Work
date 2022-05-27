@@ -364,7 +364,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
     
     Medain_of_Max_Hapex = np.median(Combined_event_Hapex[int(max_grad_where[0]):])
 
-    print(startup,'max hapex',max_PM[0],max_grad_where, Combined_event_Hapex[0],'median',Medain_of_Max_Hapex, startup)
+    #print(startup,'max hapex',max_PM[0],max_grad_where, Combined_event_Hapex[0],'median',Medain_of_Max_Hapex, startup)
 
 
     if Minn_reverse_first > Maxx_reverse_first:

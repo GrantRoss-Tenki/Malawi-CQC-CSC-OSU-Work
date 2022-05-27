@@ -69,6 +69,7 @@ else:
 Usage, Fire_start, Fire_end = Functions_malawi.FireFinder(ff_temp, ff_usage, cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
 Adjusted_Start = []
 Adjusted_End = []
+steady_state = []
 #print('ff start and end',Fire_start )
 for CE in np.arange(0, len(Fire_start),1):
     CE_spread = Kitchen_Hapex[Fire_start[CE]-start_spread: Fire_end[CE]+cooldown_Length]
@@ -76,6 +77,12 @@ for CE in np.arange(0, len(Fire_start),1):
     RATE_CW_spread = (np.gradient(CE_spread))
     RATE_CW_spread_reversed = (np.gradient(CE_spread_reversed))
 
+    K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count  = Functions_malawi.Local_Max_min(Kitchen_Hapex, Fire_start[CE]-start_spread)
+    K_Hapex_Startup_max, K_Hapex_Next_Startup_min = Functions_malawi.StartUp_max_Next_min(Kitchen_Hapex, Fire_start[CE]-start_spread)
+    #print(K_H_MAX_Count,K_H_MIN_Count,K_Hapex_Startup_max  )
+    Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Kitchen_Hapex, 35, K_H_MIN_Count,K_Hapex_Startup_max, K_H_MAX_Count,Fire_start[CE]-start_spread)
+    steady_state.append(Steady_start_Time_value)
+    #print('Here is the Steady State: ',Steady_start_Time_value)
     for tv, hape in enumerate(RATE_CW_spread):
         if hape > Median_Gradient_Hapex:
             Adjusted_Start.append((Fire_start[CE]-start_spread) +tv)
@@ -87,4 +94,4 @@ for CE in np.arange(0, len(Fire_start),1):
             
 
     
-print('Adjusted start',Adjusted_End,Fire_end )
+print('Adjusted start',Adjusted_End,Fire_end,steady_state  )

@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path, PureWindowsPath
 import Functions_malawi
+import plotly.express as px
+import plotly.graph_objects as go
+
 
 Phase  = "1N"
 Houshold = 1007
@@ -87,7 +90,7 @@ for CE in np.arange(0, len(Fire_start),1):
     for tv, hape in enumerate(RATE_CW_spread):
         if hape > Median_Gradient_Hapex:
             Adjusted_Start.append((Fire_start[CE]-start_spread) +tv)
-            for tv_rev, hape_rev in enumerate(RATE_CW_spread_reversed):
+            for tv_rev, hape_rev in enumerate(RATE_CW_spread[tv:]):
                 if hape_rev > Median_Gradient_Hapex:
                     Adjusted_End.append((Fire_end[CE]+cooldown_Length) - tv_rev)
                     break
@@ -96,3 +99,7 @@ for CE in np.arange(0, len(Fire_start),1):
 
     
 print('Adjusted start',Adjusted_End,Fire_end,steady_state  )
+Range = np.arange(0, len(Kitchen_Hapex), 1)
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=Range, y=Kitchen_Hapex, mode='lines+markers'))
+fig.show()

@@ -77,10 +77,10 @@ for CE in np.arange(0, len(Fire_start),1):
     RATE_CW_spread = (np.gradient(CE_spread))
     RATE_CW_spread_reversed = (np.gradient(CE_spread_reversed))
 
-    K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count  = Functions_malawi.Local_Max_min(Kitchen_Hapex, Fire_start[CE]-start_spread)
-    K_Hapex_Startup_max, K_Hapex_Next_Startup_min = Functions_malawi.StartUp_max_Next_min(Kitchen_Hapex, Fire_start[CE]-start_spread)
+    K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count  = Functions_malawi.Local_Max_min(CE_spread, Fire_start[CE]-start_spread)
+    K_Hapex_Startup_max, K_Hapex_Next_Startup_min = Functions_malawi.StartUp_max_Next_min(CE_spread, Fire_start[CE]-start_spread)
     #print(K_H_MAX_Count,K_H_MIN_Count,K_Hapex_Startup_max  )
-    Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Kitchen_Hapex, 35, K_H_MIN_Count,K_Hapex_Startup_max, K_H_MAX_Count,Fire_start[CE]-start_spread)
+    Steady_start_Time_value = Functions_malawi.SteadyState_Finder(CE_spread, 35, K_H_MIN_Count,K_Hapex_Startup_max, K_H_MAX_Count,Fire_start[CE]-start_spread)
     steady_state.append(Steady_start_Time_value)
     #print('Here is the Steady State: ',Steady_start_Time_value)
     for tv, hape in enumerate(RATE_CW_spread):

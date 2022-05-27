@@ -23,7 +23,7 @@ csv_read = pd.read_csv(path)
 
 
 
-#csv = csv_read.iloc[:,0]
+csv = csv_read.iloc[:,0]
 #start = 10
 #K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count  = Functions_malawi.Local_Max_min(csv, start)
 
@@ -47,7 +47,7 @@ Gradient_Hapex = (np.gradient(Kitchen_Hapex))
 
 ABS_Gradient_Hapex = abs(Gradient_Hapex)
 Median_Gradient_Hapex = np.median(ABS_Gradient_Hapex)
-print('=-=-=-=-=-=-=-=-=-=-==-=-=-',Median_Gradient_Hapex)
+print('=-=-=-=-=-=-=-=-=-=-==-=-=-',Median_Gradient_Hapex, type(csv), csv[0:5])
 
 if Phase  == ("2N") or Phase == "3N" or Phase == "3N" or Phase == "4N":
     cooking_threshold = 5
@@ -72,15 +72,15 @@ Adjusted_End = []
 steady_state = []
 #print('ff start and end',Fire_start )
 for CE in np.arange(0, len(Fire_start),1):
-    CE_spread = Kitchen_Hapex[Fire_start[CE]-start_spread: Fire_end[CE]+cooldown_Length]
+    CE_spread = Kitchen_Hapex[Fire_start[CE]-start_spread : Fire_end[CE]+cooldown_Length]
     CE_spread_reversed = CE_spread[::-1]
     RATE_CW_spread = (np.gradient(CE_spread))
     RATE_CW_spread_reversed = (np.gradient(CE_spread_reversed))
 
     K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count  = Functions_malawi.Local_Max_min(CE_spread, Fire_start[CE]-start_spread)
     K_Hapex_Startup_max, K_Hapex_Next_Startup_min = Functions_malawi.StartUp_max_Next_min(CE_spread, Fire_start[CE]-start_spread)
-    #print(K_H_MAX_Count,K_H_MIN_Count,K_Hapex_Startup_max  )
-    Steady_start_Time_value = Functions_malawi.SteadyState_Finder(CE_spread, 35, K_H_MIN_Count,K_Hapex_Startup_max, K_H_MAX_Count,Fire_start[CE]-start_spread)
+    print('before steady state - ', K_H_MAX_Count,K_H_MIN_Count,K_Hapex_Startup_max,'CE SPREAD___--',Fire_start[CE],CE_spread[Fire_start[CE]:Fire_end[CE]+cooldown_Length] ,type(CE_spread),'whole',CE_spread)
+    Steady_start_Time_value = Functions_malawi.SteadyState_Finder(CE_spread, merge_CE_threshold, K_H_MIN_Count,K_Hapex_Startup_max, K_H_MAX_Count,Fire_start[CE]-start_spread)
     steady_state.append(Steady_start_Time_value)
     #print('Here is the Steady State: ',Steady_start_Time_value)
     for tv, hape in enumerate(RATE_CW_spread):

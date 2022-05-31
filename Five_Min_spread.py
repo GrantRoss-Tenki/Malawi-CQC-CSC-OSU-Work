@@ -13,7 +13,7 @@ import Functions_malawi
 from itertools import zip_longest
 
 
-Phase  = "4N"
+Phase  = "1N"
 spread_start = 10
 spread_end = 15
 if Phase == "1N":
@@ -77,9 +77,10 @@ for HH in House_hold:
                 else:
                     five_minute_breakdown.append(np.average(hapex_data[((prev_spred-1)*5):(spread*5)+1]))
             if len(hapex_data)/5 - len(Hepex_needed_breakdown) != 0:
-                five_minute_breakdown.append(np.average(hapex_data[Hepex_needed_breakdown[-1]:]))
+                five_minute_breakdown.append(np.average(hapex_data[((Hepex_needed_breakdown[-1]+1)*5):]))
             total_median_Five_time.append(len(hapex_data))
-            #print('how many splits-- ',len(Hepex_needed_breakdown), 'length of hapex_data-- ', len(hapex_data), 'length / 5-- ',len(hapex_data)/5, 'Length of the five minue split array -- ',len(five_minute_breakdown), 'on day -- ',Day_event[end_val] )
+            print('how many splits-- ',len(Hepex_needed_breakdown), 'length of hapex_data-- ',((Hepex_needed_breakdown[-1]+1)*5), len(hapex_data), 'length / 5-- ',len(hapex_data)/5, 'Length of the five minue split array -- ',len(five_minute_breakdown), 'on day -- ',Day_event[end_val],'if length int??== ',
+                len(hapex_data)/5 - len(Hepex_needed_breakdown) )
             total_median_Five_array.append(five_minute_breakdown)
     else:
         print('this household has a failed HAPEX', HH)

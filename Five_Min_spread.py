@@ -13,7 +13,7 @@ import Functions_malawi
 from itertools import zip_longest
 
 
-Phase  = "1N"
+Phase  = "4N"
 spread_start = 10
 spread_end = 15
 if Phase == "1N":
@@ -50,7 +50,7 @@ for HH in House_hold:
             High_usage_end.append(Event_end[row])
             Day_event.append(Day[row])
             total_median_five_household.append(HH)
-            total_median_Five_time.append(length)
+            
 
     print(High_usage_start,High_usage_end)
 
@@ -58,7 +58,7 @@ for HH in House_hold:
     Phase_HH1_path = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_1_exact/Raw_D_metrics/"+Phase+"_HH_raw_Day_metrics_"+str(HH)+"_1_exact_3.55555.csv"
     Phase_HH1 = pd.read_csv(Phase_HH1_path, skiprows = 2)
     Kitchen_hapex = Phase_HH1.iloc[:,8]
-    if Kitchen_hapex[0] != -1:
+    if Kitchen_hapex[0] != -1 or Kitchen_hapex[0] != 0:
         for end_val, start in enumerate(High_usage_start):
             
             end = High_usage_end[end_val] + spread_end
@@ -75,10 +75,10 @@ for HH in House_hold:
                 elif prev_spred == 1:
                     five_minute_breakdown.append(np.average(hapex_data[5:10]))
                 else:
-                    five_minute_breakdown.append(np.average(hapex_data[((prev_spred-1)*5):(spread*5)]))
+                    five_minute_breakdown.append(np.average(hapex_data[((prev_spred-1)*5):(spread*5)+1]))
             if len(hapex_data)/5 - len(Hepex_needed_breakdown) != 0:
                 five_minute_breakdown.append(np.average(hapex_data[Hepex_needed_breakdown[-1]:]))
-        
+            total_median_Five_time.append(len(hapex_data))
             #print('how many splits-- ',len(Hepex_needed_breakdown), 'length of hapex_data-- ', len(hapex_data), 'length / 5-- ',len(hapex_data)/5, 'Length of the five minue split array -- ',len(five_minute_breakdown), 'on day -- ',Day_event[end_val] )
             total_median_Five_array.append(five_minute_breakdown)
     else:

@@ -12,7 +12,7 @@ from pathlib import Path, PureWindowsPath
 import Functions_malawi
 import plotly.express as px
 import plotly.graph_objects as go
-
+from plotly.subplots import make_subplots
 
 Phase  = "1N"
 Houshold = 1007
@@ -100,6 +100,19 @@ for CE in np.arange(0, len(Fire_start),1):
     
 print('Adjusted start',Adjusted_End,Fire_end,steady_state  )
 Range = np.arange(0, len(Kitchen_Hapex), 1)
-fig = go.Figure()
-fig.add_trace(go.Scatter(x=Range, y=Kitchen_Hapex, mode='lines+markers'))
+#fig = go.Figure()
+#fig.add_trace(go.Scatter(x=Range, y=Kitchen_Hapex, mode='lines+markers'))
+#fig.add_trace(go.Scatter(x=Range, y=ff_temp, mode='lines+markers'))
+#fig.show()
+
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+fig.add_trace(
+    go.Scatter(x=Range, y=Kitchen_Hapex, name="yaxis data"),
+    secondary_y=False,)
+
+fig.add_trace(
+    go.Scatter(x=Range, y=ff_temp, name="yaxis2 data"),
+    secondary_y=True,
+)
+
 fig.show()

@@ -15,7 +15,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 Phase  = "1N"
-Houshold = 1007
+Houshold = 1009
 start_spread = 10
 cooldown_Length = 30
 
@@ -98,7 +98,7 @@ for CE in np.arange(0, len(Fire_start),1):
             
 
     
-print('Adjusted start',Adjusted_End,Fire_end,steady_state  )
+print('Adjusted start',Adjusted_Start,'Adjusted end',Adjusted_End,'Fire Finder_start',Fire_start,'Fire Finder_end',Fire_end,'Steady state', steady_state  )
 Range = np.arange(0, len(Kitchen_Hapex), 1)
 #fig = go.Figure()
 #fig.add_trace(go.Scatter(x=Range, y=Kitchen_Hapex, mode='lines+markers'))
@@ -107,11 +107,11 @@ Range = np.arange(0, len(Kitchen_Hapex), 1)
 
 fig = make_subplots(specs=[[{"secondary_y": True}]])
 fig.add_trace(
-    go.Scatter(x=Range, y=Kitchen_Hapex, name="yaxis data"),
+    go.Scatter(x=Range, y=Kitchen_Hapex, name="Kitchen Hapex"),
     secondary_y=False,)
 
 fig.add_trace(
-    go.Scatter(x=Range, y=ff_temp, name="yaxis2 data"),
+    go.Scatter(x=Range, y=ff_temp, name="Exact Temperature"),
     secondary_y=True,
 )
 

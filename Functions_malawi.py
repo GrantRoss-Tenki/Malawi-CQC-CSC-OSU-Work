@@ -290,7 +290,7 @@ def flatten_list(_2d_list):
 
     return flat_list
 
-def Local_Max_min(arrayyyy, start):
+def Local_Max_min(arrayyyy, start, Start_Spread):
     # the array needs be a whole spread meaning the startup (10 min before ) Fire finder and cool down (30 after) 
     # *** the array is not just firefinder*****
     array = (arrayyyy)
@@ -306,14 +306,14 @@ def Local_Max_min(arrayyyy, start):
     # local max and mins are determined by the gradient
     for tv, a in enumerate(gradienttt,):
         if gradienttt[tv-1] < 0 and a > 0:
-            local_min_count.append(tv + (start -10))
+            local_min_count.append(tv + (start -Start_Spread))
         elif gradienttt[tv-1] > 0 and a < 0:
-            local_maxima_count.append(tv + (start -10))
+            local_maxima_count.append(tv + (start -Start_Spread))
 
-    return (Time_Vaue_min[0]+(start-10)), (Time_Vaue_max[0]+(start -10)), local_min_count, local_maxima_count
+    return (Time_Vaue_min[0]+(start-Start_Spread)), (Time_Vaue_max[0]+(start -Start_Spread)), local_min_count, local_maxima_count
 
 
-def StartUp_max_Next_min(Hapex,start):
+def StartUp_max_Next_min(Hapex,start, start_spread):
     # the Hapex needs be a whole spread meaning the startup (10 min before ) Fire finder and cool down (30 after) 
     # *** the array is not just firefinder*****
     # NOTE---- this function has the same input as the "Local_Max_min" with differnt names
@@ -335,7 +335,7 @@ def StartUp_max_Next_min(Hapex,start):
         if found_min == 0:
             Next_min_TV = -1000
     
-    return (StartUp_max_TV[0] +(start - 10)), (Next_min_TV + (start -10))
+    return (StartUp_max_TV[0] +(start - start_spread)), (Next_min_TV + (start -start_spread))
 
 
 

@@ -80,8 +80,8 @@ for CE in np.arange(0, len(Fire_start),1):
     RATE_CW_spread = (np.gradient(CE_spread))
     RATE_CW_spread_reversed = (np.gradient(CE_spread_reversed))
 
-    K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count  = Functions_malawi.Local_Max_min(CE_spread, Fire_start[CE]-start_spread)
-    K_Hapex_Startup_max, K_Hapex_Next_Startup_min = Functions_malawi.StartUp_max_Next_min(CE_spread, Fire_start[CE]-start_spread)
+    K_H_MIN_tv, K_H_MAX_tv ,K_H_MIN_Count, K_H_MAX_Count  = Functions_malawi.Local_Max_min(CE_spread, Fire_start[CE]-start_spread, start_spread)
+    K_Hapex_Startup_max, K_Hapex_Next_Startup_min = Functions_malawi.StartUp_max_Next_min(CE_spread, Fire_start[CE]-start_spread, start_spread)
     print('before steady state - ', K_H_MAX_Count,K_H_MIN_Count,K_Hapex_Startup_max,'CE SPREAD___--',Fire_start[CE],Kitchen_Hapex[Fire_start[CE]-start_spread:Fire_end[CE]+cooldown_Length] ,type(CE_spread),'whole',CE_spread)
     
     Steady_start_Time_value = Functions_malawi.SteadyState_Finder(list(CE_spread), merge_CE_threshold, K_H_MIN_Count,K_Hapex_Startup_max, K_H_MAX_Count,Fire_start[CE]-start_spread)

@@ -116,3 +116,37 @@ for JFK_val in CQC_JFK_Non_Filter:
     CE_Time_CQC_JFK.pop(JFK_val)
 
 
+## Wood Savings 
+#wood_tsf.remove(-1)
+Wood_CQC = list(Wood_CQC)
+Wood_CQC.remove(-1)
+#wood_cqc_jfk.remove(-1)
+ax = plt.subplot()
+plt.title('wood consumption')
+plt.ylabel("Grams of wood") 
+plot_tsf_wood = plt.boxplot(Wood_TSF, positions=[1], widths = 0.6)
+plt.text(1,0.1,'TSF',color='b')
+
+plot_cqc_wood = plt.boxplot(Wood_CQC, positions=[2], widths = 0.6)
+plt.text(2,0.1,'CQC', color= 'g')
+
+plot_cqc_jfk_wood = plt.boxplot(Wood_CQC_JFK, positions = [3], widths = 0.6)
+plt.text(3,0.1,'Jet Flame', color='r')   
+
+plt.show()
+
+## Cooked Food
+#ax = plt.subplot()
+#plt.title('COOKED FOOD')
+#plt.ylabel("Grams of Sema") 
+
+#PLOT_TSF_COOKED = plt.boxplot(Cooked_TSF, positions=[1], widths = 0.6)
+#plt.text(1,0.1,'TSF',color='b')
+
+#PLOT_CQC_COOKED = plt.boxplot(Cooked_CQC, positions=[2], widths = 0.6)
+#plt.text(2,0.1,'CQC', color= 'g')
+
+#PLOT_CQC_JFK_COOKED = plt.boxplot(Cooked_CQC_JFK, positions = [3], widths = 0.6)
+#plt.text(3,0.1,'JET FLAME', color='r')   
+
+#plt.show()

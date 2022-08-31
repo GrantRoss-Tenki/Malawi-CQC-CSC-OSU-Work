@@ -129,28 +129,42 @@ plt.ylabel("Grams of wood")
 plot_tsf_wood = plt.boxplot(Wood_TSF, positions=[1], widths = 0.6)
 plt.text(1,0.1,'TSF',color='b')
 
-Box_TSF_Wood = np.percentile(Wood_TSF, [25,50,75])
-Box_TSF_Wood= np.append(Box_TSF_Wood, np.average(Wood_TSF))
+Box_TSF_Wood = list(np.percentile(Wood_TSF, [25,50,75]))
+Box_TSF_Wood.extend([np.average(Wood_TSF), len(Wood_TSF)])
+
 # CQC
 plot_cqc_wood = plt.boxplot(Wood_CQC, positions=[2], widths = 0.6)
 plt.text(2,0.1,'CQC', color= 'g')
 
-Box_CQC_Wood = np.percentile(Wood_CQC, [25,50,75])
-Box_CQC_Wood = np.append(Box_CQC_Wood, np.average(Wood_CQC))
+Box_CQC_Wood = list(np.percentile(Wood_CQC, [25,50,75]))
+Box_CQC_Wood.extend([np.average(Wood_CQC), len(Wood_CQC)])
 #JET Flame
 plot_cqc_jfk_wood = plt.boxplot(Wood_CQC_JFK, positions = [3], widths = 0.6)
 plt.text(3,0.1,'Jet Flame', color='r')  
 
-Box_JFK_Wood = np.percentile(Wood_CQC_JFK, [25,50,75])
-Box_JFK_Wood = np.append(Box_JFK_Wood, np.average(Wood_CQC_JFK))
+Box_JFK_Wood = list(np.percentile(Wood_CQC_JFK, [25,50,75]))
+Box_JFK_Wood.extend([np.average(Wood_CQC_JFK), len(Wood_CQC_JFK)])
 
 plt.show()
 
-print('thre are so many issues with Python right now and it does not make any sense------', type(Box_JFK_Wood),'Box for CQC',type(Box_CQC_Wood))
-DF_Box_Wood_Consumtion = {'Percentile %': ['25','50','75', 'Avg'], 'TSF': Box_TSF_Wood, 'CQC': Box_CQC_Wood,'JFK' : Box_JFK_Wood}
-Wood_CCT_Consumption = pd.DataFrame(data=DF_Box_Wood_Consumtion, columns=['Percentile %','TSF', 'CQC','JET Flame'] )
-
+DF_Box_Wood_Consumtion = {'Percentile %': ['25','50','75', 'Avg', 'n'], 'TSF': Box_TSF_Wood, 'CQC': Box_CQC_Wood,'JFK' : Box_JFK_Wood}
+Wood_CCT_Consumption = pd.DataFrame(data=DF_Box_Wood_Consumtion, columns=['Percentile %','TSF', 'CQC','JFK'] )
+print('Wood Consumed')
 print(Wood_CCT_Consumption)
+# Wood % Difference Between Stoves
+Wood_TSF_CQC = []
+Wood_TSF_JFK = []
+Wood_CQC_JFK = []
+Box_TSF_Wood.pop(-1)
+for vv, w in enumerate(Box_TSF_Wood):
+    Wood_TSF_CQC.append((Box_CQC_Wood[vv])/w)
+    Wood_TSF_JFK.append((Box_JFK_Wood[vv])/w)
+    Wood_CQC_JFK.append((Box_JFK_Wood[vv])/(Box_CQC_Wood[vv]))
+
+DF_Percent_Box_Wood_Consumtion = {'Percentile %': ['25','50','75', 'Avg'], 'TSF/CQC': Wood_TSF_CQC, 'TSF/JFK': Wood_TSF_JFK,'CQC/JFK' : Wood_CQC_JFK}
+Wood_Percent_CCT_Consumption = pd.DataFrame(data=DF_Percent_Box_Wood_Consumtion, columns=['Percentile %','TSF/CQC', 'TSF/JFK','CQC/JFK'] )
+print('% Difference Wood Consumed')
+print(Wood_Percent_CCT_Consumption)
 
 ## Cooked Food
 ax2 = plt.subplot()

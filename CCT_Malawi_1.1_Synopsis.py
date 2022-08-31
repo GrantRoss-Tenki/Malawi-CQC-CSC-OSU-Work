@@ -121,8 +121,9 @@ for JFK_val in CQC_JFK_Non_Filter:
 Wood_CQC = list(Wood_CQC)
 Wood_CQC.remove(-1)
 #wood_cqc_jfk.remove(-1)
-ax = plt.subplot()
-plt.title('wood consumption')
+
+ax1 = plt.subplot()
+plt.title('Wood Consumption')
 plt.ylabel("Grams of wood") 
 plot_tsf_wood = plt.boxplot(Wood_TSF, positions=[1], widths = 0.6)
 plt.text(1,0.1,'TSF',color='b')
@@ -132,21 +133,93 @@ plt.text(2,0.1,'CQC', color= 'g')
 
 plot_cqc_jfk_wood = plt.boxplot(Wood_CQC_JFK, positions = [3], widths = 0.6)
 plt.text(3,0.1,'Jet Flame', color='r')   
+plt.show()
+
+
+## Cooked Food
+ax2 = plt.subplot()
+plt.title('COOKED FOOD')
+plt.ylabel("Grams of Sema") 
+
+PLOT_TSF_COOKED = plt.boxplot(Cooked_TSF, positions=[1], widths = 0.6)
+plt.text(1,0.1,'TSF',color='b')
+
+PLOT_CQC_COOKED = plt.boxplot(Cooked_CQC, positions=[2], widths = 0.6)
+plt.text(2,0.1,'CQC', color= 'g')
+
+PLOT_CQC_JFK_COOKED = plt.boxplot(Cooked_CQC_JFK, positions = [3], widths = 0.6)
+plt.text(3,0.1,'JET FLAME', color='r')   
 
 plt.show()
 
-## Cooked Food
-#ax = plt.subplot()
-#plt.title('COOKED FOOD')
-#plt.ylabel("Grams of Sema") 
 
-#PLOT_TSF_COOKED = plt.boxplot(Cooked_TSF, positions=[1], widths = 0.6)
-#plt.text(1,0.1,'TSF',color='b')
+## Charcaol
+ax3 = plt.subplot()
+plt.title('Hot Charcoal')
+plt.ylabel("Grams of Charcaol") 
 
-#PLOT_CQC_COOKED = plt.boxplot(Cooked_CQC, positions=[2], widths = 0.6)
-#plt.text(2,0.1,'CQC', color= 'g')
+PLOT_TSF_CHAR = plt.boxplot(Charcoal_TSF, positions=[1], widths = 0.6)
+plt.text(1,0.1,'TSF',color='b')
 
-#PLOT_CQC_JFK_COOKED = plt.boxplot(Cooked_CQC_JFK, positions = [3], widths = 0.6)
-#plt.text(3,0.1,'JET FLAME', color='r')   
+PLOT_CQC_CHAR = plt.boxplot(Charcoal_CQC, positions=[2], widths = 0.6)
+plt.text(2,0.1,'CQC', color= 'g')
 
-#plt.show()
+PLOT_CQC_JFK_CHAR = plt.boxplot(Charcoal_CQC_JFK, positions = [3], widths = 0.6)
+plt.text(3,0.1,'JET FLAME', color='r')   
+
+plt.show()
+
+
+## BOIL
+Boil_TSF = list(Boil_TSF)
+Boil_TSF.remove(-1)
+
+print(Boil_CQC)
+Boil_CQC = list(Boil_CQC)
+Boil_CQC.remove(-1)
+print(Boil_CQC)
+
+#print(Boil_CQC_JFK)
+Boil_CQC_JFK = list(Boil_CQC_JFK)
+for a in Boil_CQC_JFK:
+    if a < 0:
+        Boil_CQC_JFK.remove(a)
+
+#print(Boil_CQC_JFK)
+ax4 = plt.subplot()
+plt.title('Time to Boil')
+plt.ylabel("Minutes from Fire Start to Boil") 
+
+PLOT_TSF_BOIL = plt.boxplot(Boil_TSF, positions=[1], widths = 0.6)
+plt.text(1,0.1,'TSF',color='b')
+
+PLOT_CQC_BOIL = plt.boxplot(Boil_CQC, positions=[2], widths = 0.6)
+plt.text(2,0.1,'CQC', color= 'g')
+
+PLOT_CQC_JFK_BOIL = plt.boxplot(Boil_CQC_JFK, positions = [3], widths = 0.6)
+plt.text(3,0.1,'JET FLAME', color='r')   
+
+plt.show()
+
+### Total cooking time
+#CE_Time_TSF = list(CE_Time_TSF)
+#CE_Time_TSF.remove(-1)
+#CE_Time_CQC = list(CE_Time_CQC)
+#CE_Time_CQC.remove(-1)
+#CE_Time_CQC_JFK = list(CE_Time_CQC_JFK)
+#CE_Time_CQC_JFK.remove(-1)
+
+ax5 = plt.subplot()
+plt.title('Total Cooking Time')
+plt.ylabel("Minutes from Fire Start to End") 
+
+PLOT_TSF_CE_LENGTH = plt.boxplot(CE_Time_TSF, positions=[1], widths = 0.6)
+plt.text(1,0.1,'TSF',color='b')
+
+PLOT_CQC_CE_LENGTH = plt.boxplot(CE_Time_CQC, positions=[2], widths = 0.6)
+plt.text(2,0.1,'CQC', color= 'g')
+
+PLOT_CQC_JFK_CE_LENGTH = plt.boxplot(CE_Time_CQC_JFK, positions = [3], widths = 0.6)
+plt.text(3,0.1,'JET FLAME', color='r')   
+
+plt.show()

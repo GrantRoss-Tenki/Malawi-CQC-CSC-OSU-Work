@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import csv
 
-Source = 'laptop' # 'work' or 'laptop'
+Source = 'work'  # 'work' or 'laptop'
 
 if Source == 'laptop':
     USB = 'E'
@@ -174,10 +174,10 @@ plt.show()
 Boil_TSF = list(Boil_TSF)
 Boil_TSF.remove(-1)
 
-print(Boil_CQC)
+#print(Boil_CQC)
 Boil_CQC = list(Boil_CQC)
 Boil_CQC.remove(-1)
-print(Boil_CQC)
+#print(Boil_CQC)
 
 #print(Boil_CQC_JFK)
 Boil_CQC_JFK = list(Boil_CQC_JFK)

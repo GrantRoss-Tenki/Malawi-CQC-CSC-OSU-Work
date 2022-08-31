@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import csv
 
-Source = 'work'  # 'work' or 'laptop'
+Source = 'laptop'  # 'work' or 'laptop'
 
 if Source == 'laptop':
     USB = 'E'
@@ -125,16 +125,32 @@ Wood_CQC.remove(-1)
 ax1 = plt.subplot()
 plt.title('Wood Consumption')
 plt.ylabel("Grams of wood") 
+# TSF
 plot_tsf_wood = plt.boxplot(Wood_TSF, positions=[1], widths = 0.6)
 plt.text(1,0.1,'TSF',color='b')
 
+Box_TSF_Wood = np.percentile(Wood_TSF, [25,50,75])
+Box_TSF_Wood= np.append(Box_TSF_Wood, np.average(Wood_TSF))
+# CQC
 plot_cqc_wood = plt.boxplot(Wood_CQC, positions=[2], widths = 0.6)
 plt.text(2,0.1,'CQC', color= 'g')
 
+Box_CQC_Wood = np.percentile(Wood_CQC, [25,50,75])
+Box_CQC_Wood = np.append(Box_CQC_Wood, np.average(Wood_CQC))
+#JET Flame
 plot_cqc_jfk_wood = plt.boxplot(Wood_CQC_JFK, positions = [3], widths = 0.6)
-plt.text(3,0.1,'Jet Flame', color='r')   
+plt.text(3,0.1,'Jet Flame', color='r')  
+
+Box_JFK_Wood = np.percentile(Wood_CQC_JFK, [25,50,75])
+Box_JFK_Wood = np.append(Box_JFK_Wood, np.average(Wood_CQC_JFK))
+
 plt.show()
 
+print('thre are so many issues with Python right now and it does not make any sense------', type(Box_JFK_Wood),'Box for CQC',type(Box_CQC_Wood))
+DF_Box_Wood_Consumtion = {'Percentile %': ['25','50','75', 'Avg'], 'TSF': Box_TSF_Wood, 'CQC': Box_CQC_Wood,'JFK' : Box_JFK_Wood}
+Wood_CCT_Consumption = pd.DataFrame(data=DF_Box_Wood_Consumtion, columns=['Percentile %','TSF', 'CQC','JET Flame'] )
+
+print(Wood_CCT_Consumption)
 
 ## Cooked Food
 ax2 = plt.subplot()
@@ -174,18 +190,24 @@ plt.show()
 Boil_TSF = list(Boil_TSF)
 Boil_TSF.remove(-1)
 
-#print(Boil_CQC)
+#print('CQC Stove ',Boil_CQC)
 Boil_CQC = list(Boil_CQC)
 Boil_CQC.remove(-1)
-#print(Boil_CQC)
+#print('CQC Stove Fter -1 filter',Boil_CQC)
 
-#print(Boil_CQC_JFK)
+# There is a wierd bug in this spectific section. No idea wha thte bug is, no clue. 
+# But in order to solve, Needed to manually solve and remove
+
 Boil_CQC_JFK = list(Boil_CQC_JFK)
-for a in Boil_CQC_JFK:
-    if a < 0:
-        Boil_CQC_JFK.remove(a)
+count = 0
+for val, bb in enumerate(Boil_CQC_JFK):
+    if bb < 0:
+        count = count + 1 
+        Boil_CQC_JFK.pop(val)
 
-#print(Boil_CQC_JFK)
+Boil_CQC_JFK.remove(-5)
+Boil_CQC_JFK.pop(8)
+
 ax4 = plt.subplot()
 plt.title('Time to Boil')
 plt.ylabel("Minutes from Fire Start to Boil") 
@@ -202,12 +224,6 @@ plt.text(3,0.1,'JET FLAME', color='r')
 plt.show()
 
 ### Total cooking time
-#CE_Time_TSF = list(CE_Time_TSF)
-#CE_Time_TSF.remove(-1)
-#CE_Time_CQC = list(CE_Time_CQC)
-#CE_Time_CQC.remove(-1)
-#CE_Time_CQC_JFK = list(CE_Time_CQC_JFK)
-#CE_Time_CQC_JFK.remove(-1)
 
 ax5 = plt.subplot()
 plt.title('Total Cooking Time')
@@ -223,3 +239,5 @@ PLOT_CQC_JFK_CE_LENGTH = plt.boxplot(CE_Time_CQC_JFK, positions = [3], widths = 
 plt.text(3,0.1,'JET FLAME', color='r')   
 
 plt.show()
+
+

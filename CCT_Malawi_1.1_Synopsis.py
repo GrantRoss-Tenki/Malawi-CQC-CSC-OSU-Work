@@ -384,4 +384,80 @@ print('% Difference COOKING TIME')
 print(CE_TIME_Percent_CCT_Consumption)
 
 
+# Next section is to compare each household summary and instead of averages and medians
+
+TSF_Filter_HH = []
+HH_1_TSF_Wood = []; HH_1_TSF_Char = []; HH_1_TSF_Cooked = []; HH_1_TSF_Boil = []; HH_1_TSF_CE_Time = []
+HH_2_TSF_Wood = []; HH_2_TSF_Char = []; HH_2_TSF_Cooked = []; HH_2_TSF_Boil = []; HH_2_TSF_CE_Time = []
+HH_3_TSF_Wood = []; HH_3_TSF_Char = []; HH_3_TSF_Cooked = []; HH_3_TSF_Boil = []; HH_3_TSF_CE_Time = []
+HH_4_TSF_Wood = []; HH_4_TSF_Char = []; HH_4_TSF_Cooked = []; HH_4_TSF_Boil = []; HH_4_TSF_CE_Time = []
+HH_5_TSF_Wood = []; HH_5_TSF_Char = []; HH_5_TSF_Cooked = []; HH_5_TSF_Boil = []; HH_5_TSF_CE_Time = []
+HH_6_TSF_Wood = []; HH_6_TSF_Char = []; HH_6_TSF_Cooked = []; HH_6_TSF_Boil = []; HH_6_TSF_CE_Time = []
+print(Wood_TSF.iloc[8],type(Boil_TSF), Boil_TSF, type(CE_Time_TSF), type(Charcoal_TSF))
+
+for tl, hh_TSF in enumerate(Name_TSF):
+    HH_count = 0
+    for letter in hh_TSF:
+        if HH_count == 2:
+            print(letter, tl)
+            TSF_Filter_HH.append('HH-'+letter)
+            if letter == '1':
+                HH_1_TSF_Wood.append(Wood_TSF[tl])
+                HH_1_TSF_Char.append(Charcoal_TSF[tl])
+                HH_1_TSF_Cooked.append(Cooked_TSF[tl])
+                HH_1_TSF_Boil.append(Boil_TSF[tl])
+                HH_1_TSF_CE_Time.append(CE_Time_TSF[tl])
+            elif letter == '2':
+                HH_2_TSF_Wood.append(Wood_TSF.iloc[tl])
+                HH_2_TSF_Char.append(Charcoal_TSF.iloc[tl])
+                HH_2_TSF_Cooked.append(Cooked_TSF.iloc[tl])
+                HH_2_TSF_Boil.append(Boil_TSF.iloc[tl])
+                HH_2_TSF_CE_Time.append(CE_Time_TSF.iloc[tl])
+            elif letter == '3':
+                HH_3_TSF_Wood.append(Wood_TSF.iloc[tl])
+                HH_3_TSF_Char.append(Charcoal_TSF.iloc[tl])
+                HH_3_TSF_Cooked.append(Cooked_TSF.iloc[tl])
+                HH_3_TSF_Boil.append(Boil_TSF.iloc[tl])
+                HH_3_TSF_CE_Time.append(CE_Time_TSF.iloc[tl])
+            elif letter == '4':
+                HH_4_TSF_Wood.append(Wood_TSF.iloc[tl])
+                HH_4_TSF_Char.append(Charcoal_TSF.iloc[tl])
+                HH_4_TSF_Cooked.append(Cooked_TSF.iloc[tl])
+                HH_4_TSF_Boil.append(Boil_TSF.iloc[tl])
+                HH_4_TSF_CE_Time.append(CE_Time_TSF.iloc[tl])
+            elif letter == '5':
+                HH_5_TSF_Wood.append(Wood_TSF[tl])
+                HH_5_TSF_Char.append(Charcoal_TSF[tl])
+                HH_5_TSF_Cooked.append(Cooked_TSF[tl])
+                HH_5_TSF_Boil.append(Boil_TSF[tl])
+                HH_5_TSF_CE_Time.append(CE_Time_TSF[tl])
+            elif letter == '6':
+                HH_6_TSF_Wood.append(Wood_TSF.iloc[tl])
+                HH_6_TSF_Char.append(Charcoal_TSF.iloc[tl])
+                HH_6_TSF_Cooked.append(Cooked_TSF.iloc[tl])
+                HH_6_TSF_Boil.append(Boil_TSF.iloc[tl])
+                HH_6_TSF_CE_Time.append(CE_Time_TSF.iloc[tl])
+                
+        HH_count = HH_count + 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -116,11 +116,10 @@ for JFK_val in CQC_JFK_Non_Filter:
     CE_Time_CQC_JFK.pop(JFK_val)
 
 
-## Wood Savings 
-#wood_tsf.remove(-1)
+## Wood Savings
 Wood_CQC = list(Wood_CQC)
 Wood_CQC.remove(-1)
-#wood_cqc_jfk.remove(-1)
+
 
 ax1 = plt.subplot()
 plt.title('Wood Consumption')
@@ -147,9 +146,10 @@ Box_JFK_Wood.extend([np.average(Wood_CQC_JFK), len(Wood_CQC_JFK)])
 
 plt.show()
 
+# Tables for Wood Consumption
 DF_Box_Wood_Consumtion = {'Percentile %': ['25','50','75', 'Avg', 'n'], 'TSF': Box_TSF_Wood, 'CQC': Box_CQC_Wood,'JFK' : Box_JFK_Wood}
 Wood_CCT_Consumption = pd.DataFrame(data=DF_Box_Wood_Consumtion, columns=['Percentile %','TSF', 'CQC','JFK'] )
-print('Wood Consumed')
+print('--------Wood Consumed-----------')
 print(Wood_CCT_Consumption)
 # Wood % Difference Between Stoves
 Wood_TSF_CQC = []
@@ -170,34 +170,97 @@ print(Wood_Percent_CCT_Consumption)
 ax2 = plt.subplot()
 plt.title('COOKED FOOD')
 plt.ylabel("Grams of Sema") 
-
+# TSF
 PLOT_TSF_COOKED = plt.boxplot(Cooked_TSF, positions=[1], widths = 0.6)
 plt.text(1,0.1,'TSF',color='b')
 
+Box_TSF_Food = list(np.percentile(Cooked_TSF, [25,50,75]))
+Box_TSF_Food.extend([np.average(Cooked_TSF), len(Cooked_TSF)])
+
+#CQC
 PLOT_CQC_COOKED = plt.boxplot(Cooked_CQC, positions=[2], widths = 0.6)
 plt.text(2,0.1,'CQC', color= 'g')
 
+Box_CQC_Food = list(np.percentile(Cooked_CQC, [25,50,75]))
+Box_CQC_Food.extend([np.average(Cooked_CQC), len(Cooked_CQC)])
+
+# JET Flame
 PLOT_CQC_JFK_COOKED = plt.boxplot(Cooked_CQC_JFK, positions = [3], widths = 0.6)
 plt.text(3,0.1,'JET FLAME', color='r')   
 
+Box_JFK_Food = list(np.percentile(Cooked_CQC_JFK, [25,50,75]))
+Box_JFK_Food.extend([np.average(Cooked_CQC_JFK), len(Cooked_CQC_JFK)])
+
 plt.show()
 
+#Tables for Food Consumption
+DF_Box_Food_Consumtion = {'Percentile %': ['25','50','75', 'Avg', 'n'], 'TSF': Box_TSF_Food, 'CQC': Box_CQC_Food,'JFK' : Box_JFK_Food}
+Food_CCT_Consumption = pd.DataFrame(data=DF_Box_Food_Consumtion, columns=['Percentile %','TSF', 'CQC','JFK'] )
+print('-------Food Consumed--------')
+print(Food_CCT_Consumption)
+# Food % Difference Between Stoves
+Food_TSF_CQC = []
+Food_TSF_JFK = []
+Food_CQC_JFK = []
+Box_TSF_Food.pop(-1) # This is to remove the sample size from the box plots
+
+for vv, f in enumerate(Box_TSF_Food):
+    Food_TSF_CQC.append((Box_CQC_Food[vv])/f)
+    Food_TSF_JFK.append((Box_JFK_Food[vv])/f)
+    Food_CQC_JFK.append((Box_JFK_Food[vv])/(Box_CQC_Food[vv]))
+
+DF_Percent_Box_Food_Consumtion = {'Percentile %': ['25','50','75', 'Avg'], 'TSF/CQC': Food_TSF_CQC, 'TSF/JFK': Food_TSF_JFK,'CQC/JFK' : Food_CQC_JFK}
+Food_Percent_CCT_Consumption = pd.DataFrame(data=DF_Percent_Box_Food_Consumtion, columns=['Percentile %','TSF/CQC', 'TSF/JFK','CQC/JFK'] )
+print('% Difference Food Consumed')
+print(Food_Percent_CCT_Consumption)
 
 ## Charcaol
 ax3 = plt.subplot()
 plt.title('Hot Charcoal')
 plt.ylabel("Grams of Charcaol") 
-
+# TSF
 PLOT_TSF_CHAR = plt.boxplot(Charcoal_TSF, positions=[1], widths = 0.6)
 plt.text(1,0.1,'TSF',color='b')
 
+Box_TSF_CHAR = list(np.percentile(Charcoal_TSF, [25,50,75]))
+Box_TSF_CHAR.extend([np.average(Charcoal_TSF), len(Charcoal_TSF)])
+
+# CQC
 PLOT_CQC_CHAR = plt.boxplot(Charcoal_CQC, positions=[2], widths = 0.6)
 plt.text(2,0.1,'CQC', color= 'g')
 
+Box_CQC_CHAR = list(np.percentile(Charcoal_CQC, [25,50,75]))
+Box_CQC_CHAR.extend([np.average(Charcoal_CQC), len(Charcoal_CQC)])
+
+#Jet Flame
 PLOT_CQC_JFK_CHAR = plt.boxplot(Charcoal_CQC_JFK, positions = [3], widths = 0.6)
 plt.text(3,0.1,'JET FLAME', color='r')   
 
+Box_JFK_CHAR = list(np.percentile(Charcoal_CQC_JFK, [25,50,75]))
+Box_JFK_CHAR.extend([np.average(Charcoal_CQC_JFK), len(Charcoal_CQC_JFK)])
+
 plt.show()
+
+#Tables for Charcoal Consumption
+DF_Box_CHAR_Consumtion = {'Percentile %': ['25','50','75', 'Avg', 'n'], 'TSF': Box_TSF_CHAR, 'CQC': Box_CQC_CHAR,'JFK' : Box_JFK_CHAR}
+CHAR_CCT_Consumption = pd.DataFrame(data=DF_Box_CHAR_Consumtion, columns=['Percentile %','TSF', 'CQC','JFK'] )
+print('-------Charcaol Consumed--------')
+print(CHAR_CCT_Consumption)
+# CHARCOAL % Difference Between Stoves
+CHAR_TSF_CQC = []
+CHAR_TSF_JFK = []
+CHAR_CQC_JFK = []
+Box_TSF_CHAR.pop(-1) # This is to remove the sample size from the box plots
+
+for vv, C in enumerate(Box_TSF_Food):
+    CHAR_TSF_CQC.append((Box_CQC_CHAR[vv])/C)
+    CHAR_TSF_JFK.append((Box_JFK_CHAR[vv])/C)
+    CHAR_CQC_JFK.append((Box_JFK_CHAR[vv])/(Box_CQC_CHAR[vv]))
+
+DF_Percent_Box_CHAR_Consumtion = {'Percentile %': ['25','50','75', 'Avg'], 'TSF/CQC': CHAR_TSF_CQC, 'TSF/JFK': CHAR_TSF_JFK,'CQC/JFK' : CHAR_CQC_JFK}
+CHAR_Percent_CCT_Consumption = pd.DataFrame(data=DF_Percent_Box_CHAR_Consumtion, columns=['Percentile %','TSF/CQC', 'TSF/JFK','CQC/JFK'] )
+print('% Difference Charcaol Consumed')
+print(CHAR_Percent_CCT_Consumption)
 
 
 ## BOIL

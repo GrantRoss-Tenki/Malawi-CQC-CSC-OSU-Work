@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import csv
 
+
 Source = 'work'   # 'work' or 'laptop'
 
 if Source == 'laptop':
@@ -185,16 +186,16 @@ Wood_CCT_Consumption = pd.DataFrame(data=DF_Box_Wood_Consumtion, columns=['Perce
 print('--------Wood Consumed-----------')
 print(Wood_CCT_Consumption)
 # Wood % Difference Between Stoves
-Wood_TSF_CQC = []
-Wood_TSF_JFK = []
-Wood_CQC_JFK = []
+Wood_percent_TSF_CQC = []
+Wood_percent_TSF_JFK = []
+Wood_percent_CQC_JFK = []
 Box_TSF_Wood.pop(-1)
 for vv, w in enumerate(Box_TSF_Wood):
-    Wood_TSF_CQC.append(int(((Box_CQC_Wood[vv])/w)*100))
-    Wood_TSF_JFK.append(int(((Box_JFK_Wood[vv])/w)*100))
-    Wood_CQC_JFK.append(int(((Box_JFK_Wood[vv])/(Box_CQC_Wood[vv]))*100))
+    Wood_percent_TSF_CQC.append(int(((Box_CQC_Wood[vv])/w)*100))
+    Wood_percent_TSF_JFK.append(int(((Box_JFK_Wood[vv])/w)*100))
+    Wood_percent_CQC_JFK.append(int(((Box_JFK_Wood[vv])/(Box_CQC_Wood[vv]))*100))
 
-DF_Percent_Box_Wood_Consumtion = {'Percentile %': ['25','50','75', 'Avg'], 'CQC/TSF %': Wood_TSF_CQC, 'JFK/TSF %': Wood_TSF_JFK,'JFK/CQC %' : Wood_CQC_JFK}
+DF_Percent_Box_Wood_Consumtion = {'Percentile %': ['25','50','75', 'Avg'], 'CQC/TSF %': Wood_percent_TSF_CQC, 'JFK/TSF %': Wood_percent_TSF_JFK,'JFK/CQC %' : Wood_percent_CQC_JFK}
 Wood_Percent_CCT_Consumption = pd.DataFrame(data=DF_Percent_Box_Wood_Consumtion, columns=['Percentile %','CQC/TSF %', 'JFK/TSF %','JFK/CQC %'] )
 print('% Difference Wood Consumed')
 print(Wood_Percent_CCT_Consumption)
@@ -416,78 +417,313 @@ CE_TIME_Percent_CCT_Consumption = pd.DataFrame(data=DF_Percent_Box_CE_TIME_Consu
 print('% Difference COOKING TIME')
 print(CE_TIME_Percent_CCT_Consumption)
 
+###Stirr in Flour
+
+
+Flour_In_CQC_JFK.remove(-1)
+
+ax6 = plt.subplot()
+plt.title('Time for First Flour')
+plt.ylabel("Minutes from Fire Start to Sema in") 
+#JFK
+PLOT_TSF_Flour_LENGTH = plt.boxplot(Flour_In_TSF, positions=[1], widths = 0.6)
+plt.text(1,0.1,'TSF',color='b')
+
+Box_TSF_flour= list(np.percentile(Flour_In_TSF, [25,50,75]))
+Box_TSF_flour.extend([np.average(Flour_In_TSF), len(Flour_In_TSF)])
+
+#CQC
+PLOT_CQC_Flour = plt.boxplot(Flour_In_CQC, positions=[2], widths = 0.6)
+plt.text(2,0.1,'CQC', color= 'g')
+
+Box_CQC_Flour = list(np.percentile(Flour_In_CQC, [25,50,75]))
+Box_CQC_Flour.extend([np.average(Flour_In_CQC), len(Flour_In_CQC)])
+
+#JET FLAME
+PLOT_CQC_JFK_CE_LENGTH = plt.boxplot(Flour_In_CQC_JFK, positions = [3], widths = 0.6)
+plt.text(3,0.1,'JET FLAME', color='r')   
+
+Box_JFK_Flour = list(np.percentile(Flour_In_CQC_JFK, [25,50,75]))
+Box_JFK_Flour.extend([np.average(Flour_In_CQC_JFK), len(Flour_In_CQC_JFK)])
+
+plt.show()
+
+
+#Tables for flour in 
+DF_Box_Flour_Consumtion = {'Percentile %': ['25','50','75', 'Avg', 'n'], 'TSF': Box_TSF_flour, 'CQC': Box_CQC_Flour,'JFK' : Box_JFK_Flour}
+Flour_CCT_Consumption = pd.DataFrame(data=DF_Box_Flour_Consumtion, columns=['Percentile %','TSF', 'CQC','JFK'] )
+print('-------Time Until Flour in -------')
+print(Flour_CCT_Consumption)
+# CHARCOAL % Difference Between Stoves
+Flour_TSF_CQC = []
+Flour_TSF_JFK = []
+Flour_CQC_JFK = []
+Box_TSF_flour.pop(-1) # This is to remove the sample size from the box plots
+
+for vv, F in enumerate(Box_TSF_flour):
+    Flour_TSF_CQC.append(int(((Box_CQC_Flour[vv])/F)*100))
+    Flour_TSF_JFK.append(int(((Box_JFK_Flour[vv])/F)*100))
+    Flour_CQC_JFK.append(int(((Box_JFK_Flour[vv])/(Box_CQC_Flour[vv]))*100))
+
+DF_Percent_Box_Flour_Consumtion = {'Percentile %': ['25','50','75', 'Avg'], 'CQC/TSF %': Flour_TSF_CQC, 'JFK/TSF %': Flour_TSF_JFK,'JFK/CQC %' : Flour_CQC_JFK}
+Flour_Percent_CCT_Consumption = pd.DataFrame(data=DF_Percent_Box_Flour_Consumtion, columns=['Percentile %','CQC/TSF %', 'JFK/TSF %','JFK/CQC %'] )
+print('% Difference for Putting in FLour')
+print(Flour_Percent_CCT_Consumption)
+
 
 # Next section is to compare each household summary and instead of averages and medians
-
+# TSF Household breakdown
 TSF_Filter_HH = []
-HH_1_TSF_Wood = []; HH_1_TSF_Char = []; HH_1_TSF_Cooked = []; HH_1_TSF_Boil = []; HH_1_TSF_CE_Time = []
-HH_2_TSF_Wood = []; HH_2_TSF_Char = []; HH_2_TSF_Cooked = []; HH_2_TSF_Boil = []; HH_2_TSF_CE_Time = []
-HH_3_TSF_Wood = []; HH_3_TSF_Char = []; HH_3_TSF_Cooked = []; HH_3_TSF_Boil = []; HH_3_TSF_CE_Time = []
-HH_4_TSF_Wood = []; HH_4_TSF_Char = []; HH_4_TSF_Cooked = []; HH_4_TSF_Boil = []; HH_4_TSF_CE_Time = []
-HH_5_TSF_Wood = []; HH_5_TSF_Char = []; HH_5_TSF_Cooked = []; HH_5_TSF_Boil = []; HH_5_TSF_CE_Time = []
-HH_6_TSF_Wood = []; HH_6_TSF_Char = []; HH_6_TSF_Cooked = []; HH_6_TSF_Boil = []; HH_6_TSF_CE_Time = []
-print(Wood_TSF[8],type(Boil_TSF), Boil_TSF, type(CE_Time_TSF), type(Charcoal_TSF))
+HH_1_TSF_Wood = []; HH_1_TSF_Char = []; HH_1_TSF_Cooked = []; HH_1_TSF_Boil = []; HH_1_TSF_CE_Time = []; HH_1_TSF_Flour= []
+HH_2_TSF_Wood = []; HH_2_TSF_Char = []; HH_2_TSF_Cooked = []; HH_2_TSF_Boil = []; HH_2_TSF_CE_Time = []; HH_2_TSF_Flour= []
+HH_3_TSF_Wood = []; HH_3_TSF_Char = []; HH_3_TSF_Cooked = []; HH_3_TSF_Boil = []; HH_3_TSF_CE_Time = []; HH_3_TSF_Flour= []
+HH_4_TSF_Wood = []; HH_4_TSF_Char = []; HH_4_TSF_Cooked = []; HH_4_TSF_Boil = []; HH_4_TSF_CE_Time = []; HH_4_TSF_Flour= []
+HH_5_TSF_Wood = []; HH_5_TSF_Char = []; HH_5_TSF_Cooked = []; HH_5_TSF_Boil = []; HH_5_TSF_CE_Time = []; HH_5_TSF_Flour= []
+HH_6_TSF_Wood = []; HH_6_TSF_Char = []; HH_6_TSF_Cooked = []; HH_6_TSF_Boil = []; HH_6_TSF_CE_Time = []; HH_6_TSF_Flour= []
 
-print('boil and tfc ',Boil_TSF, type(Boil_TSF) )
 
 for tl, hh_TSF in enumerate(Name_TSF):
     HH_count = 0
     for letter in hh_TSF:
         if HH_count == 2 and tl <= len(Boil_TSF)-1 and tl <= len(CE_Time_TSF)-1:
-            print(letter, tl)
-            TSF_Filter_HH.append('HH-'+letter)
+            TSF_Filter_HH.append(letter)
             if letter == '1':
                 HH_1_TSF_Wood.append(Wood_TSF[tl])
                 HH_1_TSF_Char.append(Charcoal_TSF[tl])
                 HH_1_TSF_Cooked.append(Cooked_TSF[tl])
                 HH_1_TSF_Boil.append(Boil_TSF[tl])
                 HH_1_TSF_CE_Time.append(CE_Time_TSF[tl])
+                HH_1_TSF_Flour.append(Flour_In_TSF[tl])
             elif letter == '2':
                 HH_2_TSF_Wood.append(Wood_TSF[tl])
                 HH_2_TSF_Char.append(Charcoal_TSF[tl])
                 HH_2_TSF_Cooked.append(Cooked_TSF[tl])
                 HH_2_TSF_Boil.append(Boil_TSF[tl])
                 HH_2_TSF_CE_Time.append(CE_Time_TSF[tl])
+                HH_2_TSF_Flour.append(Flour_In_TSF[tl])
             elif letter == '3':
                 HH_3_TSF_Wood.append(Wood_TSF[tl])
                 HH_3_TSF_Char.append(Charcoal_TSF[tl])
                 HH_3_TSF_Cooked.append(Cooked_TSF[tl])
                 HH_3_TSF_Boil.append(Boil_TSF[tl])
                 HH_3_TSF_CE_Time.append(CE_Time_TSF[tl])
+                HH_3_TSF_Flour.append(Flour_In_TSF[tl])
             elif letter == '4':
                 HH_4_TSF_Wood.append(Wood_TSF[tl])
                 HH_4_TSF_Char.append(Charcoal_TSF[tl])
                 HH_4_TSF_Cooked.append(Cooked_TSF[tl])
                 HH_4_TSF_Boil.append(Boil_TSF[tl])
                 HH_4_TSF_CE_Time.append(CE_Time_TSF[tl])
+                HH_4_TSF_Flour.append(Flour_In_TSF[tl])
             elif letter == '5':
                 HH_5_TSF_Wood.append(Wood_TSF[tl])
                 HH_5_TSF_Char.append(Charcoal_TSF[tl])
+                HH_5_TSF_Cooked.append(Cooked_TSF[tl])
                 HH_5_TSF_Boil.append(Boil_TSF[tl])
                 HH_5_TSF_CE_Time.append(CE_Time_TSF[tl])
+                HH_5_TSF_Flour.append(Flour_In_TSF[tl])
             elif letter == '6':
                 HH_6_TSF_Wood.append(Wood_TSF[tl])
                 HH_6_TSF_Char.append(Charcoal_TSF[tl])
                 HH_6_TSF_Cooked.append(Cooked_TSF[tl])
                 HH_6_TSF_Boil.append(Boil_TSF[tl])
                 HH_6_TSF_CE_Time.append(CE_Time_TSF[tl])
+                HH_6_TSF_Flour.append(Flour_In_TSF[tl])
                 
         HH_count = HH_count + 1
 
 
+# CQC Household breakdown
+CQC_Filter_HH = []
+HH_1_CQC_Wood = []; HH_1_CQC_Char = []; HH_1_CQC_Cooked = []; HH_1_CQC_Boil = []; HH_1_CQC_CE_Time = []; HH_1_CQC_Flour= []
+HH_2_CQC_Wood = []; HH_2_CQC_Char = []; HH_2_CQC_Cooked = []; HH_2_CQC_Boil = []; HH_2_CQC_CE_Time = []; HH_2_CQC_Flour= []
+HH_3_CQC_Wood = []; HH_3_CQC_Char = []; HH_3_CQC_Cooked = []; HH_3_CQC_Boil = []; HH_3_CQC_CE_Time = []; HH_3_CQC_Flour= []
+HH_4_CQC_Wood = []; HH_4_CQC_Char = []; HH_4_CQC_Cooked = []; HH_4_CQC_Boil = []; HH_4_CQC_CE_Time = []; HH_4_CQC_Flour= []
+HH_5_CQC_Wood = []; HH_5_CQC_Char = []; HH_5_CQC_Cooked = []; HH_5_CQC_Boil = []; HH_5_CQC_CE_Time = []; HH_5_CQC_Flour= []
+HH_6_CQC_Wood = []; HH_6_CQC_Char = []; HH_6_CQC_Cooked = []; HH_6_CQC_Boil = []; HH_6_CQC_CE_Time = []; HH_6_CQC_Flour= []
+
+
+for tl, hh_CQC in enumerate(Name_CQC):
+    HH_count = 0
+    for letter in hh_CQC:
+        if HH_count == 2 and tl <= len(Boil_CQC)-1 and tl <= len(CE_Time_CQC)-1:
+            CQC_Filter_HH.append(letter)
+            if letter == '1':
+                HH_1_CQC_Wood.append(Wood_CQC[tl])
+                HH_1_CQC_Char.append(Charcoal_CQC[tl])
+                HH_1_CQC_Cooked.append(Cooked_CQC[tl])
+                HH_1_CQC_Boil.append(Boil_CQC[tl])
+                HH_1_CQC_CE_Time.append(CE_Time_CQC[tl])
+                HH_1_CQC_Flour.append(Flour_In_CQC[tl])
+            elif letter == '2':
+                HH_2_CQC_Wood.append(Wood_CQC[tl])
+                HH_2_CQC_Char.append(Charcoal_CQC[tl])
+                HH_2_CQC_Cooked.append(Cooked_CQC[tl])
+                HH_2_CQC_Boil.append(Boil_CQC[tl])
+                HH_2_CQC_CE_Time.append(CE_Time_CQC[tl])
+                HH_2_CQC_Flour.append(Flour_In_CQC[tl])
+            elif letter == '3':
+                HH_3_CQC_Wood.append(Wood_CQC[tl])
+                HH_3_CQC_Char.append(Charcoal_CQC[tl])
+                HH_3_CQC_Cooked.append(Cooked_CQC[tl])
+                HH_3_CQC_Boil.append(Boil_CQC[tl])
+                HH_3_CQC_CE_Time.append(CE_Time_CQC[tl])
+                HH_3_CQC_Flour.append(Flour_In_CQC[tl])
+            elif letter == '4':
+                HH_4_CQC_Wood.append(Wood_CQC[tl])
+                HH_4_CQC_Char.append(Charcoal_CQC[tl])
+                HH_4_CQC_Cooked.append(Cooked_CQC[tl])
+                HH_4_CQC_Boil.append(Boil_CQC[tl])
+                HH_4_CQC_CE_Time.append(CE_Time_CQC[tl])
+                HH_4_CQC_Flour.append(Flour_In_CQC[tl])
+            elif letter == '5':
+                HH_5_CQC_Wood.append(Wood_CQC[tl])
+                HH_5_CQC_Char.append(Charcoal_CQC[tl])
+                HH_5_CQC_Cooked.append(Cooked_CQC[tl])
+                HH_5_CQC_Boil.append(Boil_CQC[tl])
+                HH_5_CQC_CE_Time.append(CE_Time_CQC[tl])
+                HH_5_CQC_Flour.append(Flour_In_CQC[tl])
+            elif letter == '6':
+                HH_6_CQC_Wood.append(Wood_CQC[tl])
+                HH_6_CQC_Char.append(Charcoal_CQC[tl])
+                HH_6_CQC_Cooked.append(Cooked_CQC[tl])
+                HH_6_CQC_Boil.append(Boil_CQC[tl])
+                HH_6_CQC_CE_Time.append(CE_Time_CQC[tl])
+                HH_6_CQC_Flour.append(Flour_In_CQC[tl])
+                
+        HH_count = HH_count + 1
+
+
+# JFK Household breakdown
+JFK_Filter_HH = []
+HH_1_JFK_Wood = []; HH_1_JFK_Char = []; HH_1_JFK_Cooked = []; HH_1_JFK_Boil = []; HH_1_JFK_CE_Time = []; HH_1_JFK_Flour= []
+HH_2_JFK_Wood = []; HH_2_JFK_Char = []; HH_2_JFK_Cooked = []; HH_2_JFK_Boil = []; HH_2_JFK_CE_Time = []; HH_2_JFK_Flour= []
+HH_3_JFK_Wood = []; HH_3_JFK_Char = []; HH_3_JFK_Cooked = []; HH_3_JFK_Boil = []; HH_3_JFK_CE_Time = []; HH_3_JFK_Flour= []
+HH_4_JFK_Wood = []; HH_4_JFK_Char = []; HH_4_JFK_Cooked = []; HH_4_JFK_Boil = []; HH_4_JFK_CE_Time = []; HH_4_JFK_Flour= []
+HH_5_JFK_Wood = []; HH_5_JFK_Char = []; HH_5_JFK_Cooked = []; HH_5_JFK_Boil = []; HH_5_JFK_CE_Time = []; HH_5_JFK_Flour= []
+HH_6_JFK_Wood = []; HH_6_JFK_Char = []; HH_6_JFK_Cooked = []; HH_6_JFK_Boil = []; HH_6_JFK_CE_Time = []; HH_6_JFK_Flour= []
+
+print('name for Jet flame' ,Name_CQC_JFK,  CE_Time_CQC_JFK)
+for tl, hh_JFK in enumerate(Name_CQC_JFK):
+    HH_count = 0
+    for letter in hh_JFK:
+        if HH_count == 2:# and tl <= len(Boil_CQC_JFK)-1 and tl <= len(CE_Time_CQC_JFK)-1 and tl <= len(Flour_In_CQC_JFK)-1 and tl <= len(Wood_CQC_JFK)-1:
+            JFK_Filter_HH.append(letter)
+            print('at 6?????',letter)
+            if letter == '1':
+                HH_1_JFK_Wood.append(Wood_CQC_JFK[tl])
+                HH_1_JFK_Char.append(Charcoal_CQC_JFK[tl])
+                HH_1_JFK_Cooked.append(Cooked_CQC_JFK[tl])
+                HH_1_JFK_Boil.append(Boil_CQC_JFK[tl])
+                HH_1_JFK_CE_Time.append(CE_Time_CQC_JFK[tl])
+                HH_1_JFK_Flour.append(Flour_In_CQC_JFK[tl])
+            elif letter == '2':
+                HH_2_JFK_Wood.append(Wood_CQC_JFK[tl])
+                HH_2_JFK_Char.append(Charcoal_CQC_JFK[tl])
+                HH_2_JFK_Cooked.append(Cooked_CQC_JFK[tl])
+                HH_2_JFK_Boil.append(Boil_CQC_JFK[tl])
+                HH_2_JFK_CE_Time.append(CE_Time_CQC_JFK[tl])
+                HH_2_JFK_Flour.append(Flour_In_CQC_JFK[tl])
+            elif letter == '3':
+                HH_3_JFK_Wood.append(Wood_CQC_JFK[tl])
+                HH_3_JFK_Char.append(Charcoal_CQC_JFK[tl])
+                HH_3_JFK_Cooked.append(Cooked_CQC_JFK[tl])
+                HH_3_JFK_Boil.append(Boil_CQC_JFK[tl])
+                HH_3_JFK_CE_Time.append(CE_Time_CQC_JFK[tl])
+                HH_3_JFK_Flour.append(Flour_In_CQC_JFK[tl])
+            elif letter == '4':
+                HH_4_JFK_Wood.append(Wood_CQC_JFK[tl])
+                HH_4_JFK_Char.append(Charcoal_CQC_JFK[tl])
+                HH_4_JFK_Cooked.append(Cooked_CQC_JFK[tl])
+                HH_4_JFK_Boil.append(Boil_CQC_JFK[tl])
+                HH_4_JFK_CE_Time.append(CE_Time_CQC_JFK[tl])
+                HH_4_JFK_Flour.append(Flour_In_CQC_JFK[tl])
+            elif letter == '5':
+                HH_5_JFK_Wood.append(Wood_CQC_JFK[tl])
+                HH_5_JFK_Char.append(Charcoal_CQC_JFK[tl])
+                HH_5_JFK_Cooked.append(Cooked_CQC_JFK[tl])
+                HH_5_JFK_Boil.append(Boil_CQC_JFK[tl])
+                HH_5_JFK_CE_Time.append(CE_Time_CQC_JFK[tl])
+                HH_5_JFK_Flour.append(Flour_In_CQC_JFK[tl])
+            elif letter == '6':
+                HH_6_JFK_Wood.append(Wood_CQC_JFK[tl])
+                HH_6_JFK_Char.append(Charcoal_CQC_JFK[tl])
+                HH_6_JFK_Cooked.append(Cooked_CQC_JFK[tl])
+                HH_6_JFK_Boil.append(Boil_CQC_JFK[tl])
+                HH_6_JFK_CE_Time.append(CE_Time_CQC_JFK[tl])
+                HH_6_JFK_Flour.append(Flour_In_CQC_JFK[tl])
+                
+        HH_count = HH_count + 1
+
+
+# Three stone Fire HH== Breakdown
+print(HH_6_JFK_CE_Time)
+DF_Household_Compiler_TSF = {'Household-TSF':['HH1', 'HH2','HH3', 'HH4', 'HH5','HH6'], 'Average Wood Used': [np.average(HH_1_JFK_Wood), np.average(HH_2_JFK_Wood),
+                         np.average(HH_3_JFK_Wood),np.average(HH_4_JFK_Wood),np.average(HH_5_JFK_Wood), np.average(HH_6_JFK_Wood)],
+                            'STEV.P Wood Used':[np.std(HH_1_JFK_Wood),np.std(HH_2_JFK_Wood), np.std(HH_3_JFK_Wood),np.std(HH_4_JFK_Wood),np.std(HH_5_JFK_Wood), np.std(HH_6_JFK_Wood)],
+                            'Average Char Used': [np.average(HH_1_TSF_Char),np.average(HH_2_TSF_Char), np.average(HH_3_TSF_Char),np.average(HH_4_TSF_Char),np.average(HH_5_TSF_Char), np.average(HH_6_TSF_Char)],
+                            'STEV.P Char Used':[np.std(HH_1_TSF_Char), np.std(HH_2_TSF_Char), np.std(HH_3_TSF_Char),np.std(HH_4_TSF_Char),np.std(HH_5_TSF_Char), np.std(HH_6_TSF_Char)],
+                            'Average Food Cooked': [np.average(HH_1_TSF_Cooked),np.average(HH_2_TSF_Cooked), np.average(HH_3_TSF_Cooked),np.average(HH_4_TSF_Cooked),np.average(HH_5_TSF_Cooked), np.average(HH_6_TSF_Cooked)],
+                            'STEV.P Food Cooked':[np.std(HH_1_TSF_Cooked), np.std(HH_2_TSF_Cooked), np.std(HH_3_TSF_Cooked),np.std(HH_4_TSF_Cooked),np.std(HH_5_TSF_Cooked), np.std(HH_6_TSF_Cooked)],
+                            'Average Time for Flour in (min)': [np.average(HH_1_TSF_Flour),np.average(HH_2_TSF_Flour), np.average(HH_3_TSF_Flour),np.average(HH_4_TSF_Flour),np.average(HH_5_TSF_Flour), np.average(HH_6_TSF_Flour)],
+                            'STEV.P Time for Flour in (min)':[np.std(HH_1_TSF_Flour), np.std(HH_2_TSF_Flour), np.std(HH_3_TSF_Flour),np.std(HH_4_TSF_Flour),np.std(HH_5_TSF_Flour), np.std(HH_6_TSF_Flour)],
+                            'Average Time until boiling (min)': [np.average(HH_1_TSF_Boil),np.average(HH_2_TSF_Boil), np.average(HH_3_TSF_Boil),np.average(HH_4_TSF_Boil),np.average(HH_5_TSF_Boil), np.average(HH_6_TSF_Boil)],
+                            'STEV.P Time until boiling (min)':[np.std(HH_1_TSF_Boil), np.std(HH_2_TSF_Boil), np.std(HH_3_TSF_Boil),np.std(HH_4_TSF_Boil),np.std(HH_5_TSF_Boil), np.std(HH_6_TSF_Boil)],
+                            'Average Time Cooking (min)': [np.average(HH_1_TSF_CE_Time),np.average(HH_2_TSF_CE_Time), np.average(HH_3_TSF_CE_Time),np.average(HH_4_TSF_CE_Time),np.average(HH_5_TSF_CE_Time), np.average(HH_6_TSF_CE_Time)],
+                            'STEV.P Time Cooking (min)':[np.std(HH_1_TSF_CE_Time), np.std(HH_2_TSF_CE_Time), np.std(HH_3_TSF_CE_Time),np.std(HH_4_TSF_CE_Time),np.std(HH_5_TSF_CE_Time), np.std(HH_6_TSF_CE_Time)]}
+Household_TSF_CCT_Consumption = pd.DataFrame(data=DF_Household_Compiler_TSF, columns=['Household-TSF','Average Wood Used', 'STEV.P Wood Used','Average Char Used', 'STEV.P Char Used', 'Average Food Cooked','STEV.P Food Cooked',
+                                                                                      'Average Time for Flour in (min)', 'STEV.P Time for Flour in (min)','Average Time until boiling (min)', 'STEV.P Time until boiling (min)',
+                                                                                      'Average Time Cooking (min)','STEV.P Time Cooking (min)'] )
+print(Household_TSF_CCT_Consumption)
+
+
+# CQC HH== Breakdown
+print(np.std(HH_1_CQC_Wood),HH_1_CQC_Wood)
+DF_Household_Compiler_CQC = {'Household-CQC':['HH1', 'HH2','HH3', 'HH4', 'HH5','HH6'], 'Average Wood Used': [np.average(HH_1_CQC_Wood), np.average(HH_2_CQC_Wood),
+                         np.average(HH_3_CQC_Wood),np.average(HH_4_CQC_Wood),np.average(HH_5_CQC_Wood), np.average(HH_6_CQC_Wood)],
+                            'STEV.P Wood Used':[np.std(HH_1_CQC_Wood),np.std(HH_2_CQC_Wood), np.std(HH_3_CQC_Wood),np.std(HH_4_CQC_Wood),np.std(HH_5_CQC_Wood), np.std(HH_6_CQC_Wood)],
+                            'Average Char Used': [np.average(HH_1_CQC_Char),np.average(HH_2_CQC_Char), np.average(HH_3_CQC_Char),np.average(HH_4_CQC_Char),np.average(HH_5_CQC_Char), np.average(HH_6_CQC_Char)],
+                            'STEV.P Char Used':[np.std(HH_1_CQC_Char), np.std(HH_2_CQC_Char), np.std(HH_3_CQC_Char),np.std(HH_4_CQC_Char),np.std(HH_5_CQC_Char), np.std(HH_6_CQC_Char)],
+                            'Average Food Cooked': [np.average(HH_1_CQC_Cooked),np.average(HH_2_CQC_Cooked), np.average(HH_3_CQC_Cooked),np.average(HH_4_CQC_Cooked),np.average(HH_5_CQC_Cooked), np.average(HH_6_CQC_Cooked)],
+                            'STEV.P Food Cooked':[np.std(HH_1_CQC_Cooked), np.std(HH_2_CQC_Cooked), np.std(HH_3_CQC_Cooked),np.std(HH_4_CQC_Cooked),np.std(HH_5_CQC_Cooked), np.std(HH_6_CQC_Cooked)],
+                            'Average Time for Flour in (min)': [np.average(HH_1_CQC_Flour),np.average(HH_2_CQC_Flour), np.average(HH_3_CQC_Flour),np.average(HH_4_CQC_Flour),np.average(HH_5_CQC_Flour), np.average(HH_6_CQC_Flour)],
+                            'STEV.P Time for Flour in (min)':[np.std(HH_1_CQC_Flour), np.std(HH_2_CQC_Flour), np.std(HH_3_CQC_Flour),np.std(HH_4_CQC_Flour),np.std(HH_5_CQC_Flour), np.std(HH_6_CQC_Flour)],
+                            'Average Time until boiling (min)': [np.average(HH_1_CQC_Boil),np.average(HH_2_CQC_Boil), np.average(HH_3_CQC_Boil),np.average(HH_4_CQC_Boil),np.average(HH_5_CQC_Boil), np.average(HH_6_CQC_Boil)],
+                            'STEV.P Time until boiling (min)':[np.std(HH_1_CQC_Boil), np.std(HH_2_CQC_Boil), np.std(HH_3_CQC_Boil),np.std(HH_4_CQC_Boil),np.std(HH_5_CQC_Boil), np.std(HH_6_CQC_Boil)],
+                            'Average Time Cooking (min)': [np.average(HH_1_CQC_CE_Time),np.average(HH_2_CQC_CE_Time), np.average(HH_3_CQC_CE_Time),np.average(HH_4_CQC_CE_Time),np.average(HH_5_CQC_CE_Time), np.average(HH_6_CQC_CE_Time)],
+                            'STEV.P Time Cooking (min)':[np.std(HH_1_CQC_CE_Time), np.std(HH_2_CQC_CE_Time), np.std(HH_3_CQC_CE_Time),np.std(HH_4_CQC_CE_Time),np.std(HH_5_CQC_CE_Time), np.std(HH_6_CQC_CE_Time)]}
+Household_CQC_CCT_Consumption = pd.DataFrame(data=DF_Household_Compiler_CQC, columns=['Household-CQC','Average Wood Used', 'STEV.P Wood Used','Average Char Used', 'STEV.P Char Used', 'Average Food Cooked','STEV.P Food Cooked',
+                                                                                      'Average Time for Flour in (min)', 'STEV.P Time for Flour in (min)','Average Time until boiling (min)', 'STEV.P Time until boiling (min)',
+                                                                                      'Average Time Cooking (min)','STEV.P Time Cooking (min)'] )
+print(Household_CQC_CCT_Consumption)
+
+#JKF HH== Breakdown
+print(np.std(HH_1_JFK_Wood),HH_1_JFK_Wood)
+DF_Household_Compiler_JFK = {'Household-JFK':['HH1', 'HH2','HH3', 'HH4', 'HH5','HH6'], 'Average Wood Used': [np.average(HH_1_JFK_Wood), np.average(HH_2_JFK_Wood),
+                         np.average(HH_3_JFK_Wood),np.average(HH_4_JFK_Wood),np.average(HH_5_JFK_Wood), np.average(HH_6_JFK_Wood)],
+                            'STEV.P Wood Used':[np.std(HH_1_JFK_Wood),np.std(HH_2_JFK_Wood), np.std(HH_3_JFK_Wood),np.std(HH_4_JFK_Wood),np.std(HH_5_JFK_Wood), np.std(HH_6_JFK_Wood)],
+                            'Average Char Used': [np.average(HH_1_JFK_Char),np.average(HH_2_JFK_Char), np.average(HH_3_JFK_Char),np.average(HH_4_JFK_Char),np.average(HH_5_JFK_Char), np.average(HH_6_JFK_Char)],
+                            'STEV.P Char Used':[np.std(HH_1_JFK_Char), np.std(HH_2_JFK_Char), np.std(HH_3_JFK_Char),np.std(HH_4_JFK_Char),np.std(HH_5_JFK_Char), np.std(HH_6_JFK_Char)],
+                            'Average Food Cooked': [np.average(HH_1_JFK_Cooked),np.average(HH_2_JFK_Cooked), np.average(HH_3_JFK_Cooked),np.average(HH_4_JFK_Cooked),np.average(HH_5_JFK_Cooked), np.average(HH_6_JFK_Cooked)],
+                            'STEV.P Food Cooked':[np.std(HH_1_JFK_Cooked), np.std(HH_2_JFK_Cooked), np.std(HH_3_JFK_Cooked),np.std(HH_4_JFK_Cooked),np.std(HH_5_JFK_Cooked), np.std(HH_6_JFK_Cooked)],
+                            'Average Time for Flour in (min)': [np.average(HH_1_JFK_Flour),np.average(HH_2_JFK_Flour), np.average(HH_3_JFK_Flour),np.average(HH_4_JFK_Flour),np.average(HH_5_JFK_Flour), np.average(HH_6_JFK_Flour)],
+                            'STEV.P Time for Flour in (min)':[np.std(HH_1_JFK_Flour), np.std(HH_2_JFK_Flour), np.std(HH_3_JFK_Flour),np.std(HH_4_JFK_Flour),np.std(HH_5_JFK_Flour), np.std(HH_6_JFK_Flour)],
+                            'Average Time until boiling (min)': [np.average(HH_1_JFK_Boil),np.average(HH_2_JFK_Boil), np.average(HH_3_JFK_Boil),np.average(HH_4_JFK_Boil),np.average(HH_5_JFK_Boil), np.average(HH_6_JFK_Boil)],
+                            'STEV.P Time until boiling (min)':[np.std(HH_1_JFK_Boil), np.std(HH_2_JFK_Boil), np.std(HH_3_JFK_Boil),np.std(HH_4_JFK_Boil),np.std(HH_5_JFK_Boil), np.std(HH_6_JFK_Boil)],
+                            'Average Time Cooking (min)': [np.average(HH_1_JFK_CE_Time),np.average(HH_2_JFK_CE_Time), np.average(HH_3_JFK_CE_Time),np.average(HH_4_JFK_CE_Time),np.average(HH_5_JFK_CE_Time), np.average(HH_6_JFK_CE_Time)],
+                            'STEV.P Time Cooking (min)':[np.std(HH_1_JFK_CE_Time), np.std(HH_2_JFK_CE_Time), np.std(HH_3_JFK_CE_Time),np.std(HH_4_JFK_CE_Time),np.std(HH_5_JFK_CE_Time), np.std(HH_6_JFK_CE_Time)]}
+Household_JFK_CCT_Consumption = pd.DataFrame(data=DF_Household_Compiler_JFK, columns=['Household-JFK','Average Wood Used', 'STEV.P Wood Used','Average Char Used', 'STEV.P Char Used', 'Average Food Cooked','STEV.P Food Cooked',
+                                                                                      'Average Time for Flour in (min)', 'STEV.P Time for Flour in (min)','Average Time until boiling (min)', 'STEV.P Time until boiling (min)',
+                                                                                      'Average Time Cooking (min)','STEV.P Time Cooking (min)'] )
+print(Household_JFK_CCT_Consumption)
 
 
 
+Path_export = USB+":/HOUSEHOLD_CCT_COMPILER.csv"
 
-
-
-
-
-
-
-
-
-
+#Household_TSF_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
+#Household_CQC_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
+#Household_JFK_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
 
 
 

@@ -607,7 +607,7 @@ print('name for Jet flame' ,Name_CQC_JFK,  CE_Time_CQC_JFK)
 for tl, hh_JFK in enumerate(Name_CQC_JFK):
     HH_count = 0
     for letter in hh_JFK:
-        if HH_count == 2:# and tl <= len(Boil_CQC_JFK)-1 and tl <= len(CE_Time_CQC_JFK)-1 and tl <= len(Flour_In_CQC_JFK)-1 and tl <= len(Wood_CQC_JFK)-1:
+        if HH_count == 2 and tl <= len(Boil_CQC_JFK)-1 :#and tl <= len(CE_Time_CQC_JFK)-1 and tl <= len(Flour_In_CQC_JFK)-1 and tl <= len(Wood_CQC_JFK)-1:
             JFK_Filter_HH.append(letter)
             print('at 6?????',letter)
             if letter == '1':
@@ -655,7 +655,7 @@ for tl, hh_JFK in enumerate(Name_CQC_JFK):
                 
         HH_count = HH_count + 1
 
-
+print('cooking time array for JFK',CE_Time_CQC_JFK,'boil time fopr tsf', Boil_CQC_JFK)
 # Three stone Fire HH== Breakdown
 print(HH_6_JFK_CE_Time)
 DF_Household_Compiler_TSF = {'Household-TSF':['HH1', 'HH2','HH3', 'HH4', 'HH5','HH6'], 'Average Wood Used': [np.average(HH_1_JFK_Wood), np.average(HH_2_JFK_Wood),
@@ -717,13 +717,13 @@ Household_JFK_CCT_Consumption = pd.DataFrame(data=DF_Household_Compiler_JFK, col
                                                                                       'Average Time Cooking (min)','STEV.P Time Cooking (min)'] )
 print(Household_JFK_CCT_Consumption)
 
-
+print('cooking time array',CE_Time_CQC_JFK )
 
 Path_export = USB+":/HOUSEHOLD_CCT_COMPILER.csv"
 
-#Household_TSF_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
-#Household_CQC_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
-#Household_JFK_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
+Household_TSF_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
+Household_CQC_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
+Household_JFK_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
 
 
 

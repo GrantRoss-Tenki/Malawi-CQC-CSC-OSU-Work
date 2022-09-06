@@ -721,9 +721,9 @@ print('cooking time array',CE_Time_CQC_JFK )
 
 Path_export = USB+":/HOUSEHOLD_CCT_COMPILER.csv"
 
-Household_TSF_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
-Household_CQC_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
-Household_JFK_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
+CE_TIME_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
+CE_TIME_Percent_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
+#Household_JFK_CCT_Consumption.to_csv(Path_export, index=False, mode='a')
 
 
 

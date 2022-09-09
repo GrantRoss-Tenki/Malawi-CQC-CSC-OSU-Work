@@ -19,6 +19,34 @@ if Source == 'laptop':
     USB = 'D'
 else:
     USB = 'E'
+# getting the metrics and times
+CCT_TIMES_METRICS = pd.read_csv(USB+":/Malawi 1.1 CCT Fire Start Times.csv")
+print('is the cct coming in?  ', CCT_TIMES_METRICS.iloc[1,6])
+identifyer = Household+' - CCT-'+ CCT_Num
+if Stove == '1':
+    for rows, name in enumerate(CCT_TIMES_METRICS.iloc[:,0]):
+        if name == identifyer:
+            Fire_Start = CCT_TIMES_METRICS.iloc[rows,1]
+            Fuel_change = CCT_TIMES_METRICS.iloc[rows,2]
+            Fuel_MJ = CCT_TIMES_METRICS.iloc[rows, 3]
+            Boil_time = CCT_TIMES_METRICS.iloc[rows, 4]
+            Coking_Length = CCT_TIMES_METRICS.iloc[rows, 5]
+if Stove == '2':
+    for rows, name in enumerate(CCT_TIMES_METRICS.iloc[:,6]):
+        if name == identifyer:
+            Fire_Start = CCT_TIMES_METRICS.iloc[rows,7]
+            Fuel_change = CCT_TIMES_METRICS.iloc[rows,8]
+            Fuel_MJ = CCT_TIMES_METRICS.iloc[rows, 9]
+            Boil_time = CCT_TIMES_METRICS.iloc[rows, 10]
+            Coking_Length = CCT_TIMES_METRICS.iloc[rows, 11]
+if Stove == '3':
+    for rows, name in enumerate(CCT_TIMES_METRICS.iloc[:,12]):
+        if name == identifyer:
+            Fire_Start = CCT_TIMES_METRICS.iloc[rows,13]
+            Fuel_change = CCT_TIMES_METRICS.iloc[rows,14]
+            Fuel_MJ = CCT_TIMES_METRICS.iloc[rows, 15]
+            Boil_time = CCT_TIMES_METRICS.iloc[rows, 16]
+            Coking_Length = CCT_TIMES_METRICS.iloc[rows, 17]
 
 
 CCT_Stove_Path = USB+":/Malawi 1.1/"+Household+"/S- "+Stove+"; CCT-"+CCT_Num
@@ -115,5 +143,38 @@ for file in l_files:
                         Gas_RH = Gas_csv.iloc[:, 8]
         print('GASSS: ', Gas_name)
 
+Running_Average_length = 16 # #input(" Enter Number for running length ")
+co2_filter = [Gas_CO2[0]]
+count_four = 0
+running_average = []
+co2_lengh = len(Gas_CO2)
+for tv, c in enumerate(Gas_CO2):
+    count_four = count_four + 1
+    running_average.append(c)
+    if count_four == Running_Average_length:
+        co2_filter.append(np.average(running_average))
+        count_four = 0
+        running_average = []
+    elif tv +1 ==  co2_lengh:
+        break
+    else:
+        co2_filter.append(co2_filter[-1])
 
-print('Task finished!')
+# Finding the fire start and starting with gas
+print('-----------------------------', C_Hap_Time[0][9:16], Fire_Start[9:])
+for tv, f in enumerate(Gas_Time):
+    if f[11:16] == Fire_Start[9:]:
+        print('------------------oiiiiioiiioioi-----------')
+        break
+
+
+
+print('Task finished!', co2_lengh, len(co2_filter))
+plt.title('CO2 Filter')
+plt.ylabel("CO2- PPM")
+plt.plot(Gas_CO2, label='Orginal CO2', color='green')
+plt.plot(co2_filter, label='CO2 Filter', color='r')
+plt.legend()
+#plt.show()
+
+

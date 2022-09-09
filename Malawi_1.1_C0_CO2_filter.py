@@ -11,8 +11,8 @@ import csv
 
 
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH1' #input("HH1 or HH2... etc:  ")
-Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
+Household = 'HH3' #input("HH1 or HH2... etc:  ")
+Stove = '1'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
 CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 8#int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':

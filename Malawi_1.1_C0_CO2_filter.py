@@ -12,16 +12,15 @@ import csv
 
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 Household = 'HH1' #input("HH1 or HH2... etc:  ")
-Stove = '1'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
-CCT_Num = '1'#input("1, 2, or 3: ")
-
+Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
+CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
+Running_Average_length = 8#int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
     USB = 'D'
 else:
     USB = 'E'
 # getting the metrics and times
 CCT_TIMES_METRICS = pd.read_csv(USB+":/Malawi 1.1 CCT Fire Start Times.csv")
-print('is the cct coming in?  ', CCT_TIMES_METRICS.iloc[1,6])
 identifyer = Household+' - CCT-'+ CCT_Num
 if Stove == '1':
     for rows, name in enumerate(CCT_TIMES_METRICS.iloc[:,0]):
@@ -55,7 +54,6 @@ l_files = os.listdir(CCT_Stove_Path)
 for file in l_files:
 
     file_path = f'{CCT_Stove_Path}\\{file}'
-    print(file,file_path, file[0] )
     if file[0] == "H":
         if (file[6:10] == '1577') or (file[6:10] == '1558') or (file[6:10] == '3275'):
             Inline_hapex_name = 'HAPEx '+ file[6:10]
@@ -66,14 +64,18 @@ for file in l_files:
                     csv_reader = csv.reader(f)
                     for idx, row in enumerate(csv_reader):
                         if 'Timestamp' in row:
+                            print('inline')
                             Inline_hapex_csv = pd.read_csv(file_path, skiprows= (idx))
-                            I_Hap_Time = Inline_hapex_csv.iloc[:,0]
+                            I_Hap_Time = (Inline_hapex_csv.iloc[:,0])
                             Day_date = Inline_hapex_csv.iloc[0,0][0:10]
                             Inline_Hap_Comp = Inline_hapex_csv.iloc[:,1]
                             Inline_Hap_PM = Inline_hapex_csv.iloc[:,2]
+                            for tv, f in enumerate(I_Hap_Time):
+                                if f[11:16] == Fire_Start[9:] or str(f[10:16]) == Fire_Start[10:]:
+                                    Inline_Hapex_FIRE_START_TV = tv
+                                    break
         elif file[1] == "H":
             print('Household')
-            #Whole_Household_CSV = pd.read_csv(file_path)
         else:
             Cook_hapex_name = 'HAPEx '+ file[6:10]
             C_H_File = os.getcwd()
@@ -87,7 +89,11 @@ for file in l_files:
                             C_Hap_Time = Cook_hapex_csv.iloc[:,0]
                             Cook_Hap_Comp = Cook_hapex_csv.iloc[:,1]
                             Cook_Hap_PM = Cook_hapex_csv.iloc[:,2]
-            print('Cook hapex: ', Cook_hapex_name)
+                            #print('TEEESTER', str(C_Hap_Time[0][11:16]),Fire_Start[9:] )
+                            for tv, f in enumerate(C_Hap_Time):
+                                if f[9:16] == Fire_Start[9:] or str(f[11:16]) == Fire_Start[10:] or str(f[11:16]) == Fire_Start[9:]:
+                                    Cook_hapex_FIRE_START_TV = tv
+                                    break
 
     elif file[0] == "B":
         Cook_Beacon_name = 'Beacon ' + file[7:11]
@@ -99,10 +105,14 @@ for file in l_files:
                 for idx, row in enumerate(csv_reader):
                     if 'Timestamp' in row:
                         Cook_Beacon_csv = pd.read_csv(file_path, skiprows=(idx))
-                        C_Hap_Time = Cook_Beacon_csv.iloc[:, 0]
+                        Cook_Beacon_Time = Cook_Beacon_csv.iloc[:, 0]
                         Cook_Beacon_Move= Cook_Beacon_csv.iloc[:, 1]
                         Cook_Beacon_Accel = Cook_Beacon_csv.iloc[:, 2]
-        print('Beacon: ', Cook_Beacon_name)
+                        #print('TEEESTER' ,str(Cook_Beacon_Time))#,Fire_Start[9:], str(Cook_Beacon_Time[0][10:16]), Fire_Start[10:])
+                        for tv, f in enumerate(Cook_Beacon_Time):
+                            if f[11:16] == Fire_Start[9:] or str(f[10:16]) == Fire_Start[10:]:
+                                Beacon_FIRE_START_TV = tv
+                                break
     elif file[0] == 'U':
         USB_name = 'USBLog ' + file[7:11]
         USB_File = os.getcwd()
@@ -121,12 +131,15 @@ for file in l_files:
                         USB_Energy  = USB_CSV.iloc[:, 5]
                         USB_Usage = USB_CSV.iloc[:, 6]
                         USB_Proximity_DF = pd.DataFrame(USB_CSV.iloc[:, 6:])
-        print('USB: ', USB_name)
+                        for tv, f in enumerate(USB_Time):
+                            if f[11:16] == Fire_Start[9:] or str(f[10:16]) == Fire_Start[10:]:
+                                USB_FIRE_START_TV = tv
+                                break
     elif file[0] == 'G':
         Gas_name = 'GasSense ' + file[9:13]
         Gas_File = os.getcwd()
         Gas_open = glob.glob((file_path))
-        for files in C_Beacon_open:
+        for files in Gas_open:
             with open(files, 'r') as f:
                 csv_reader = csv.reader(f)
                 for idx, row in enumerate(csv_reader):
@@ -141,9 +154,14 @@ for file in l_files:
                         Gas_T_Sen = Gas_csv.iloc[:, 6]
                         Gas_Pressure = Gas_csv.iloc[:, 7]
                         Gas_RH = Gas_csv.iloc[:, 8]
-        print('GASSS: ', Gas_name)
+                        #finding fire start time value
+                        print('~~~~~', Gas_Time[0])
+                        for tv, f in enumerate(Gas_Time):
+                            if f[11:16] == Fire_Start[9:] or str(f[10:16]) == Fire_Start[10:]:
+                                GAS_FIRE_START_TV = tv
+                                break
 
-Running_Average_length = 16 # #input(" Enter Number for running length ")
+
 co2_filter = [Gas_CO2[0]]
 count_four = 0
 running_average = []
@@ -161,20 +179,28 @@ for tv, c in enumerate(Gas_CO2):
         co2_filter.append(co2_filter[-1])
 
 # Finding the fire start and starting with gas
-print('-----------------------------', C_Hap_Time[0][9:16], Fire_Start[9:])
-for tv, f in enumerate(Gas_Time):
-    if f[11:16] == Fire_Start[9:]:
-        print('------------------oiiiiioiiioioi-----------')
-        break
 
-
-
-print('Task finished!', co2_lengh, len(co2_filter))
+print('----Plotting Gas Sense----')
+x = np.linspace(0.0, len(co2_filter), int(len(co2_filter)/(15*5)))
+xval = []
+for tt in x:
+    xval.append(int(tt/15))
+fig, ax = plt.subplots()
+labels = [x]
 plt.title('CO2 Filter')
 plt.ylabel("CO2- PPM")
+plt.xlabel("Minutes")
 plt.plot(Gas_CO2, label='Orginal CO2', color='green')
 plt.plot(co2_filter, label='CO2 Filter', color='r')
+plt.axvline(GAS_FIRE_START_TV,label='Fire Start', color='blue',linestyle = '--')
+if Boil_time != '-1':
+    Gas_boil = (GAS_FIRE_START_TV) + (15*int(Boil_time))
+    plt.axvline(Gas_boil, label='Boil Time', color='blue', linestyle=':')
+if Coking_Length != '-1':
+    Gas_CE = (GAS_FIRE_START_TV) + (15 * int(Coking_Length))
+    plt.axvline(Gas_CE, label='Cooking End', color='blue')
+plt.xticks(x, xval)
 plt.legend()
-#plt.show()
+plt.show()
 
 

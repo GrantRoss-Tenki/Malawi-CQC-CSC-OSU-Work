@@ -9,8 +9,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import csv
 
-HH_Number = ['HH1', 'HH2', 'HH3', 'HH4', 'HH5','HH6']
-Stove = ['1','2','3']
+HH_Number_array = ['HH1', 'HH2', 'HH3', 'HH4', 'HH5','HH6']
+Stove_array = ['1','2','3']
+CCT_array = ['1','2','3', '4']
 
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 Household = 'HH4' #input("HH1 or HH2... etc:  ")

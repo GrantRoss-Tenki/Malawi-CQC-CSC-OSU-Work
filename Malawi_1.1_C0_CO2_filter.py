@@ -11,9 +11,9 @@ import csv
 
 
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH3' #input("HH1 or HH2... etc:  ")
-Stove = '1'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
-CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
+Household = 'HH4' #input("HH1 or HH2... etc:  ")
+Stove = '2'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
+CCT_Num = '2'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 8#int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
     USB = 'D'
@@ -155,9 +155,9 @@ for file in l_files:
                         Gas_Pressure = Gas_csv.iloc[:, 7]
                         Gas_RH = Gas_csv.iloc[:, 8]
                         #finding fire start time value
-                        print('~~~~~', Gas_Time[0])
+                        print('~~~~~', Gas_Time[0][9:16], Fire_Start[10:])
                         for tv, f in enumerate(Gas_Time):
-                            if f[11:16] == Fire_Start[9:] or str(f[10:16]) == Fire_Start[10:]:
+                            if f[11:16] == Fire_Start[9:] or str(f[10:16]) == Fire_Start[10:] or str(f[9:16]) == Fire_Start[10:]:
                                 GAS_FIRE_START_TV = tv
                                 break
 

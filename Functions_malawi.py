@@ -528,3 +528,14 @@ def Running_Average(array, Running_Average_length):
             Array_filter.append(Array_filter[-1])
 
     return Array_filter
+
+def Remove_Repeated_Values(array):
+    Removed_excess = []
+    Removes_at_time = []
+    for RV, Value in enumerate(array):
+        if RV + 1 == len(array):
+            break
+        elif array[RV+1] != Value and Value != 0:
+            Removed_excess.append(Value)
+            Removes_at_time.append(RV)
+    return Removed_excess, Removes_at_time

@@ -219,16 +219,21 @@ xval = []
 for tt in x:
     xval.append(int(tt/15))
 fig, ax = plt.subplots()
+ax2 = ax.twinx()
 labels = [x]
 plt.title('CO2 Filter')
 plt.ylabel("CO2- PPM")
 plt.xlabel("Minutes")
-plt.plot(Gas_CO2, label='Orginal CO2', color='green')
-plt.plot(co2_filter, label='CO2 Filter', color='r')
-plt.axvline(GAS_FIRE_START_TV,label='Fire Start', color='blue',linestyle = '--')
+ax.plot(Gas_CO2, label='Orginal CO2', color='green')
+ax.plot(co2_filter, label='CO2 Filter', color='r')
+
+ax2.plot(Inline_Hap_PM,label='Inline HAPEx', color = 'blue')
+ax2.plot(Cook_Hap_PM,label='Cook HAPEx',  color = 'm')
+plt.axvline(GAS_FIRE_START_TV,label='Fire Start', color='k',linestyle = '--')
+plt.ylabel('Hapex PM ')
 if Boil_time != '-1':
     Gas_boil = (GAS_FIRE_START_TV) + (15*int(Boil_time))
-    plt.axvline(Gas_boil, label='Boil Time', color='blue', linestyle=':')
+    plt.axvline(Gas_boil, label='Boil Time', color='k', linestyle=':')
     if GasSense_Failure == False:
         Avg_Fire_CO2_Start_to_boil = np.average(co2_filter[GAS_FIRE_START_TV:Gas_boil +1])
         Median_Fire_CO2_Start_to_boil = np.median(co2_filter[GAS_FIRE_START_TV:Gas_boil +1])
@@ -240,7 +245,7 @@ if Boil_time != '-1':
 
 if Coking_Length != '-1':
     Gas_CE = (GAS_FIRE_START_TV) + (15 * int(Coking_Length))
-    plt.axvline(Gas_CE, label='Cooking End', color='blue')
+    plt.axvline(Gas_CE, label='Cooking End', color='k')
     if GasSense_Failure == False:
         Avg_CO2_Cooking_length = np.average(co2_filter[GAS_FIRE_START_TV:Gas_CE+1])
         Median_CO2_Boil_to_Cooking_end = np.median(co2_filter[GAS_FIRE_START_TV:Gas_CE +1])
@@ -256,20 +261,28 @@ if Coking_Length != '-1' and Boil_time != '-1':
 
 plt.xticks(x, xval)
 plt.legend()
-#plt.show()
+plt.show()
 
 
 fig, ax = plt.subplots()
+ax2 = ax.twinx()
 labels2 = [x]
 plt.title('CO Filter')
-plt.ylabel("CO - PPM")
+#plt.ylabel("CO - PPM")
+
+
+ax.plot(Gas_CO, label='Orginal CO', color='green')
+ax.plot(co_filter, label='CO Filter', color='r')
+ax2.plot(Inline_Hap_PM,label='Inline HAPEx', color = 'blue')
+ax2.plot(Cook_Hap_PM,label='Cook HAPEx',  color = 'm')
+
+plt.axvline(GAS_FIRE_START_TV,label='Fire Start', color='k',linestyle = '--')
+ax.set_ylabel('CO - PPM')
 plt.xlabel("Minutes")
-plt.plot(Gas_CO, label='Orginal CO', color='green')
-plt.plot(co_filter, label='CO Filter', color='r')
-plt.axvline(GAS_FIRE_START_TV,label='Fire Start', color='blue',linestyle = '--')
+plt.ylabel('Hapex PM ')
 if Boil_time != '-1':
     Gas_boil = (GAS_FIRE_START_TV) + (15*int(Boil_time))
-    plt.axvline(Gas_boil, label='Boil Time', color='blue', linestyle=':')
+    plt.axvline(Gas_boil, label='Boil Time', color='k', linestyle=':')
     if GasSense_Failure == False:
         Avg_Fire_CO_Start_to_boil = np.average(co_filter[GAS_FIRE_START_TV:Gas_boil +1])
         Median_Fire_CO_Start_to_boil = np.median(co_filter[GAS_FIRE_START_TV:Gas_boil +1])
@@ -290,7 +303,7 @@ if Boil_time != '-1':
 
 if Coking_Length != '-1':
     Gas_CE = (GAS_FIRE_START_TV) + (15 * int(Coking_Length))
-    plt.axvline(Gas_CE, label='Cooking End', color='blue')
+    plt.axvline(Gas_CE, label='Cooking End', color='k')
     if GasSense_Failure == False:
         Avg_CO_Cooking_length = np.average(co_filter[GAS_FIRE_START_TV:Gas_CE+1])
         Median_CO_Boil_to_Cooking_end = np.median(co_filter[GAS_FIRE_START_TV:Gas_CE +1])
@@ -305,6 +318,7 @@ if Coking_Length != '-1' and Boil_time != '-1':
         print('Median CO PPM from Boil - Cooking End:  ', int(Median_CO_Boil_to_Cooking_end))
 
 plt.xticks(x, xval)
+
 plt.legend()
 plt.show()
 

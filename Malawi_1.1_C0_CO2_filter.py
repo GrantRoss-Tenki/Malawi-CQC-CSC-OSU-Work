@@ -248,8 +248,8 @@ plt.title('CO Filter')
 ax22 = ax1.twinx()
 ax1.plot(Gas_CO, label='Orginal CO', color='green')
 ax1.plot(co_filter, color='r', label='CO Filter')
-ax22.plot(Inline_Hap_PM, color = 'blue',) #label='Inline HAPEx',
-ax22.plot(Cook_Hap_PM,  color = 'm',label='Cook HAPEx') #label='Cook HAPEx',
+#ax22.plot(Inline_Hap_PM, color = 'blue',) #label='Inline HAPEx',
+#ax22.plot(Cook_Hap_PM,  color = 'm',label='Cook HAPEx') #label='Cook HAPEx',
 
 plt.axvline(GAS_FIRE_START_TV, color='k',linestyle = '--') #label='Fire Start',
 ax1.set_ylabel('CO - PPM')
@@ -267,14 +267,14 @@ if Boil_time != '-1':
         Gradient_Fire_CO_Start_to_boil = np.gradient(co_filter[GAS_FIRE_START_TV:Gas_boil +1])
         grad_count = 1
         Local_maxima_Start_to_boil = []
-        print('-----Gradient----', list(Gradient_Fire_CO_Start_to_boil))
+        print('-----Gradient----', list(Gradient_Fire_CO_Start_to_boil), Functions_malawi.Remove_Repeated_Values(Gradient_Fire_CO_Start_to_boil))
         for gg in Gradient_Fire_CO_Start_to_boil:
             if grad_count +1 == len(Gradient_Fire_CO_Start_to_boil):
                 break
             elif Gradient_Fire_CO_Start_to_boil[grad_count] < 0 and gg > 0:
                 Local_maxima_Start_to_boil.append(grad_count-1)
             grad_count = grad_count + 1
-        print('Minutes to Local Maaxima from Fire Start:  ',Local_maxima_Start_to_boil, len(Gradient_Fire_CO_Start_to_boil) )
+        print('Minutes to Local Maaxima from Fire Start:  ',Local_maxima_Start_to_boil, len(Gradient_Fire_CO_Start_to_boil),Gas_boil , xval[8] )
 
 if Coking_Length != '-1':
     Gas_CE = (GAS_FIRE_START_TV) + (15 * int(Coking_Length))

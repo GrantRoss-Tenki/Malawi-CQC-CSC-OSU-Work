@@ -14,10 +14,10 @@ Stove_array = ['1','2','3']
 CCT_array = ['1','2','3', '4']
 
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH4' #input("HH1 or HH2... etc:  ")
+Household = 'HH3' #input("HH1 or HH2... etc:  ")
 Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
-CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
-Running_Average_length = 8#int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
+CCT_Num = '3'#input("CCT Number - 1, 2, or 3: ")
+Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
     USB = 'D'
 else:
@@ -232,8 +232,10 @@ if Boil_time != '-1':
     if GasSense_Failure == False:
         Avg_Fire_CO2_Start_to_boil = np.average(co2_filter[GAS_FIRE_START_TV:Gas_boil +1])
         Median_Fire_CO2_Start_to_boil = np.median(co2_filter[GAS_FIRE_START_TV:Gas_boil +1])
+
         print('Average CO2 PPM from Start - Boil:  ', int(Avg_Fire_CO2_Start_to_boil))
         print('Median CO2 PPM from Start - Boil:  ', int(Median_Fire_CO2_Start_to_boil))
+        
 
 
 if Coking_Length != '-1':
@@ -269,25 +271,36 @@ if Boil_time != '-1':
     Gas_boil = (GAS_FIRE_START_TV) + (15*int(Boil_time))
     plt.axvline(Gas_boil, label='Boil Time', color='blue', linestyle=':')
     if GasSense_Failure == False:
-        Avg_Fire_CO_Start_to_boil = np.average(Gas_CO[GAS_FIRE_START_TV:Gas_boil +1])
-        Median_Fire_CO_Start_to_boil = np.median(Gas_CO[GAS_FIRE_START_TV:Gas_boil +1])
+        Avg_Fire_CO_Start_to_boil = np.average(co_filter[GAS_FIRE_START_TV:Gas_boil +1])
+        Median_Fire_CO_Start_to_boil = np.median(co_filter[GAS_FIRE_START_TV:Gas_boil +1])
         print('Average CO PPM from Start - Boil:  ', int(Avg_Fire_CO_Start_to_boil))
         print('Median CO PPM from Start - Boil:  ', int(Median_Fire_CO_Start_to_boil))
-
+        # Gradient for the array section
+        Gradient_Fire_CO_Start_to_boil = np.gradient(co_filter[GAS_FIRE_START_TV:Gas_boil +1])
+        grad_count = 1
+        Local_maxima_Start_to_boil = []
+        print('-----Gradient----', list(Gradient_Fire_CO_Start_to_boil))
+        for gg in Gradient_Fire_CO_Start_to_boil:
+            if grad_count +1 == len(Gradient_Fire_CO_Start_to_boil):
+                break
+            elif Gradient_Fire_CO_Start_to_boil[grad_count] < 0 and gg > 0:
+                Local_maxima_Start_to_boil.append(grad_count-1)
+            grad_count = grad_count + 1
+        print('Minutes to Local Maaxima from Fire Start:  ',Local_maxima_Start_to_boil, len(Gradient_Fire_CO_Start_to_boil) )
 
 if Coking_Length != '-1':
     Gas_CE = (GAS_FIRE_START_TV) + (15 * int(Coking_Length))
     plt.axvline(Gas_CE, label='Cooking End', color='blue')
     if GasSense_Failure == False:
-        Avg_CO_Cooking_length = np.average(Gas_CO[GAS_FIRE_START_TV:Gas_CE+1])
-        Median_CO_Boil_to_Cooking_end = np.median(Gas_CO[GAS_FIRE_START_TV:Gas_CE +1])
+        Avg_CO_Cooking_length = np.average(co_filter[GAS_FIRE_START_TV:Gas_CE+1])
+        Median_CO_Boil_to_Cooking_end = np.median(co_filter[GAS_FIRE_START_TV:Gas_CE +1])
         print('Average CO PPM for Cooking Length:  ', int(Avg_CO_Cooking_length))
         print('Median CO PPM for Cooking Length:  ',int(Median_CO_Boil_to_Cooking_end) )
 
 if Coking_Length != '-1' and Boil_time != '-1':
     if GasSense_Failure == False:
-        Avg_CO_Boil_to_Cooking_end = np.average(Gas_CO[Gas_boil: Gas_CE+1])
-        Median_CO_Boil_to_Cooking_end = np.median(Gas_CO[Gas_boil: Gas_CE+1])
+        Avg_CO_Boil_to_Cooking_end = np.average(co_filter[Gas_boil: Gas_CE+1])
+        Median_CO_Boil_to_Cooking_end = np.median(co_filter[Gas_boil: Gas_CE+1])
         print('Average CO PPM from Boil - Cooking End:  ', int(Avg_CO_Boil_to_Cooking_end))
         print('Median CO PPM from Boil - Cooking End:  ', int(Median_CO_Boil_to_Cooking_end))
 

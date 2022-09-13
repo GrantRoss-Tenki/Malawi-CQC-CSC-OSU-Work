@@ -509,3 +509,22 @@ def Squish_usage(Phase, Houseold, First_usage, Second_usage, min_CE_length):
             event = event +1
         
     return Squish_array, event, Two_stove_once
+
+def Running_Average(array, Running_Average_length):
+    Array_filter = [array[0]]
+    Array_length = len(array)
+    running_average_co = []
+    count_four = 0
+    for tv, place in enumerate(array):
+        count_four = count_four + 1
+        running_average_co.append(place)
+        if count_four == Running_Average_length:
+            Array_filter.append(np.average(running_average_co))
+            count_four = 0
+            running_average_co = []
+        elif tv + 1 == Array_length:
+            break
+        else:
+            Array_filter.append(Array_filter[-1])
+
+    return Array_filter

@@ -15,9 +15,9 @@ Stove_array = ['1','2','3']
 CCT_array = ['1','2','3', '4']
 
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH3' #input("HH1 or HH2... etc:  ")
+Household = 'HH4' #input("HH1 or HH2... etc:  ")
 Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
-CCT_Num = '3'#input("CCT Number - 1, 2, or 3: ")
+CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
     USB = 'D'
@@ -200,8 +200,18 @@ labels = [x]
 ax2.plot(Inline_Hap_PM,label='Inline HAPEx', color = 'blue')
 ax2.plot(Cook_Hap_PM,label='Cook HAPEx',  color = 'm')
 
-
+#getting start up before fire start
 plt.axvline(GAS_FIRE_START_TV, color='k',linestyle = '--')#label='Fire Start',
+
+Avg_Fire_CO2_Setup = np.average(co2_filter[0:GAS_FIRE_START_TV])
+Median_Fire_CO2_Setup = np.median(co2_filter[0:GAS_FIRE_START_TV])
+print('Average CO2 PPM to Start:  ', int(Avg_Fire_CO2_Setup))
+print('Median CO2 PPM to Start:  ', int(Median_Fire_CO2_Setup))
+Slope_CO2_to_Start = (co2_filter[GAS_FIRE_START_TV] - co2_filter[0]) / ((GAS_FIRE_START_TV + 1 - 0) / 15)
+print('CO2 Before Fire Slope:  ', int(Slope_CO2_to_Start))
+
+
+
 ax.set_ylabel('CO2 - PPM')
 ax.set_xlabel("Minutes")
 plt.ylabel('Hapex PM ')
@@ -211,10 +221,10 @@ if Boil_time != '-1':
     if GasSense_Failure == False:
         Avg_Fire_CO2_Start_to_boil = np.average(co2_filter[GAS_FIRE_START_TV:Gas_boil +1])
         Median_Fire_CO2_Start_to_boil = np.median(co2_filter[GAS_FIRE_START_TV:Gas_boil +1])
-
         print('Average CO2 PPM from Start - Boil:  ', int(Avg_Fire_CO2_Start_to_boil))
         print('Median CO2 PPM from Start - Boil:  ', int(Median_Fire_CO2_Start_to_boil))
-
+        Slope_CO2_Boil = (co2_filter[Gas_boil+1] - co2_filter[GAS_FIRE_START_TV])/((Gas_boil+1 -GAS_FIRE_START_TV)/15)
+        print('CO2 Start - Boil Slope:  ', int(Slope_CO2_Boil))
 if Coking_Length != '-1':
     Gas_CE = (GAS_FIRE_START_TV) + (15 * int(Coking_Length))
     plt.axvline(Gas_CE, color='k')# label='Cooking End',
@@ -223,17 +233,24 @@ if Coking_Length != '-1':
         Median_CO2_Boil_to_Cooking_end = np.median(co2_filter[GAS_FIRE_START_TV:Gas_CE +1])
         print('Average CO2 PPM for Cooking Length:  ', int(Avg_CO2_Cooking_length))
         print('Median CO2 PPM for Cooking Length:  ',int(Median_CO2_Boil_to_Cooking_end) )
-
+        Slope_CO2_CE = (co2_filter[Gas_CE + 1] - co2_filter[GAS_FIRE_START_TV]) / ((Gas_CE + 1 - GAS_FIRE_START_TV) / 15)
+        print('CO2 Cooking length Slope:  ', int(Slope_CO2_CE))
 if Coking_Length != '-1' and Boil_time != '-1':
     if GasSense_Failure == False:
         Avg_CO2_Boil_to_Cooking_end = np.average(co2_filter[Gas_boil: Gas_CE+1])
         Median_CO2_Boil_to_Cooking_end = np.median(co2_filter[Gas_boil: Gas_CE+1])
         print('Average CO2 PPM from Boil - Cooking End:  ', int(Avg_CO2_Boil_to_Cooking_end))
         print('Median CO2 PPM from Boil - Cooking End:  ', int(Median_CO2_Boil_to_Cooking_end))
+        Slope_CO2_boil_CE = (co2_filter[Gas_CE + 1] - co2_filter[Gas_boil]) / ((Gas_CE + 1 - Gas_boil) / 15)
+        print('CO2 boil - Cooking end Slope:  ', int(Slope_CO2_boil_CE))
+        Slope_CO2_Cooldown = (co2_filter[-1] - co2_filter[Gas_CE]) / ((len(co2_filter) - 1 - Gas_CE) / 15)
+        print('CO2 Cooldown Slope:  ', int(Slope_CO2_Cooldown), 'Cooldown Length (minutes):  ', int(((len(co2_filter) - 1 - Gas_CE) / 15)))
+
+
 
 plt.xticks(x, xval)
 plt.legend()
-plt.show()
+#plt.show()
 
 
 fig2, ax1 = plt.subplots()
@@ -245,13 +262,16 @@ plt.title('CO Filter')
 
 
 
-ax22 = ax1.twinx()
-ax1.plot(Gas_CO, label='Orginal CO', color='green')
-ax1.plot(co_filter, color='r', label='CO Filter')
-#ax22.plot(Inline_Hap_PM, color = 'blue',) #label='Inline HAPEx',
-#ax22.plot(Cook_Hap_PM,  color = 'm',label='Cook HAPEx') #label='Cook HAPEx',
 
+# getitng the slope before the fire starr
 plt.axvline(GAS_FIRE_START_TV, color='k',linestyle = '--') #label='Fire Start',
+Avg_Fire_CO_Setup = np.average(co_filter[0:GAS_FIRE_START_TV])
+Median_Fire_CO_Setup = np.median(co_filter[0:GAS_FIRE_START_TV])
+print('Average CO PPM to Start:  ', int(Avg_Fire_CO_Setup))
+print('Median CO PPM to Start:  ', int(Median_Fire_CO_Setup))
+Slope_CO_to_Start = (co_filter[GAS_FIRE_START_TV] - co_filter[0]) / ((GAS_FIRE_START_TV + 1 - 0) / 15)
+print('CO Before Fire Slope:  ', int(Slope_CO_to_Start))
+
 ax1.set_ylabel('CO - PPM')
 ax1.set_xlabel("Minutes")
 plt.ylabel('Hapex PM ')
@@ -263,19 +283,6 @@ if Boil_time != '-1':
         Median_Fire_CO_Start_to_boil = np.median(co_filter[GAS_FIRE_START_TV:Gas_boil +1])
         print('Average CO PPM from Start - Boil:  ', int(Avg_Fire_CO_Start_to_boil))
         print('Median CO PPM from Start - Boil:  ', int(Median_Fire_CO_Start_to_boil))
-        # Gradient for the array section
-        Gradient_Fire_CO_Start_to_boil = np.gradient(co_filter[GAS_FIRE_START_TV:Gas_boil +1])
-        grad_count = 1
-        Local_maxima_Start_to_boil = []
-        print('-----Gradient----', list(Gradient_Fire_CO_Start_to_boil), Functions_malawi.Remove_Repeated_Values(Gradient_Fire_CO_Start_to_boil))
-        for gg in Gradient_Fire_CO_Start_to_boil:
-            if grad_count +1 == len(Gradient_Fire_CO_Start_to_boil):
-                break
-            elif Gradient_Fire_CO_Start_to_boil[grad_count] < 0 and gg > 0:
-                Local_maxima_Start_to_boil.append(grad_count-1)
-            grad_count = grad_count + 1
-        print('Minutes to Local Maaxima from Fire Start:  ',Local_maxima_Start_to_boil, len(Gradient_Fire_CO_Start_to_boil),Gas_boil , xval[8] )
-
 if Coking_Length != '-1':
     Gas_CE = (GAS_FIRE_START_TV) + (15 * int(Coking_Length))
     plt.axvline(Gas_CE,  color='k')#label='Cooking End',
@@ -284,7 +291,29 @@ if Coking_Length != '-1':
         Median_CO_Boil_to_Cooking_end = np.median(co_filter[GAS_FIRE_START_TV:Gas_CE +1])
         print('Average CO PPM for Cooking Length:  ', int(Avg_CO_Cooking_length))
         print('Median CO PPM for Cooking Length:  ',int(Median_CO_Boil_to_Cooking_end) )
+        # Gradient for the array section
+        Gradient_Fire_CO_Cooking = np.gradient(co_filter[GAS_FIRE_START_TV:Gas_CE+1])
 
+        grad_count = 0
+        Local_maxima_Cooking = []
+        Local_minima_Cooking = []
+        CO_Gradient, CO_Gradient_TV =  Functions_malawi.Remove_Repeated_Values(Gradient_Fire_CO_Cooking)
+        for gg in CO_Gradient:
+            if grad_count + 1 == len(CO_Gradient)-1:
+                break
+            elif CO_Gradient[grad_count+1] < 0 and gg > 0:
+                Local_maxima_Cooking.append(CO_Gradient_TV[grad_count]+GAS_FIRE_START_TV)
+            elif CO_Gradient[grad_count+1] > 0 and gg < 0:
+                Local_minima_Cooking.append(CO_Gradient_TV[grad_count] + GAS_FIRE_START_TV)
+            grad_count = grad_count + 1
+        maxima_CO_Cooking = []
+        for place,B in enumerate(Local_maxima_Cooking):
+            maxima_CO_Cooking.append(co_filter[B])
+
+        Y_Max_CO_Cooking = max(maxima_CO_Cooking)
+        Where_Y_Max_CO_Cooking = np.where(maxima_CO_Cooking == (Y_Max_CO_Cooking))
+        X_Max_CO_Cooking = Local_maxima_Cooking[int(Where_Y_Max_CO_Cooking[0])]
+        print('The toal max (minutes):   ',X_Max_CO_Cooking, X_Max_CO_Cooking/15 )
 if Coking_Length != '-1' and Boil_time != '-1':
     if GasSense_Failure == False:
         Avg_CO_Boil_to_Cooking_end = np.average(co_filter[Gas_boil: Gas_CE+1])
@@ -292,8 +321,31 @@ if Coking_Length != '-1' and Boil_time != '-1':
         print('Average CO PPM from Boil - Cooking End:  ', int(Avg_CO_Boil_to_Cooking_end))
         print('Median CO PPM from Boil - Cooking End:  ', int(Median_CO_Boil_to_Cooking_end))
 
-plt.xticks(x, xval)
 
+plt.xticks(x, xval)
+ax1.plot(X_Max_CO_Cooking, Y_Max_CO_Cooking, label='Local Max ',color = 'k', marker=".", markersize=30)
+
+ax22 = ax1.twinx()
+
+ax1.plot(Gas_CO, label='Orginal CO', color='green')
+ax1.plot(co_filter, color='r', label='CO Filter')
+ax22.plot(Inline_Hap_PM, color = 'blue',) #label='Inline HAPEx',
+ax22.plot(Cook_Hap_PM,  color = 'm',label='Cook HAPEx') #label='Cook HAPEx',
+
+
+#going to solve for CO cooldown usingx previous steady state work
+# First USe Local Max
+
+
+print('CO min count', Local_minima_Cooking)
+# For maximum, I am going to use the totla maximum for the test and coking event
+Co_MIN_tv, Co_MAX_tv ,Co_MIN_Count, Co_MAX_Count  = Functions_malawi.Local_Max_min(Gas_CO[Gas_CE:], Gas_CE,0)
+print('CO from local min max', Co_MIN_tv, Co_MAX_tv ,Co_MIN_Count, Co_MAX_Count)
+
+Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Gas_CO, 15, Co_MIN_Count,Gas_CO[Gas_CE],Co_MAX_Count ,10)
+print(Steady_start_Time_value)
+
+ax1.plot(Steady_start_Time_value, Gas_CO[Steady_start_Time_value], label='Local Max ',color = 'k', marker=".", markersize=30)
 plt.legend()
 plt.show()
 

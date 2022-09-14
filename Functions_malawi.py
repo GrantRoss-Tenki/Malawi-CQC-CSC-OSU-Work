@@ -304,9 +304,8 @@ def Local_Max_min(arrayyyy, start, Start_Spread):
     local_maxima_count = []
     # the for loop is for determining the number of local minmums and maximums 
     # local max and mins are determined by the gradient
-    for tv, a in enumerate(gradienttt):
+    for tv, a in enumerate(gradienttt,):
         if gradienttt[tv-1] < 0 and a > 0:
-
             local_min_count.append(tv + (start -Start_Spread))
         elif gradienttt[tv-1] > 0 and a < 0:
             local_maxima_count.append(tv + (start -Start_Spread))
@@ -315,11 +314,11 @@ def Local_Max_min(arrayyyy, start, Start_Spread):
 
 
 def StartUp_max_Next_min(Hapex,start, start_spread):
-    # only for Hapex needs be a whole spread meaning the startup (10 min before ) Fire finder and cool down (30 after)
+    # the Hapex needs be a whole spread meaning the startup (10 min before ) Fire finder and cool down (30 after)
     # *** the array is not just firefinder*****
     # NOTE---- this function has the same input as the "Local_Max_min" with differnt names
     Hap = list(np.gradient(Hapex))
-    StartUp_max = max(Hap[0:(2*start_spread)])
+    StartUp_max = max(Hap[0:start_spread])
     StartUp_max_TV = (np.where(Hap == StartUp_max))
     #print('---------=--=-=-=---==-------',StartUp_max_TV)
     found_min = 0
@@ -366,14 +365,15 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
     Medain_of_Max_Hapex = np.median(Combined_event_Hapex[int(max_grad_where[0]):])
 
     #print(startup,'max hapex',max_PM[0],max_grad_where, Combined_event_Hapex[0],'median',Medain_of_Max_Hapex, startup)
-    #print('from function, type of min and max', type(Minn_reverse_first),  type(Maxx_reverse_first), Minn_reverse_first>Maxx_reverse_first)
+
+    print('from function, this is the array i am looking at' ,Minn_reverse_first, max_array_scale[0],Maxx_reverse_first)
 
     if Minn_reverse_first > Maxx_reverse_first:
         where_grad = Gradient_Hapex[Maxx_reverse_first:Minn_reverse_first]
     elif Minn_reverse_first < Maxx_reverse_first:
         where_grad = Gradient_Hapex[Minn_reverse_first:Maxx_reverse_first]
 
-    print('from function, this is the array i am looking at' ,Minn_reverse_first>Maxx_reverse_first,where_grad)
+    print('from function, this is where ',where_grad)
     where = min(where_grad)
     for tv_1, hapex_vauue in enumerate(where_grad):
         if hapex_vauue == where: 
@@ -387,7 +387,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
         if (len(Combined_event_Hapex) - tv_rev) < max_grad_where[0]:
             break
 
-        elif (len(Combined_event_Hapex)-1- tv_rev) == Min_reverse[Min_reverse_count]:
+        elif ((len(Combined_event_Hapex)-1- tv_rev) == Min_reverse[Min_reverse_count]):
             for tv_max, rev_max in enumerate(Max_reverse):
                 if  (Min_reverse[Min_reverse_count] - window) <= rev_max <= (Min_reverse[Min_reverse_count] + window):
                     #print('is this the good max', Combined_event_Hapex[rev_max], rev_max, Combined_event_Hapex[Min_reverse[Min_reverse_count-1]], Min_reverse[Min_reverse_count-1])
@@ -426,7 +426,8 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
                     continue
                 
             Min_reverse_count = Min_reverse_count +1
-            
+        else:
+            break
     
     #print('here are the steady states', how_many_steady_state,min_reverse_array_count,max_reverse_array_count,clossest_min_median[0], clossest_max_median[0])
     last_filter = []

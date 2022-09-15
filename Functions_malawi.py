@@ -555,8 +555,8 @@ def Add_repeated_values(arrays, length, Stop):
             if len(New_Array) == Stop:
                 break
     if len(New_Array) < Stop:
-        Dif = Stop - len(New_Array)
-        last_value = New_Array.iloc[-1]
+        Dif = Stop - int(len(New_Array))
+        last_value = New_Array[-1]
         New_Array.extend([last_value]*Dif)
     return New_Array
 

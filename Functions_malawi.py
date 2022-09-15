@@ -115,7 +115,7 @@ def FireFinder(temp, Usage, cooking_threshold, length_decrease, start_threshold,
         return Usage, Fire_start, Fire_end
 
 # Fuel Algorithm 
-def FUEL_REMOVAL(Fuel_KG_nf, Thresold, min_average_spread,No_fuel):
+def FUEL_REMOVAL(Fuel_KG_nf, Thresold, min_average_spread,No_fuel, running_average):
         
         if No_fuel != 1:
 
@@ -128,8 +128,8 @@ def FUEL_REMOVAL(Fuel_KG_nf, Thresold, min_average_spread,No_fuel):
 
             # this is for running average
             Mean_Count_min = []
-            one_to_five = np.arange(0,6,1)
-            for one in one_to_five:
+            one_to_Aveg = np.arange(0,running_average+1,1)
+            for one in one_to_Aveg:
                 fiveee = abs(Fuel_KG_nf[one])
                 Mean_Count_min.append(fiveee)
 

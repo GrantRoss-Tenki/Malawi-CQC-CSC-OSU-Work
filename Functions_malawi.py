@@ -551,9 +551,10 @@ def Add_repeated_values(arrays, length, Stop):
     for Value,Num in enumerate(arrays):
         New_Array.append(Num)
         for add in count_place:
-            New_Array.append(Num)
             if len(New_Array) == Stop:
                 break
+            else:
+                New_Array.append(Num)
     if len(New_Array) < Stop:
         Dif = Stop - int(len(New_Array))
         last_value = New_Array[-1]

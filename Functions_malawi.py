@@ -546,7 +546,7 @@ def Add_repeated_values(arrays, length):
     #this function makes an array a step function with a larger x value.
     #meaning the array value needs to be expanded a certain distance untill the next value in the origional array
     New_Array = []
-    count_place = np.linspace(0, length-1, 1)
+    count_place = np.arange(0, length-1, 1)
     print('from funciton: ', count_place)
     for Value,Num in enumerate(arrays):
         New_Array.append(Num)

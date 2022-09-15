@@ -547,7 +547,7 @@ def Add_repeated_values(arrays, length):
     #meaning the array value needs to be expanded a certain distance untill the next value in the origional array
     New_Array = []
     count_place = np.linspace(0, length-1, 1)
-    print(count_place)
+    print('from funciton: ', count_place)
     for Value,Num in enumerate(arrays):
         New_Array.append(Num)
         for add in count_place:

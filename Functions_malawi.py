@@ -542,14 +542,21 @@ def Remove_Repeated_Values(array):
             Removes_at_time.append(RV)
     return Removed_excess, Removes_at_time
 
-def Add_repeated_values(arrays, length):
+def Add_repeated_values(arrays, length, Stop):
     #this function makes an array a step function with a larger x value.
     #meaning the array value needs to be expanded a certain distance untill the next value in the origional array
+
     New_Array = []
     count_place = np.arange(0, length-1, 1)
     for Value,Num in enumerate(arrays):
         New_Array.append(Num)
         for add in count_place:
             New_Array.append(Num)
+            if len(New_Array) == Stop:
+                break
+    if len(New_Array) < Stop:
+        Dif = Stop - len(New_Array)
+        last_value = New_Array.iloc[-1]
+        New_Array.extend([last_value]*Dif)
     return New_Array
 

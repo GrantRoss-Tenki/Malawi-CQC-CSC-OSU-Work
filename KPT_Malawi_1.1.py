@@ -163,21 +163,20 @@ for file in l_files:
                         Exact_2 = row[2][-5:]
                         print('exact Numbers', Exact_1, Exact_2)
                     elif 'PM measurement location:' in row and Hapex == True:
-                        for g in row[1]:
-                            if g == 'c' and Cook_Hapex_place == True:
-                               if Kitchen_Hapex_place == False:
-                                    Cook_Hapex = row[1][-5:]
-                                    Kitchen_Hapex = Kitchen_Hapex_place
-                               else:
-                                   Kitchen_Hapex = row[2][-5:]
-                                   Cook_Hapex = row[1][-5:]
-                            elif g == 'k'and Kitchen_Hapex_place == True:
-                                if Cook_Hapex_place == False:
-                                    Kitchen_Hapex = row[1][-5:]
-                                    Cook_Hapex = Cook_Hapex_place
-                                else:
-                                    Cook_Hapex = row[2][-5:]
-                                    Kitchen_Hapex = row[1][-5:]
+                        if row[1][0] == 'c' and Cook_Hapex_place == True:
+                            if Kitchen_Hapex_place == False:
+                                Cook_Hapex = row[1][-5:]
+                                Kitchen_Hapex = Kitchen_Hapex_place
+                            else:
+                                Kitchen_Hapex = row[2][-5:]
+                                Cook_Hapex = row[1][-5:]
+                        elif row[1][0] == 'k'and Kitchen_Hapex_place == True:
+                            if Cook_Hapex_place == False:
+                                Kitchen_Hapex = row[1][-5:]
+                                Cook_Hapex = Cook_Hapex_place
+                            else:
+                                Cook_Hapex = row[2][-5:]
+                                Kitchen_Hapex = row[1][-5:]
                         print('Hapex Numbers- Cook', Cook_Hapex,'-Kitchen-', Kitchen_Hapex)
                     elif 'Fuel type:' in row and Fuel == True:
                         Fuel_1 = row[1][-5:]
@@ -207,25 +206,27 @@ for file in l_files:
                                 Fuel_1_Battery = WHOLE_CSV.iloc[:,Column]
                                 Fuel_1_T = WHOLE_CSV.iloc[:,Column+1]
                                 Fuel_1_KG = WHOLE_CSV.iloc[:,Column+2]
+                                KG_burned_1, Fuel_KG_1 = Functions_malawi.FUEL_REMOVAL(Fuel_1_KG, 0.05, 15, True, 10)
                                 
                             elif Metric[-6:-1] == Fuel_2 and Fuel_2_place == True and Metric[0:13] =='Battery level' :
                                 Fuel_2_Battery = WHOLE_CSV.iloc[:,Column]
                                 Fuel_2_T = WHOLE_CSV.iloc[:,Column+1]
                                 Fuel_2_KG = WHOLE_CSV.iloc[:,Column+2]
+                                KG_burned_2, Fuel_KG_2 = Functions_malawi.FUEL_REMOVAL(Fuel_2_KG, 0.05, 15, True, 10)
                                
-                            elif Metric[-6:-1] == Kitchen_Hapex and Kitchen_Hapex_place == True and Metric[0:18]==' kitchen Compliance':
+                            elif (Metric[-6:-1] == Kitchen_Hapex) and (Kitchen_Hapex_place == True) and (Metric[0:18] =='kitchen Compliance'):
                                 Kitchen_Hapex_Comp = WHOLE_CSV.iloc[0:Minute_log_length,Column]
                                 Kitchen_Hapex_PM = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
-                                
-                            elif Metric[-6:-1] == Cook_Hapex and Cook_Hapex_place == True and Metric[0:15]==' cook Compliance':
+
+                            elif Metric[-6:-1] == Cook_Hapex and Cook_Hapex_place == True and Metric[0:15] =='cook Compliance':
                                 CooK_Hapex_Comp = WHOLE_CSV.iloc[0:Minute_log_length,Column]
                                 Cook_Hapex_PM = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
                                 
-                            elif Metric[-6:-1] == Exact_1 and Exact_1_place == True and Metric[0:6]==' Usage':
+                            elif Metric[-6:-1] == Exact_1 and Exact_1_place == True and Metric[0:6] ==' Usage':
                                 Exact_1_Usage = WHOLE_CSV.iloc[0:Minute_log_length,Column]
                                 Exact_1_Temp = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
                                 
-                            elif Metric[-6:-1] == Exact_2 and Exact_2_place == True and Metric[0:6]==' Usage':
+                            elif Metric[-6:-1] == Exact_2 and Exact_2_place == True and Metric[0:6] ==' Usage':
                                 Exact_2_Usage = WHOLE_CSV.iloc[0:Minute_log_length,Column]
                                 Exact_2_Temp = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
                                 
@@ -260,27 +261,73 @@ if (Household_Number == 'HH4') or (Household_Number == 'HH5') or (Household_Numb
     if Exact_1_place == True:
         Exact_1_Usage_ext = Functions_malawi.Add_repeated_values(Exact_1_Usage, 15, len(USB_time))
         Exact_1_Temp_ext = Functions_malawi.Add_repeated_values(Exact_1_Temp, 15, len(USB_time))
-    elif Exact_2_place == True:
-        Exact_2_Usage = Functions_malawi.Add_repeated_values(Exact_2_Usage, 15, len(USB_time))
-        Exact_2_Temp = Functions_malawi.Add_repeated_values(Exact_2_Temp, 15, len(USB_time))
-    elif Kitchen_Hapex_place == True:
-        Kitchen_Hapex_Comp = Functions_malawi.Add_repeated_values(Kitchen_Hapex_Comp, 15, len(USB_time))
-        Kitchen_Hapex_PM = Functions_malawi.Add_repeated_values(Kitchen_Hapex_PM, 15, len(USB_time))
-    elif Cook_Hapex_place == True:
-        CooK_Hapex_Comp = Functions_malawi.Add_repeated_values(CooK_Hapex_Comp, 15, len(USB_time))
-        Cook_Hapex_PM = Functions_malawi.Add_repeated_values(Cook_Hapex_PM, 15, len(USB_time))
+        EXACT_1_FF_usage, EXACT_1_fire_start, EXACT_1_fire_end = Functions_malawi.FireFinder(Exact_1_Temp, Exact_1_Usage, cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+    if Exact_2_place == True:
+        Exact_2_Usage_ext = Functions_malawi.Add_repeated_values(Exact_2_Usage, 15, len(USB_time))
+        Exact_2_Temp_ext = Functions_malawi.Add_repeated_values(Exact_2_Temp, 15, len(USB_time))
+        EXACT_2_FF_usage, EXACT_2_fire_start, EXACT_2_fire_end = Functions_malawi.FireFinder(Exact_2_Temp,Exact_2_Usage, cooking_threshold, length_decrease, start_threshold,end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+    if Kitchen_Hapex_place == True:
+        Kitchen_Hapex_Comp_ext = Functions_malawi.Add_repeated_values(Kitchen_Hapex_Comp, 15, len(USB_time))
+        Kitchen_Hapex_PM_ext = Functions_malawi.Add_repeated_values(Kitchen_Hapex_PM, 15, len(USB_time))
+    if Cook_Hapex_place == True:
+        CooK_Hapex_Comp_ext = Functions_malawi.Add_repeated_values(CooK_Hapex_Comp, 15, len(USB_time))
+        Cook_Hapex_PM_ext = Functions_malawi.Add_repeated_values(Cook_Hapex_PM, 15, len(USB_time))
+else:
+    EXACT_1_FF_usage, EXACT_1_fire_start, EXACT_1_fire_end = Functions_malawi.FireFinder(Exact_1_Temp, Exact_1_Usage, cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+    EXACT_2_FF_usage, EXACT_2_fire_start, EXACT_2_fire_end = Functions_malawi.FireFinder(Exact_2_Temp, Exact_2_Usage, cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+#Getting Metrics For the events and collection
+#Combining stove usage
 
-#Going to set in the FireFinder first
+if  (Exact_1_place == True) and (Exact_2_place == True):
+    Combined_Stove, Combined_events, Two_stove_once = Functions_malawi.Squish_usage('2N', 1007, EXACT_1_FF_usage, EXACT_2_FF_usage, min_CE_length)
+    Combined_Stove_ext = Functions_malawi.Add_repeated_values(Combined_Stove, 15, len(USB_time))
 
-EXACT_1_FF_usage, EXACT_1_fire_start, EXACT_1_fire_end = Functions_malawi.FireFinder(Exact_1_Temp, Exact_1_Usage, cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+print('# events - stove 1:',len(EXACT_1_fire_start),'# events - stove 2:',len(EXACT_2_fire_start),'# events - combined:',Combined_events)
+Event_counter = np.arange(0,Combined_events, 1)
+#Event Metrics that I need to gather
+Event_KG_Removed_Fuel_1 = []
+Event_KG_Removed_Fuel_2 =[]
 
-print('Fire Start:',EXACT_1_fire_start, len(Exact_1_Usage), len(USB_time), len(Exact_1_Usage_ext))
-print('Fire End:', EXACT_1_fire_end, (EXACT_1_fire_end[0]-EXACT_1_fire_start[0]))
-print('timestart val o', EXACT_1_fire_start[0], 'timend val 0 ', EXACT_1_fire_end[0])
+Event_Average_Kitchen_Compliance = []
+Event_Median_Kitchen_Compliance = []
+Event_StDeV_Kitchen_Compliance = []
+Event_Average_Kitchen_PM = []
+Event_Median_Kitchen_PM = []
+Event_StDeV_Kitchen_PM = []
 
+Event_Average_Cook_Compliance = []
+Event_Median_Cook_Compliance = []
+Event_StDeV_Cook_Compliance = []
+Event_Average_Cook_PM = []
+Event_Median_Cook_PM = []
+Event_StDeV_Cook_PM = []
 
-#next going to set Fuel Alorighm
+Event_Average_USB_Current = []
+Event_Median_USB_Current = []
+Event_StDeV_USB_Current = []
+Event_Average_USB_Voltage = []
+Event_Median_USB_Voltage = []
+Event_StDeV_USB_Voltage = []
 
-KG_burned, Fuel_KG = Functions_malawi.FUEL_REMOVAL(Fuel_1_KG, 0.05, 15, 0, 10)
+for TVE, Metric in enumerate(Event_counter):
+    Event_KG_Removed_Fuel_1.append()
+    Event_Average_Kitchen_Compliance = []
+    Event_Median_Kitchen_Compliance = []
+    Event_StDeV_Kitchen_Compliance = []
+    Event_Average_Kitchen_PM = []
+    Event_Median_Kitchen_PM = []
+    Event_StDeV_Kitchen_PM = []
 
-print('KG BURNED', np.average(KG_burned), KG_burned[80000], Fuel_1_KG[80000])
+    Event_Average_Cook_Compliance = []
+    Event_Median_Cook_Compliance = []
+    Event_StDeV_Cook_Compliance = []
+    Event_Average_Cook_PM = []
+    Event_Median_Cook_PM = []
+    Event_StDeV_Cook_PM = []
+
+    Event_Average_USB_Current = []
+    Event_Median_USB_Current = []
+    Event_StDeV_USB_Current = []
+    Event_Average_USB_Voltage = []
+    Event_Median_USB_Voltage = []
+    Event_StDeV_USB_Voltage = []

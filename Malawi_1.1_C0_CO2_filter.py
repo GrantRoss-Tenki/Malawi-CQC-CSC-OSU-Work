@@ -337,18 +337,18 @@ ax22.plot(Cook_Hap_PM,  color = 'm',label='Cook HAPEx') #label='Cook HAPEx',
 # First USe Local Max
 
 
-print('CO min count', Local_minima_Cooking)
+#print('CO min count', Local_minima_Cooking)
 # For maximum, I am going to use the total maximum for the test and coking event
 Co_MIN_tv, Co_MAX_tv ,Co_MIN_Count, Co_MAX_Count = Functions_malawi.Local_Max_min(Gas_CO[Gas_CE:], Gas_CE,0)
-print('CO from local min max', Co_MIN_tv, Co_MAX_tv ,Co_MIN_Count, Co_MAX_Count)
+#print('CO from local min max', Co_MIN_tv, Co_MAX_tv ,Co_MIN_Count, Co_MAX_Count)
 
-Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Gas_CO, 25, Co_MIN_Count,Gas_CO[Gas_CE],Co_MAX_Count ,10)
-print(Steady_start_Time_value, type(Gas_CO), type(Gas_CO[Gas_CE:]))
+#Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Gas_CO, 25, Co_MIN_Count,Gas_CO[Gas_CE],Co_MAX_Count ,10)
+#print(Steady_start_Time_value, type(Gas_CO), type(Gas_CO[Gas_CE:]))
 
-Hap_MIN_tv, Hap_MAX_tv ,Hap_MIN_Count, Hap_MAX_Count = Functions_malawi.Local_Max_min(Inline_Hap_PM[Gas_CE:], Gas_CE,0)
-HAPEX_Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Inline_Hap_PM, 25, Hap_MIN_Count,Inline_Hap_PM[Gas_CE],Hap_MAX_Count ,10)
-print(HAPEX_Steady_start_Time_value)
-ax1.plot(Steady_start_Time_value, Gas_CO[Steady_start_Time_value], label='Local Max ',color = 'k', marker=".", markersize=30)
+#Hap_MIN_tv, Hap_MAX_tv ,Hap_MIN_Count, Hap_MAX_Count = Functions_malawi.Local_Max_min(Inline_Hap_PM[Gas_CE:], Gas_CE,0)
+#HAPEX_Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Inline_Hap_PM, 25, Hap_MIN_Count,Inline_Hap_PM[Gas_CE],Hap_MAX_Count ,10)
+#print(HAPEX_Steady_start_Time_value)
+#ax1.plot(Steady_start_Time_value, Gas_CO[Steady_start_Time_value], label='Local Max ',color = 'k', marker=".", markersize=30)
 plt.legend()
 plt.show()
 

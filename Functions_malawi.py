@@ -389,7 +389,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
         elif (len(Combined_event_Hapex)-1- tv_rev) == Min_reverse[Min_reverse_count]:
             for tv_max, rev_max in enumerate(Max_reverse):
                 if (Min_reverse[Min_reverse_count] - window) <= rev_max <= (Min_reverse[Min_reverse_count] + window):
-                    print('is this the good max', Combined_event_Hapex[rev_max], rev_max, Combined_event_Hapex[Min_reverse[Min_reverse_count-1]], Min_reverse[Min_reverse_count-1])
+                    #print('is this the good max', Combined_event_Hapex[rev_max], rev_max, Combined_event_Hapex[Min_reverse[Min_reverse_count-1]], Min_reverse[Min_reverse_count-1])
                     if rev_max > Min_reverse[Min_reverse_count] and Min_reverse_count > len(Min_reverse):
                         Final_last_slope = [t for t in Gradient_Hapex[Min_reverse[Min_reverse_count]:]]
                         min_last_slope = min(Final_last_slope)
@@ -404,7 +404,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
                             
                         else:
                             continue
-                        print('------------- it made it here-------------', (len(Combined_event_Hapex) - tv_rev), one, two)
+                        #print('------------- it made it here-------------', (len(Combined_event_Hapex) - tv_rev), one, two)
                         Steady_window_gradient = np.array([a for a in Gradient_Hapex[one:two]])
                         #mini_window_gradient_array = [(min(Steady_window_gradient))]
                         mini_window_gradient_array, idx = min([(abs(val), idx) for (idx, val) in enumerate(Steady_window_gradient)])
@@ -430,7 +430,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
     
     #print('here are the steady states', how_many_steady_state,min_reverse_array_count,max_reverse_array_count,clossest_min_median[0], clossest_max_median[0])
     last_filter = []
-    print('From Function, where is the min_slope: ', where_is_the_MinSlope)
+    #print('From Function, where is the min_slope: ', where_is_the_MinSlope)
     if len(how_many_steady_state) > 1:
         for nec in how_many_steady_state:
             filtering = 0
@@ -441,7 +441,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
                     break
             if filtering == 0:
                 last_filter.append(nec)
-        print('last_filter ',list(set(last_filter)),how_many_steady_state  )
+        #print('last_filter ',list(set(last_filter)),how_many_steady_state  )
         if len(last_filter) > 1:
             where_is_the_MinSlope = min((set(last_filter)))
         else:

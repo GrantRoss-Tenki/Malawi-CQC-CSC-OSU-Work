@@ -348,7 +348,7 @@ def SteadyState_Finder(Combined_event_Hapex, window, Local_min_array,startup, Lo
     min_array_scale = [] 
     for h in Local_min_array:
         min_array_scale.append(h-(start - 10))
-    print('From Function, min array : ', min_array_scale)
+    #print('From Function, min array : ', min_array_scale)
     Max_reverse = list(reversed(Loca_Max_array))
     Min_reverse = list(reversed(Local_min_array))
     Minn_reverse_first = min_array_scale[-1]

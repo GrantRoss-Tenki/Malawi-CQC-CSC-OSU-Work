@@ -117,7 +117,7 @@ def FireFinder(temp, Usage, cooking_threshold, length_decrease, start_threshold,
 # Fuel Algorithm 
 def FUEL_REMOVAL(Fuel_KG_nf, Thresold, min_average_spread,No_fuel, running_average):
         
-        if No_fuel != 1:
+        if No_fuel == True:
 
             count = 0
             n = 0

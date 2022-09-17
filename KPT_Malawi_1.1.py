@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import csv
 import glob
+import statistics as stat
 from datetime import datetime
 from csv import reader
 import matplotlib.pyplot as plt
@@ -16,6 +17,8 @@ import itertools
 Household_Number = 'HH4' #input("HH1 or HH2... etc:  ")
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
+Start_Up_Spread = 10*15
+Cooldown_Spread = 30*15
 
 if Source == 'laptop':
     USB_D = 'D'
@@ -339,30 +342,34 @@ Event_Average_USB_Voltage = []
 Event_Median_USB_Voltage = []
 Event_StDeV_USB_Voltage = []
 
-# for TVE, Metric in enumerate(Event_counter):
-#     if Fuel_1_place == True
-#         fuel_bounds = list(set(KG_burned_1[st:Fire_end[tv]]))
-#         Event_KG_Removed_Fuel_1.append()
-#     if Fuel_2_place == True
-#         Event_KG_Removed_Fuel_2.append()
-#
-#     Event_Average_Kitchen_Compliance = []
-#     Event_Median_Kitchen_Compliance = []
-#     Event_StDeV_Kitchen_Compliance = []
-#     Event_Average_Kitchen_PM = []
-#     Event_Median_Kitchen_PM = []
-#     Event_StDeV_Kitchen_PM = []
-#
-#     Event_Average_Cook_Compliance = []
-#     Event_Median_Cook_Compliance = []
-#     Event_StDeV_Cook_Compliance = []
-#     Event_Average_Cook_PM = []
-#     Event_Median_Cook_PM = []
-#     Event_StDeV_Cook_PM = []
-#
-#     Event_Average_USB_Current = []
-#     Event_Median_USB_Current = []
-#     Event_StDeV_USB_Current = []
-#     Event_Average_USB_Voltage = []
-#     Event_Median_USB_Voltage = []
-#     Event_StDeV_USB_Voltage = []
+for Event in Event_counter:
+    if Fuel_1_place == True:
+        fuel_bounds = list(set(KG_burned_1[(Combined_Cooking_start[Event*15]):(Combined_Cooking_end[Event])]))
+        Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds))*1000)/1000))
+    if Fuel_2_place == True:
+        fuel_bounds = list(set(KG_burned_2[(Combined_Cooking_start[Event*15]):(Combined_Cooking_end[Event])]))
+        Event_KG_Removed_Fuel_2.append((int((sum(fuel_bounds)) * 1000) / 1000))
+
+    Event_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
+    Event_Median_Kitchen_Compliance.append((int((np.median([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
+    Event_StDeV_Kitchen_Compliance.append((int((stat.stdev(Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])])) * 100)) / 100)
+
+    Event_Average_Kitchen_PM.append((int((np.average([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
+    Event_Median_Kitchen_PM.append((int((np.median([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
+    Event_StDeV_Kitchen_PM.append((int((stat.stdev(Kitchen_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])])) * 100)) / 100)
+
+    Event_Average_Cook_Compliance.append((int((np.average([a for a in CooK_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
+    Event_Median_Cook_Compliance.append((int((np.median([a for a in CooK_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
+    Event_StDeV_Cook_Compliance.append((int((stat.stdev(CooK_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])])) * 100)) / 100)
+    Event_Average_Cook_PM.append((int((np.average([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
+    Event_Median_Cook_PM.append((int((np.median([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
+    Event_StDeV_Cook_PM.append((int((stat.stdev(Cook_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])])) * 100)) / 100)
+
+    # Event_Average_USB_Current = []
+    # Event_Median_USB_Current = []
+    # Event_StDeV_USB_Current = []
+    # Event_Average_USB_Voltage = []
+    # Event_Median_USB_Voltage = []
+    # Event_StDeV_USB_Voltage = []
+
+# Start up 10 minutes before hand

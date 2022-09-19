@@ -467,4 +467,6 @@ for Event in Event_counter:
 
 
 # Next- Day Breakdown for Each metric
-
+print('length of a day and minute log', Minute_log_length/(60*24), int(Minute_log_length/(60*24)))
+#if len(Minute_log_length) < 60*24
+#Minute_day = len(Minute_log_length)

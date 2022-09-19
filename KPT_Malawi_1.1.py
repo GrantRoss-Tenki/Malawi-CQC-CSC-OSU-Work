@@ -250,10 +250,12 @@ for file in l_files:
                                 USB_time = WHOLE_CSV.iloc[:,Column]
                                 USB_time_place = True
                             elif Metric[-6:-1] == Cook_beacon:
+                                print('-----Cook Beacon ----', Cook_beacon)
                                 Cook_Beacon_move = WHOLE_CSV.iloc[:,Column]
                                 Cook_Beacon_accel = WHOLE_CSV.iloc[:,Column+1]
                                 Cook_Beacon = True 
                             elif Metric[-6:-1] == Child_beacon:
+                                print('-----Child Beacon ----', Child_beacon)
                                 Child_Beacon_move = WHOLE_CSV.iloc[:,Column]
                                 Child_Beacon_accel = WHOLE_CSV.iloc[:,Column+1]
                                 Child_Beacon = True 
@@ -321,27 +323,23 @@ Event_counter = np.arange(0,Combined_events, 1)
 Event_KG_Removed_Fuel_1 = []
 Event_KG_Removed_Fuel_2 =[]
 
-Event_Average_Kitchen_Compliance = []
-Event_Median_Kitchen_Compliance = []
-Event_StDeV_Kitchen_Compliance = []
-Event_Average_Kitchen_PM = []
-Event_Median_Kitchen_PM = []
-Event_StDeV_Kitchen_PM = []
+Event_Average_Kitchen_Compliance = []; Event_Average_Cook_Compliance = []
+Event_Median_Kitchen_Compliance = []; Event_Median_Cook_Compliance = []
+Event_StDeV_Kitchen_Compliance = []; Event_StDeV_Cook_Compliance = []
+Event_Average_Kitchen_PM = []; Event_Average_Cook_PM = []
+Event_Median_Kitchen_PM = []; Event_Median_Cook_PM = []
+Event_StDeV_Kitchen_PM = []; Event_StDeV_Cook_PM = []
 Event_Length = []
 Event_start_time = []
-Event_Average_Cook_Compliance = []
-Event_Median_Cook_Compliance = []
-Event_StDeV_Cook_Compliance = []
-Event_Average_Cook_PM = []
-Event_Median_Cook_PM = []
-Event_StDeV_Cook_PM = []
 
 Event_Average_USB_Current = []
 Event_Median_USB_Current = []
 Event_StDeV_USB_Current = []
+Event_RAW_USB_Current = []
 Event_Average_USB_Voltage = []
 Event_Median_USB_Voltage = []
 Event_StDeV_USB_Voltage = []
+Event_RAW_USB_Voltage = []
 
 for Event in Event_counter:
     #fuel is looking start up spread
@@ -371,32 +369,28 @@ for Event in Event_counter:
     Event_Average_USB_Current.append(np.average(list((USB_Current[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)]))))
     Event_Median_USB_Current.append(np.median(list((USB_Current[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)]))))
     Event_StDeV_USB_Current.append((int((stat.stdev(USB_Current[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)])) * 100)) / 100)
+    Event_RAW_USB_Current.append(USB_Current[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)])
     Event_Average_USB_Voltage.append(np.average(list(set(USB_Voltage[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)]))))
     Event_Median_USB_Voltage.append(np.median(list(set(USB_Voltage[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)]))))
     Event_StDeV_USB_Voltage.append((int((stat.stdev(USB_Voltage[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)])) * 100)) / 100)
-
+    Event_RAW_USB_Voltage.append(USB_Voltage[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)])
 # Event Start
 
-Startup_Average_Kitchen_Compliance = []
-Startup_Median_Kitchen_Compliance = []
-Startup_StDeV_Kitchen_Compliance = []
-Startup_Average_Kitchen_PM = []
-Startup_Median_Kitchen_PM = []
-Startup_StDeV_Kitchen_PM = []
-
-Startup_Average_Cook_Compliance = []
-Startup_Median_Cook_Compliance = []
-Startup_StDeV_Cook_Compliance = []
-Startup_Average_Cook_PM = []
-Startup_Median_Cook_PM = []
-Startup_StDeV_Cook_PM = []
+Startup_Average_Kitchen_Compliance = []; Startup_Average_Cook_Compliance = []
+Startup_Median_Kitchen_Compliance = []; Startup_Median_Cook_Compliance = []
+Startup_StDeV_Kitchen_Compliance = []; Startup_StDeV_Cook_Compliance = []
+Startup_Average_Kitchen_PM = []; Startup_Average_Cook_PM = []
+Startup_Median_Kitchen_PM = []; Startup_Median_Cook_PM = []
+Startup_StDeV_Kitchen_PM = []; Startup_StDeV_Cook_PM = []
 
 Startup_Average_USB_Current = []
 Startup_Median_USB_Current = []
 Startup_StDeV_USB_Current = []
+Startup_RAW_USB_Current = []
 Startup_Average_USB_Voltage = []
 Startup_Median_USB_Voltage = []
 Startup_StDeV_USB_Voltage = []
+Startup_RAW_USB_Voltage = []
 
 for Event in Event_counter:
     Startup_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
@@ -417,32 +411,29 @@ for Event in Event_counter:
     Startup_Average_USB_Current.append(np.average(list((USB_Current[((Combined_Cooking_start[Event]*15)-(Start_Up_Spread*15)):((Combined_Cooking_start[Event]*15)+1)]))))
     Startup_Median_USB_Current.append(np.median(list(USB_Current[((Combined_Cooking_start[Event]*15)-(Start_Up_Spread*15)):((Combined_Cooking_start[Event]*15)+1)])))
     Startup_StDeV_USB_Current.append((int((stat.stdev(USB_Current[((Combined_Cooking_start[Event]*15)-(Start_Up_Spread*15)):((Combined_Cooking_start[Event]*15)+1)])) * 100)) / 100)
+    Startup_RAW_USB_Current.append(USB_Current[((Combined_Cooking_start[Event]*15)-(Start_Up_Spread*15)):((Combined_Cooking_start[Event]*15)+1)])
     Startup_Average_USB_Voltage.append(np.average(list(set(USB_Voltage[((Combined_Cooking_start[Event]*15)-(Start_Up_Spread*15)):((Combined_Cooking_start[Event]*15)+1)]))))
     Startup_Median_USB_Voltage.append(np.median(list(set(USB_Voltage[((Combined_Cooking_start[Event]*15)-(Start_Up_Spread*15)):((Combined_Cooking_start[Event]*15)+1)]))))
     Startup_StDeV_USB_Voltage.append((int((stat.stdev(USB_Voltage[((Combined_Cooking_start[Event]*15)-(Start_Up_Spread*15)):((Combined_Cooking_start[Event]*15)+1)])) * 100)) / 100)
+    Startup_RAW_USB_Voltage.append(USB_Voltage[((Combined_Cooking_start[Event]*15)-(Start_Up_Spread*15)):((Combined_Cooking_start[Event]*15)+1)])
 
 # Cooldown
 
-Cooldown_Average_Kitchen_Compliance = []
-Cooldown_Median_Kitchen_Compliance = []
-Cooldown_StDeV_Kitchen_Compliance = []
-Cooldown_Average_Kitchen_PM = []
-Cooldown_Median_Kitchen_PM = []
-Cooldown_StDeV_Kitchen_PM = []
-
-Cooldown_Average_Cook_Compliance = []
-Cooldown_Median_Cook_Compliance = []
-Cooldown_StDeV_Cook_Compliance = []
-Cooldown_Average_Cook_PM = []
-Cooldown_Median_Cook_PM = []
-Cooldown_StDeV_Cook_PM = []
+Cooldown_Average_Kitchen_Compliance = []; Cooldown_Average_Cook_Compliance = []
+Cooldown_Median_Kitchen_Compliance = []; Cooldown_Median_Cook_Compliance = []
+Cooldown_StDeV_Kitchen_Compliance = []; Cooldown_StDeV_Cook_Compliance = []
+Cooldown_Average_Kitchen_PM = []; Cooldown_Average_Cook_PM = []
+Cooldown_Median_Kitchen_PM = []; Cooldown_Median_Cook_PM = []
+Cooldown_StDeV_Kitchen_PM = []; Cooldown_StDeV_Cook_PM = []
 
 Cooldown_Average_USB_Current = []
 Cooldown_Median_USB_Current = []
 Cooldown_StDeV_USB_Current = []
+Cooldown_RAW_USB_Current = []
 Cooldown_Average_USB_Voltage = []
 Cooldown_Median_USB_Voltage = []
 Cooldown_StDeV_USB_Voltage = []
+Cooldown_RAW_USB_Voltage = []
 
 for Event in Event_counter:
     Cooldown_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)
@@ -463,10 +454,11 @@ for Event in Event_counter:
     Cooldown_Average_USB_Current.append(np.average(list((USB_Current[(Combined_Cooking_end[Event]*15):((Combined_Cooking_end[Event]*15)+(Cooldown_Spread*15))]))))
     Cooldown_Median_USB_Current.append(np.median(list(USB_Current[(Combined_Cooking_end[Event]*15):((Combined_Cooking_end[Event]*15)+(Cooldown_Spread*15))])))
     Cooldown_StDeV_USB_Current.append((int((stat.stdev(USB_Current[(Combined_Cooking_end[Event]*15):((Combined_Cooking_end[Event]*15)+(Cooldown_Spread*15))])) * 100)) / 100)
+    Cooldown_RAW_USB_Current.append(USB_Current[(Combined_Cooking_end[Event]*15):((Combined_Cooking_end[Event]*15)+(Cooldown_Spread*15))])
     Cooldown_Average_USB_Voltage.append(np.average(list(set(USB_Voltage[(Combined_Cooking_end[Event]*15):((Combined_Cooking_end[Event]*15)+(Cooldown_Spread*15))]))))
     Cooldown_Median_USB_Voltage.append(np.median(list(set(USB_Voltage[(Combined_Cooking_end[Event]*15):((Combined_Cooking_end[Event]*15)+(Cooldown_Spread*15))]))))
     Cooldown_StDeV_USB_Voltage.append((int((stat.stdev(USB_Voltage[(Combined_Cooking_end[Event]*15):((Combined_Cooking_end[Event]*15)+(Cooldown_Spread*15))])) * 100)) / 100)
-
+    Cooldown_RAW_USB_Voltage.append(USB_Voltage[(Combined_Cooking_end[Event]*15):((Combined_Cooking_end[Event]*15)+(Cooldown_Spread*15))])
 
 # Next- Day Breakdown for Each metric
 
@@ -492,9 +484,19 @@ Sum_Fuel_2_removed_per_day_per_event = []; Fuel_2_Removed_per_day = []
 # Hapex Compliance
 Average_Kitchen_Comp_per_day_per_event = []; Average_Kitchen_Comp_per_day = []
 Average_Cook_Comp_per_day_per_event = []; Average_Cook_Comp_per_day = []
+Average_Kitchen_Comp_per_day_per_startup = []; Average_Cook_Comp_per_day_per_startup = []
+Average_Kitchen_Comp_per_day_per_cooldown = []; Average_Cook_Comp_per_day_per_cooldown = []
 # Hapex PM
 Average_Kitchen_PM_per_day_per_event = []; Median_Kitchen_PM_per_day_per_event = []; Average_Kitchen_PM_per_day = []
-Average_Cook_PM_per_day_per_event = []; Median_Cook_PM_per_day_per_event = []; Average_PM_Comp_per_day = []
+Average_Cook_PM_per_day_per_event = []; Median_Cook_PM_per_day_per_event = []; Average_Cook_PM_per_day = []
+Average_Kitchen_PM_per_day_per_startup = []; Average_Cook_PM_per_day_per_startup = []
+Average_Kitchen_PM_per_day_per_cooldown = []; Average_Cook_PM_per_day_per_cooldown = []
+#USB Metrics
+Average_USB_Current_per_Event = []; Average_USB_Voltage_per_Event = []
+Average_USB_Current_per_Startup = []; Average_USB_Voltage_per_Startup = []
+Average_USB_Current_per_Cooldown = []; Average_USB_Voltage_per_cooldown = []
+
+
 
 for Day in Day_counter:
     Event_per_Day_count = 0
@@ -502,6 +504,14 @@ for Day in Day_counter:
     Fuel_1_Event = []; Fuel_2_Event = []
     Kit_Comp_event =[]; Cook_Comp_event = []
     Kit_PM_event  = []; Cook_PM_event = []
+    Kit_Comp_startup =[]; Cook_Comp_startup = []
+    Kit_PM_startup  = []; Cook_PM_startup = []
+    Kit_Comp_Cooldown =[]; Cook_Comp_Cooldown = []
+    Kit_PM_Cooldown  = []; Cook_PM_Cooldown = []
+    USB_Current_Event = []; USB_Voltage_Event = []
+    USB_Current_Startup = []; USB_Voltage_Startup = []
+    USB_Current_Cooldown = []; USB_Voltage_Cooldown = []
+
     print('DAyyyy', Day)
     for E in Event_counter:
         if (Combined_Cooking_end[E] < Minute_Day_End_TV[Day-1]) and (Combined_Cooking_end[E] >  Minute_Day_Start_TV[Day-1]):
@@ -512,6 +522,18 @@ for Day in Day_counter:
             Kit_Comp_event.extend(Kitchen_Hapex_Comp[Combined_Cooking_start[E]:Combined_Cooking_end[E]]); Cook_Comp_event.extend(CooK_Hapex_Comp[Combined_Cooking_start[E]:Combined_Cooking_end[E]])
             Kit_PM_event.extend(Kitchen_Hapex_PM[Combined_Cooking_start[E]:Combined_Cooking_end[E]]); Cook_PM_event.extend(Cook_Hapex_PM[Combined_Cooking_start[E]:Combined_Cooking_end[E]])
 
+            Kit_Comp_startup.extend(int(((Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]) * 100)) / 100)
+            Cook_Comp_startup.extend(int(((CooK_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]) * 100)) / 100)
+            Kit_PM_startup.extend(int(((Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]) * 100)) / 100)
+            Cook_PM_startup.extend(int(((Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]) * 100)) / 100)
+
+            Kit_Comp_Cooldown.extend(int(((Kitchen_Hapex_Comp[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])*100))/100)
+            Cook_Comp_Cooldown.extend(int(((CooK_Hapex_Comp[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])*100))/100)
+            Kit_PM_Cooldown.extend(int(((Kitchen_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])*100))/100)
+            Cook_PM_Cooldown.extend(int(((Cook_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])*100))/100)
+
+
+
     Event_per_Day.append(Event_per_Day_count)
     Average_length_of_CE.append(np.average(EVENT_LENGTH_count))
     Sum_Fuel_1_removed_per_day_per_event.append(sum(Fuel_1_Event)); Sum_Fuel_2_removed_per_day_per_event.append(sum(Fuel_2_Event))
@@ -519,16 +541,25 @@ for Day in Day_counter:
     Average_Kitchen_Comp_per_day_per_event.append(np.average(Kit_Comp_event)); Average_Cook_Comp_per_day_per_event.append(Cook_Comp_event)
     Average_Kitchen_Comp_per_day.append(np.average(Kitchen_Hapex_Comp[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
     Average_Cook_Comp_per_day.append(np.average(CooK_Hapex_Comp[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
-    #Hapex Kitcchen and Cook PM
+    #Hapex Kitchen and Cook PM
     Average_Kitchen_PM_per_day_per_event.append(np.average(Kit_PM_event)) ; Median_Kitchen_PM_per_day_per_event.append(np.median(Kit_PM_event))
     Average_Kitchen_PM_per_day.append(np.average(Kitchen_Hapex_PM[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
-
     Average_Cook_PM_per_day_per_event.append(np.average(Cook_PM_event)); Median_Cook_PM_per_day_per_event.append(np.median(Cook_PM_event))
-    Average_PM_Comp_per_day.append(np.average(Cook_Hapex_PM[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
+    Average_Cook_PM_per_day.append(np.average(Cook_Hapex_PM[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
+    #Hapex Compliance for Start up and Cooldown
+    Average_Kitchen_Comp_per_day_per_startup.append(np.average(Kit_Comp_startup)) ; Average_Cook_Comp_per_day_per_startup.append(np.average(Cook_Comp_startup)) 
+    Average_Kitchen_Comp_per_day_per_cooldown.append(np.average(Kit_Comp_Cooldown)); Average_Cook_Comp_per_day_per_cooldown.append(np.average(Cook_Comp_Cooldown))
+    #Hapex PM for Startup and Cooldown
+    Average_Kitchen_PM_per_day_per_startup.append(np.average(Kit_PM_startup)) ; Average_Cook_PM_per_day_per_startup.append(np.average(Cook_PM_startup)) 
+    Average_Kitchen_PM_per_day_per_cooldown.append(np.average(Kit_PM_Cooldown)); Average_Cook_PM_per_day_per_cooldown.append(np.average(Cook_PM_Cooldown))
     #Fuel Metrics
     fuel_bounds_1 = list(set(KG_burned_1[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]])); Fuel_1_Removed_per_day.append((int((sum(fuel_bounds_1)) * 1000) / 1000))
     fuel_bounds_2 = list(set(KG_burned_2[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]])); Fuel_2_Removed_per_day.append((int((sum(fuel_bounds_2)) * 1000) / 1000))
+    #USB Power meter
     
 
 
 print('events per day---------',Event_per_Day )
+
+
+# Non-cooking time metrics

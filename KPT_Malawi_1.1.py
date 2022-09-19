@@ -327,7 +327,8 @@ Event_StDeV_Kitchen_Compliance = []
 Event_Average_Kitchen_PM = []
 Event_Median_Kitchen_PM = []
 Event_StDeV_Kitchen_PM = []
-
+Event_Length = []
+Event_start_time = []
 Event_Average_Cook_Compliance = []
 Event_Median_Cook_Compliance = []
 Event_StDeV_Cook_Compliance = []
@@ -354,11 +355,12 @@ for Event in Event_counter:
     Event_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
     Event_Median_Kitchen_Compliance.append((int((np.median([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
     Event_StDeV_Kitchen_Compliance.append((int((stat.stdev(Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])])) * 100)) / 100)
-
+    
     Event_Average_Kitchen_PM.append((int((np.average([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
     Event_Median_Kitchen_PM.append((int((np.median([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
     Event_StDeV_Kitchen_PM.append((int((stat.stdev(Kitchen_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])])) * 100)) / 100)
-
+    Event_Length.append((Combined_Cooking_end[Event])-(Combined_Cooking_start[Event]))
+    Event_start_time.append(First_time_Clean[(Combined_Cooking_start[Event])])
     Event_Average_Cook_Compliance.append((int((np.average([a for a in CooK_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
     Event_Median_Cook_Compliance.append((int((np.median([a for a in CooK_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
     Event_StDeV_Cook_Compliance.append((int((stat.stdev(CooK_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])])) * 100)) / 100)
@@ -483,17 +485,41 @@ print('are these the minute breakdowns', how_many_days, Minute_Day_Start_TV, Fas
 print('are these the minute breakdowns', Day_counter, Minute_Day_End_TV, Fast_log_rate_day_End_TV)
 print('envent numbers',Combined_Cooking_start, Combined_Cooking_end )
 Event_per_Day = []
-
-
+Average_length_of_CE = []
+# Fuel
+Sum_Fuel_1_removed_per_day_per_event = []; Fuel_1_Removed_per_day = []
+Sum_Fuel_2_removed_per_day_per_event = []; Fuel_2_Removed_per_day = []
+# Hapex Compliance
+Average_Kitchen_Comp_per_day_per_event = []; Average_Kitchen_Comp_per_day = []
+Average_Cook_Comp_per_day_per_event = []; Average_Cook_Comp_per_day = []
 
 
 for Day in Day_counter:
     Event_per_Day_count = 0
+    EVENT_LENGTH_count = []
+    Fuel_1_Event = []; Fuel_2_Event = []
+    Kit_Comp_event =[]; Cook_Comp_event = []
+
     print('DAyyyy', Day)
     for E in Event_counter:
         if (Combined_Cooking_end[E] < Minute_Day_End_TV[Day-1]) and (Combined_Cooking_end[E] >  Minute_Day_Start_TV[Day-1]):
             Event_per_Day_count = Event_per_Day_count +1
-    
+            EVENT_LENGTH_count.append(Combined_Cooking_end[E]-Combined_Cooking_start[E])
+
+            Fuel_1_Event.append(Event_KG_Removed_Fuel_1[E]); Fuel_2_Event.append(Event_KG_Removed_Fuel_2[E])
+            Kit_Comp_event.append();   Cook_Comp_event = []
+
     Event_per_Day.append(Event_per_Day_count)
+    Average_length_of_CE.append(np.average(EVENT_LENGTH_count))
+    Sum_Fuel_1_removed_per_day_per_event.append(sum(Fuel_1_Event))
+    Sum_Fuel_2_removed_per_day_per_event.append(sum(Fuel_2_Event))
+
+    fuel_bounds_1 = list(set(KG_burned_1[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
+    Fuel_1_Removed_per_day.append((int((sum(fuel_bounds_1)) * 1000) / 1000))
+
+    fuel_bounds_2 = list(set(KG_burned_2[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
+    Fuel_2_Removed_per_day.append((int((sum(fuel_bounds_2)) * 1000) / 1000))
+
+
 
 print('events per day---------',Event_per_Day )

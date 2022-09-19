@@ -348,7 +348,7 @@ for Event in Event_counter:
         Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds))*1000)/1000))
         print('kg fuel bounds 1', len(KG_burned_1), Combined_Cooking_end[-1], Combined_Cooking_end[Event]*15, KG_burned_1[Combined_Cooking_end[Event]*15])
     if Fuel_2_place == True:
-        fuel_bounds = list(set(KG_burned_2[(Combined_Cooking_start[Event*15]):(Combined_Cooking_end[Event*15])]))
+        fuel_bounds = list(set(KG_burned_2[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)]))
         Event_KG_Removed_Fuel_2.append((int((sum(fuel_bounds)) * 1000) / 1000))
 
     Event_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
@@ -366,11 +366,11 @@ for Event in Event_counter:
     Event_Median_Cook_PM.append((int((np.median([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
     Event_StDeV_Cook_PM.append((int((stat.stdev(Cook_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])])) * 100)) / 100)
 
-    Event_Average_USB_Current.append(np.average(list((USB_Current[(Combined_Cooking_start[Event*15]):(Combined_Cooking_end[Event*15])]))))
-    Event_Median_USB_Current.append(np.median(list((USB_Current[(Combined_Cooking_start[Event*15]):(Combined_Cooking_end[Event*15])]))))
-    Event_StDeV_USB_Current.append((int((stat.stdev(USB_Current[(Combined_Cooking_start[Event*15]):(Combined_Cooking_end[Event*15])])) * 100)) / 100)
-    Event_Average_USB_Voltage.append(np.average(list(set(USB_Voltage[(Combined_Cooking_start[Event*15]):(Combined_Cooking_end[Event*15])]))))
-    Event_Median_USB_Voltage.append(np.median(list(set(USB_Voltage[(Combined_Cooking_start[Event*15]):(Combined_Cooking_end[Event*15])]))))
-    Event_StDeV_USB_Voltage.append((int((stat.stdev(USB_Voltage[(Combined_Cooking_start[Event*15]):(Combined_Cooking_end[Event*15])])) * 100)) / 100)
+    Event_Average_USB_Current.append(np.average(list((USB_Current[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)]))))
+    Event_Median_USB_Current.append(np.median(list((USB_Current[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)]))))
+    Event_StDeV_USB_Current.append((int((stat.stdev(USB_Current[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)])) * 100)) / 100)
+    Event_Average_USB_Voltage.append(np.average(list(set(USB_Voltage[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)]))))
+    Event_Median_USB_Voltage.append(np.median(list(set(USB_Voltage[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)]))))
+    Event_StDeV_USB_Voltage.append((int((stat.stdev(USB_Voltage[(Combined_Cooking_start[Event]*15):(Combined_Cooking_end[Event]*15)])) * 100)) / 100)
 
 # Start up 10 minutes before hand

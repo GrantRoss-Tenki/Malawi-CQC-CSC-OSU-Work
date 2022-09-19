@@ -467,6 +467,33 @@ for Event in Event_counter:
 
 
 # Next- Day Breakdown for Each metric
-print('length of a day and minute log', Minute_log_length/(60*24), int(Minute_log_length/(60*24)))
-#if len(Minute_log_length) < 60*24
-#Minute_day = len(Minute_log_length)
+
+Munute_Day_breakdown = (int(Minute_log_length/(60*24))) * 60*24
+Fast_log_rate_day_breakdown = int(len(Fuel_time)/ (60*24*15)) * 60*24*15
+how_many_days = (int(Minute_log_length/(60*24)))
+Day_counter = np.arange(1,5,1)
+Minute_Day_Start_TV= np.arange(0,Munute_Day_breakdown, (60*24))
+Fast_log_rate_day_Start_TV = np.arange(0,Fast_log_rate_day_breakdown, (60*24*15))
+
+Minute_Day_End_TV= np.arange((60*24),Munute_Day_breakdown+1, (60*24))
+Fast_log_rate_day_End_TV = np.arange((60*24*15),Fast_log_rate_day_breakdown+1, (60*24*15))
+
+print('Day Breakdowns', Munute_Day_breakdown, Fast_log_rate_day_breakdown)
+print('are these the minute breakdowns', how_many_days, Minute_Day_Start_TV, Fast_log_rate_day_Start_TV)
+print('are these the minute breakdowns', Day_counter, Minute_Day_End_TV, Fast_log_rate_day_End_TV)
+print('envent numbers',Combined_Cooking_start, Combined_Cooking_end )
+Event_per_Day = []
+
+
+
+
+for Day in Day_counter:
+    Event_per_Day_count = 0
+    print('DAyyyy', Day)
+    for E in Event_counter:
+        if (Combined_Cooking_end[E] < Minute_Day_End_TV[Day-1]) and (Combined_Cooking_end[E] >  Minute_Day_Start_TV[Day-1]):
+            Event_per_Day_count = Event_per_Day_count +1
+    
+    Event_per_Day.append(Event_per_Day_count)
+
+print('events per day---------',Event_per_Day )

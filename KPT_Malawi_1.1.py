@@ -15,7 +15,7 @@ import itertools
 #HH1 has a file error
 
 Household_Number = 'HH4' #input("HH1 or HH2... etc:  ")
-Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
+Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
 Cooldown_Spread = 30
@@ -492,14 +492,16 @@ Sum_Fuel_2_removed_per_day_per_event = []; Fuel_2_Removed_per_day = []
 # Hapex Compliance
 Average_Kitchen_Comp_per_day_per_event = []; Average_Kitchen_Comp_per_day = []
 Average_Cook_Comp_per_day_per_event = []; Average_Cook_Comp_per_day = []
-
+# Hapex PM
+Average_Kitchen_PM_per_day_per_event = []; Median_Kitchen_PM_per_day_per_event = []; Average_Kitchen_PM_per_day = []
+Average_Cook_PM_per_day_per_event = []; Median_Cook_PM_per_day_per_event = []; Average_PM_Comp_per_day = []
 
 for Day in Day_counter:
     Event_per_Day_count = 0
     EVENT_LENGTH_count = []
     Fuel_1_Event = []; Fuel_2_Event = []
     Kit_Comp_event =[]; Cook_Comp_event = []
-
+    Kit_PM_event  = []; Cook_PM_event = []
     print('DAyyyy', Day)
     for E in Event_counter:
         if (Combined_Cooking_end[E] < Minute_Day_End_TV[Day-1]) and (Combined_Cooking_end[E] >  Minute_Day_Start_TV[Day-1]):
@@ -507,19 +509,26 @@ for Day in Day_counter:
             EVENT_LENGTH_count.append(Combined_Cooking_end[E]-Combined_Cooking_start[E])
 
             Fuel_1_Event.append(Event_KG_Removed_Fuel_1[E]); Fuel_2_Event.append(Event_KG_Removed_Fuel_2[E])
-            Kit_Comp_event.append();   Cook_Comp_event = []
+            Kit_Comp_event.extend(Kitchen_Hapex_Comp[Combined_Cooking_start[E]:Combined_Cooking_end[E]]); Cook_Comp_event.extend(CooK_Hapex_Comp[Combined_Cooking_start[E]:Combined_Cooking_end[E]])
+            Kit_PM_event.extend(Kitchen_Hapex_PM[Combined_Cooking_start[E]:Combined_Cooking_end[E]]); Cook_PM_event.extend(Cook_Hapex_PM[Combined_Cooking_start[E]:Combined_Cooking_end[E]])
 
     Event_per_Day.append(Event_per_Day_count)
     Average_length_of_CE.append(np.average(EVENT_LENGTH_count))
-    Sum_Fuel_1_removed_per_day_per_event.append(sum(Fuel_1_Event))
-    Sum_Fuel_2_removed_per_day_per_event.append(sum(Fuel_2_Event))
+    Sum_Fuel_1_removed_per_day_per_event.append(sum(Fuel_1_Event)); Sum_Fuel_2_removed_per_day_per_event.append(sum(Fuel_2_Event))
+    #Kitchen and Cook Complinace from Hapex
+    Average_Kitchen_Comp_per_day_per_event.append(np.average(Kit_Comp_event)); Average_Cook_Comp_per_day_per_event.append(Cook_Comp_event)
+    Average_Kitchen_Comp_per_day.append(np.average(Kitchen_Hapex_Comp[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
+    Average_Cook_Comp_per_day.append(np.average(CooK_Hapex_Comp[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
+    #Hapex Kitcchen and Cook PM
+    Average_Kitchen_PM_per_day_per_event.append(np.average(Kit_PM_event)) ; Median_Kitchen_PM_per_day_per_event.append(np.median(Kit_PM_event))
+    Average_Kitchen_PM_per_day.append(np.average(Kitchen_Hapex_PM[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
 
-    fuel_bounds_1 = list(set(KG_burned_1[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
-    Fuel_1_Removed_per_day.append((int((sum(fuel_bounds_1)) * 1000) / 1000))
-
-    fuel_bounds_2 = list(set(KG_burned_2[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
-    Fuel_2_Removed_per_day.append((int((sum(fuel_bounds_2)) * 1000) / 1000))
-
+    Average_Cook_PM_per_day_per_event.append(np.average(Cook_PM_event)); Median_Cook_PM_per_day_per_event.append(np.median(Cook_PM_event))
+    Average_PM_Comp_per_day.append(np.average(Cook_Hapex_PM[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
+    #Fuel Metrics
+    fuel_bounds_1 = list(set(KG_burned_1[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]])); Fuel_1_Removed_per_day.append((int((sum(fuel_bounds_1)) * 1000) / 1000))
+    fuel_bounds_2 = list(set(KG_burned_2[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]])); Fuel_2_Removed_per_day.append((int((sum(fuel_bounds_2)) * 1000) / 1000))
+    
 
 
 print('events per day---------',Event_per_Day )

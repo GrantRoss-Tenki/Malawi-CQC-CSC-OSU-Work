@@ -357,7 +357,7 @@ for Event in Event_counter:
         Event_KG_Combined_Fuel.append(Event_KG_Removed_Fuel_1 + Event_KG_Removed_Fuel_2)
     else:
         Event_KG_Combined_Fuel.append(-1)
-        
+
     if Kitchen_Hapex_place == True:
         Event_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
         Event_Average_Kitchen_PM.append((int((np.average([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
@@ -536,7 +536,7 @@ Average_length_of_CE = []
 # Fuel
 Sum_Fuel_1_removed_per_day_per_event = []; Fuel_1_Removed_per_day = []
 Sum_Fuel_2_removed_per_day_per_event = []; Fuel_2_Removed_per_day = []
-Sum_Combined_
+Sum_Combined_Fuel_removed_per_day_per_event = []; Combined_Fuel_Removed_per_day = []
 # Hapex Compliance
 Average_Kitchen_Comp_per_day_per_event = []; Average_Kitchen_Comp_per_day = []
 Average_Cook_Comp_per_day_per_event = []; Average_Cook_Comp_per_day = []
@@ -581,8 +581,11 @@ for Day in Day_counter:
         if (Combined_Cooking_end[E] < Minute_Day_End_TV[Day-1]) and (Combined_Cooking_end[E] >  Minute_Day_Start_TV[Day-1]):
             Event_per_Day_count = Event_per_Day_count +1
             EVENT_LENGTH_count.append(Combined_Cooking_end[E]-Combined_Cooking_start[E])
-
+            
             Fuel_1_Event.append(Event_KG_Removed_Fuel_1[E]); Fuel_2_Event.append(Event_KG_Removed_Fuel_2[E])
+            Sum_Combined_Fuel_removed_per_day_per_event = []; Combined_Fuel_Removed_per_day = []
+
+
             Kit_Comp_event.extend(Kitchen_Hapex_Comp[Combined_Cooking_start[E]:Combined_Cooking_end[E]]); Cook_Comp_event.extend(CooK_Hapex_Comp[Combined_Cooking_start[E]:Combined_Cooking_end[E]])
             Kit_PM_event.extend(Kitchen_Hapex_PM[Combined_Cooking_start[E]:Combined_Cooking_end[E]]); Cook_PM_event.extend(Cook_Hapex_PM[Combined_Cooking_start[E]:Combined_Cooking_end[E]])
 

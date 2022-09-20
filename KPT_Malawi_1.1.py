@@ -522,15 +522,19 @@ for Day in Day_counter:
             Kit_Comp_event.extend(Kitchen_Hapex_Comp[Combined_Cooking_start[E]:Combined_Cooking_end[E]]); Cook_Comp_event.extend(CooK_Hapex_Comp[Combined_Cooking_start[E]:Combined_Cooking_end[E]])
             Kit_PM_event.extend(Kitchen_Hapex_PM[Combined_Cooking_start[E]:Combined_Cooking_end[E]]); Cook_PM_event.extend(Cook_Hapex_PM[Combined_Cooking_start[E]:Combined_Cooking_end[E]])
 
-            Kit_Comp_startup.extend(int(((Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]) * 100)) / 100)
-            Cook_Comp_startup.extend(int(((CooK_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]) * 100)) / 100)
-            Kit_PM_startup.extend(int(((Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]) * 100)) / 100)
-            Cook_PM_startup.extend(int(((Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]) * 100)) / 100)
+            Kit_Comp_startup.extend(Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)])
+            Cook_Comp_startup.extend(CooK_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)])
+            Kit_PM_startup.extend(Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)])
+            Cook_PM_startup.extend(Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)])
 
-            Kit_Comp_Cooldown.extend(int(((Kitchen_Hapex_Comp[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])*100))/100)
-            Cook_Comp_Cooldown.extend(int(((CooK_Hapex_Comp[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])*100))/100)
-            Kit_PM_Cooldown.extend(int(((Kitchen_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])*100))/100)
-            Cook_PM_Cooldown.extend(int(((Cook_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])*100))/100)
+            Kit_Comp_Cooldown.extend(Kitchen_Hapex_Comp[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])
+            Cook_Comp_Cooldown.extend(CooK_Hapex_Comp[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])
+            Kit_PM_Cooldown.extend(Kitchen_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])
+            Cook_PM_Cooldown.extend(Cook_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])
+
+            USB_Current_Event.extend(Event_RAW_USB_Current); USB_Voltage_Event.extend(Event_RAW_USB_Voltage)
+            USB_Current_Startup.extend(Startup_RAW_USB_Current)  ; USB_Voltage_Startup.extend(Startup_RAW_USB_Voltage)
+            USB_Current_Cooldown.extend(Cooldown_RAW_USB_Current) ; USB_Voltage_Cooldown.extend(Cooldown_RAW_USB_Voltage)
 
 
 
@@ -556,7 +560,9 @@ for Day in Day_counter:
     fuel_bounds_1 = list(set(KG_burned_1[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]])); Fuel_1_Removed_per_day.append((int((sum(fuel_bounds_1)) * 1000) / 1000))
     fuel_bounds_2 = list(set(KG_burned_2[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]])); Fuel_2_Removed_per_day.append((int((sum(fuel_bounds_2)) * 1000) / 1000))
     #USB Power meter
-    
+    Average_USB_Current_per_Event.append(np.average(USB_Current_Event)) ; Average_USB_Voltage_per_Event.append(np.average(USB_Voltage_Event))
+    Average_USB_Current_per_Startup.append(np.average(USB_Current_Startup)) ; Average_USB_Voltage_per_Startup.append(np.average(USB_Voltage_Startup))
+    Average_USB_Current_per_Cooldown.append(np.average(USB_Current_Cooldown)) ; Average_USB_Voltage_per_cooldown.append(np.average(USB_Voltage_Cooldown))
 
 
 print('events per day---------',Event_per_Day )

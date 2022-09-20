@@ -322,6 +322,7 @@ Event_counter = np.arange(0,Combined_events, 1)
 #Event Metrics that I need to gather
 Event_KG_Removed_Fuel_1 = []
 Event_KG_Removed_Fuel_2 =[]
+Event_KG_Combined_Fuel = []
 
 Event_Average_Kitchen_Compliance = []; Event_Average_Cook_Compliance = []
 Event_Median_Kitchen_Compliance = []; Event_Median_Cook_Compliance = []
@@ -346,9 +347,16 @@ for Event in Event_counter:
     if Fuel_1_place == True:
         fuel_bounds = list(set(KG_burned_1[((Combined_Cooking_start[Event]-(Start_Up_Spread*15))*15):(Combined_Cooking_end[Event]*15)]))
         Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds))*1000)/1000))
+    else:
+        Event_KG_Removed_Fuel_1.append(-1)
     if Fuel_2_place == True:
         fuel_bounds = list(set(KG_burned_2[((Combined_Cooking_start[Event]-(Start_Up_Spread*15))*15):(Combined_Cooking_end[Event]*15)]))
         Event_KG_Removed_Fuel_2.append((int((sum(fuel_bounds)) * 1000) / 1000))
+    else:
+        Event_KG_Removed_Fuel_2.append(-1)
+
+    if Fuel_2_place == True and Fuel_1_place == True:
+        Event_KG_Combined_Fuel.append(Event_KG_Removed_Fuel_1 + Event_KG_Removed_Fuel_2)
 
     if Kitchen_Hapex_place == True:
         Event_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
@@ -656,7 +664,12 @@ for Day in Day_counter:
 print('events per day---------',Event_per_Day )
 
 #Exporting Metrics to CSV
+Dict_sensors = {'~Exact 1~': Exact_1, '~Exact 2~':Exact_2, '~Cook HAPEx~':Cook_Hapex, 
+'~Kitchen HAPEx~':Kitchen_Hapex, '~Fuel 1~':Fuel_1, '~Fuel 2~':Fuel_2,'~USB~':USB_name, '~Cook Beacon~':Cook_beacon,'~Child Beacon~':Child_beacon}
 
+
+Dict_Event = {'|Event|': Event_counter, '|Start Time|':Event_start_time, '|Length of Event|':Event_Length,'|Fuel 1 Removed|': Event_KG_Removed_Fuel_1, 
+'|Fuel 2 Removed|': Event_KG_Removed_Fuel_2, '|Combined Fuel Removed|':Event_KG_Combined_Fuel}
 
 # Path_Raw_Event = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact"
 # File_event_Raw_metrics = str(Path_Raw_Event) + "/Raw_E_metrics/"+Phase+"_HH_raw_Event_metrics_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"

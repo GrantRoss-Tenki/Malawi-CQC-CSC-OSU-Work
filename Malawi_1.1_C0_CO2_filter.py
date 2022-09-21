@@ -313,7 +313,7 @@ if Coking_Length != '-1':
         Y_Max_CO_Cooking = max(maxima_CO_Cooking)
         Where_Y_Max_CO_Cooking = np.where(maxima_CO_Cooking == (Y_Max_CO_Cooking))
         X_Max_CO_Cooking = Local_maxima_Cooking[int(Where_Y_Max_CO_Cooking[0])]
-        print('The toal max (minutes):   ',X_Max_CO_Cooking, X_Max_CO_Cooking/15 )
+        print('The toal max CO (minutes):   ', X_Max_CO_Cooking/15 )
 if Coking_Length != '-1' and Boil_time != '-1':
     if GasSense_Failure == False:
         Avg_CO_Boil_to_Cooking_end = np.average(co_filter[Gas_boil: Gas_CE+1])

@@ -98,7 +98,7 @@ for CE in np.arange(0, len(Fire_start),1):
             
 
     
-print('Adjusted start',Adjusted_Start,'Adjusted end',Adjusted_End,'Fire Finder_start',Fire_start,'Fire Finder_end',Fire_end,'Steady state', steady_state  )
+print('Adjusted start',Adjusted_Start[0:5],'Adjusted end',Adjusted_End[0:5],'Fire Finder_start',Fire_start[0:5],'Fire Finder_end',Fire_end[0:5],'Steady state', steady_state[0:5])
 Range = np.arange(0, len(Kitchen_Hapex), 1)
 #fig = go.Figure()
 #fig.add_trace(go.Scatter(x=Range, y=Kitchen_Hapex, mode='lines+markers'))

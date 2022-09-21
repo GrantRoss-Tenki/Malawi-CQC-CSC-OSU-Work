@@ -13,7 +13,7 @@ import Functions_malawi
 import itertools  
 
 Household_Number = 'HH3' #input("HH1 or HH2... etc:  ")
-Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
+Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
 Cooldown_Spread = 30
@@ -200,8 +200,7 @@ for file in l_files:
                     elif 'Timestamp' in row:
                         WHOLE_CSV = pd.read_csv(file_path, skiprows=(idx))
                         First_time = WHOLE_CSV.iloc[:,0]
-                        First_time_Clean = [item for item in First_time if not(pd.isnull(item)) == True]
-                        Minute_log_length = int(len(First_time_Clean))
+                        Minute_log_length = (len(First_time_Clean))
                         #print('Time',First_time[0:6])
                         for Column, Metric in enumerate(row):
                             if Metric[-6:-1] == Fuel_1 and Fuel_1_place == True and Metric[0:13] == 'Battery level' :
@@ -261,9 +260,14 @@ for file in l_files:
                                     
 # I have all of the values and organizaiton done.
 # if there is not a split of time values, Going to have to convert Hapex, Exact to minute sets
-if USB_time_place == False or Fuel_time_place == False:
-    print('workogn on this')
-
+if USB_time_place == False and Fuel_time_place == False:
+    #First_time_Clean = [item for item in First_time if not(pd.isnull(item)) == True]
+    USB_time = First_time_Clean
+    Fuel_time = First_time_Clean
+    step_coutner = np.arange(0, Minute_log_length, Log_rate_per_min)
+    print('step new array--------------', Exact_2_Temp[step_coutner[0]], Exact_2_Temp[step_coutner[1]],Exact_2_Temp[step_coutner[2]],)
+else:
+    First_time_Clean = [item for item in First_time if not(pd.isnull(item)) == True]
 # Next, the Exact and Hapex need to be extended to reach the 4 seconds for HH 4, 5, 6
 if (Household_Number == 'HH4') or (Household_Number == 'HH5') or (Household_Number == 'HH6'):
     if Exact_1_place == True:
@@ -781,8 +785,8 @@ Path_Raw_Events = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary.csv"
 # File_event_Raw_metrics = str(Path_Raw_Event) + "/Raw_E_metrics/"+Phase+"_HH_raw_Event_metrics_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
         #Df_sensor.to_csv(File_event_Raw_metrics)
         #Df_raw_event.to_csv(File_event_Raw_metrics,index=False,mode='a')
-DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
-DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
-DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
-DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
-DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')

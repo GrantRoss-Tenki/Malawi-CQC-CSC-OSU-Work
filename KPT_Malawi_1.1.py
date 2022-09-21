@@ -12,13 +12,12 @@ import csv
 import Functions_malawi
 import itertools  
 
-#HH1 has a file error
-
 Household_Number = 'HH3' #input("HH1 or HH2... etc:  ")
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
 Cooldown_Spread = 30
+
 
 if Source == 'laptop':
     USB_D = 'D'
@@ -261,6 +260,10 @@ for file in l_files:
                                 Child_Beacon_place = True 
                                     
 # I have all of the values and organizaiton done.
+# if there is not a split of time values, Going to have to convert Hapex, Exact to minute sets
+if USB_time_place == False or Fuel_time_place == False:
+    print('workogn on this')
+
 # Next, the Exact and Hapex need to be extended to reach the 4 seconds for HH 4, 5, 6
 if (Household_Number == 'HH4') or (Household_Number == 'HH5') or (Household_Number == 'HH6'):
     if Exact_1_place == True:
@@ -565,6 +568,7 @@ Average_Beacon_Child_Move_per_Day = []
 
 for Day in Day_counter:
     Event_per_Day_count = 0
+
     Day_date.append(First_time_Clean[Minute_Day_Start_TV[Day-1]])
     EVENT_LENGTH_count = []
     Fuel_1_Event = []; Fuel_2_Event = []

@@ -14,7 +14,7 @@ import itertools
 
 #HH1 has a file error
 
-Household_Number = 'HH5' #input("HH1 or HH2... etc:  ")
+Household_Number = 'HH3' #input("HH1 or HH2... etc:  ")
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
@@ -31,8 +31,8 @@ Fuel_time_place = False
 if Household_Number == 'HH1':
     Cook_beacon = '3409'
     Child_beacon = '3408'
-    Cook_Beacon = False
-    Child_Beacon = False
+    Cook_Beacon_place = False
+    Child_Beacon_place = False
     Hapex = True
     Exact = True
     Fuel = False
@@ -46,8 +46,8 @@ if Household_Number == 'HH1':
 if Household_Number == 'HH2' and KPT_NUM == '1' :
     Cook_beacon = '3404'
     Child_beacon = '3414'
-    Cook_Beacon = False
-    Child_Beacon = False
+    Cook_Beacon_place = False
+    Child_Beacon_place = False
     Hapex = True
     Exact = True
     Fuel = True
@@ -62,8 +62,8 @@ if Household_Number == 'HH2' and KPT_NUM == '1' :
 if Household_Number == 'HH2' and KPT_NUM == '2' :
     Cook_beacon = '3404'
     Child_beacon = '3414'
-    Cook_Beacon = False
-    Child_Beacon = False
+    Cook_Beacon_place = False
+    Child_Beacon_place = False
     Hapex = True
     Exact = True
     Fuel = True
@@ -77,8 +77,8 @@ if Household_Number == 'HH2' and KPT_NUM == '2' :
 if Household_Number == 'HH3'and KPT_NUM == '1' :
     Cook_beacon = '3405'
     Child_beacon = '3416'
-    Cook_Beacon = False
-    Child_Beacon = False
+    Cook_Beacon_place = False
+    Child_Beacon_place = False
     Hapex = True
     Exact = True
     Fuel = True
@@ -108,8 +108,8 @@ if Household_Number == 'HH4':
 if Household_Number == 'HH5':
     Cook_beacon = '3401'
     Child_beacon = '3393'
-    Cook_Beacon = False
-    Child_Beacon = False
+    Cook_Beacon_place = False
+    Child_Beacon_place = False
     Hapex = True
     Exact = True
     Fuel = False
@@ -123,8 +123,8 @@ if Household_Number == 'HH5':
 if Household_Number == 'HH6':
     Cook_beacon = '3407'
     Child_beacon = '3400'
-    Cook_Beacon = False
-    Child_Beacon = False
+    Cook_Beacon_place = False
+    Child_Beacon_place = False
     Hapex = True
     Exact = True
     Fuel = False
@@ -519,7 +519,7 @@ for Event in Event_counter:
     # Next- Day Breakdown for Each metric
 
 Munute_Day_breakdown = (int(Minute_log_length/(60*24))) * 60*24
-Fast_log_rate_day_breakdown = int(len(Fuel_time)/ (60*24*15)) * 60*24*15
+Fast_log_rate_day_breakdown = int(len(USB_time)/ (60*24*15)) * 60*24*15
 how_many_days = (int(Minute_log_length/(60*24)))
 Day_counter = np.arange(1,5,1)
 Minute_Day_Start_TV= np.arange(0,Munute_Day_breakdown, (60*24))
@@ -626,7 +626,7 @@ for Day in Day_counter:
 
             if Cook_Beacon_place == True:
                 Beacon_Cook_accel_Event.extend(Event_RAW_Beacon_Cook_accel[E])
-                Beacon_Cook_move_Event.extend(Event_RAW_Child_Beacon_Movement[E])
+                #Beacon_Cook_move_Event.extend(Event_RAW_Child_Beacon_Movement[E])
             else:
                 Beacon_Cook_accel_Event = [-1, -1]; Beacon_Cook_move_Event = [-1, -1]
             if Child_Beacon_place == True:

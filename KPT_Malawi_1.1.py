@@ -12,8 +12,8 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH4' #input("HH1 or HH2... etc:  ")
-Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
+Household_Number = 'HH2' #input("HH1 or HH2... etc:  ")
+Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
 Cooldown_Spread = 30
@@ -221,7 +221,6 @@ for file in l_files:
                             for step in step_coutner:
                                 Decrease_to_min_log_length.append(First_time_Clean[step])
 
-                        print('Why would data fram be so small ?',Household_Number,'____',Minute_log_length, type(WHOLE_CSV.iloc[:,0]), type(Decrease_to_min_log_length), len(WHOLE_CSV.iloc[:,0]))
                         for Column, Metric in enumerate(row):
                             if Metric[-6:-1] == Fuel_1 and Fuel_1_place == True and Metric[0:13] == 'Battery level' :
                                 Fuel_1_Battery = WHOLE_CSV.iloc[:,Column]
@@ -239,13 +238,11 @@ for file in l_files:
                                 if One_time == True:
                                     Kitchen_Hapex_Comp = []
                                     Kitchen_Hapex_PM = []
-                                    comp_space = WHOLE_CSV.iloc[:,Column]
-                                    PM_space = WHOLE_CSV.iloc[:,Column+1]
                                     for step in step_coutner:
-                                        Kitchen_Hapex_Comp.append(comp_space[step])
-                                        Kitchen_Hapex_PM.append(PM_space[step])
-                                    Kitchen_Hapex_Comp = pd.DataFrame(Kitchen_Hapex_Comp)
-                                    Kitchen_Hapex_PM = pd.DataFrame(Kitchen_Hapex_PM)
+                                        Kitchen_Hapex_Comp.append(WHOLE_CSV.iloc[step,Column])
+                                        Kitchen_Hapex_PM.append(WHOLE_CSV.iloc[step,Column+1])
+                                    Kitchen_Hapex_Comp = pd.Series(Kitchen_Hapex_Comp)
+                                    Kitchen_Hapex_PM = pd.Series(Kitchen_Hapex_PM)
                                 else:
                                     Kitchen_Hapex_Comp = WHOLE_CSV.iloc[0:Minute_log_length,Column]
                                     Kitchen_Hapex_PM = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
@@ -254,13 +251,11 @@ for file in l_files:
                                 if One_time == True:
                                     CooK_Hapex_Comp = []
                                     Cook_Hapex_PM = []
-                                    comp_space = WHOLE_CSV.iloc[:,Column]
-                                    PM_space = WHOLE_CSV.iloc[:,Column+1]
                                     for step in step_coutner:
-                                        CooK_Hapex_Comp.append(comp_space[step])
-                                        Cook_Hapex_PM.append(PM_space[step])
-                                    CooK_Hapex_Comp = pd.DataFrame(CooK_Hapex_Comp)
-                                    Cook_Hapex_PM = pd.DataFrame(Cook_Hapex_PM)
+                                        CooK_Hapex_Comp.append(WHOLE_CSV.iloc[step,Column])
+                                        Cook_Hapex_PM.append(WHOLE_CSV.iloc[step,Column+1])
+                                    CooK_Hapex_Comp = pd.Series(CooK_Hapex_Comp)
+                                    Cook_Hapex_PM = pd.Series(Cook_Hapex_PM)
                                 else:
                                     CooK_Hapex_Comp = WHOLE_CSV.iloc[0:Minute_log_length,Column]
                                     Cook_Hapex_PM = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
@@ -269,28 +264,24 @@ for file in l_files:
                                 if One_time == True:
                                     Exact_1_Usage = []
                                     Exact_1_Temp = []
-                                    Exact_use_space = WHOLE_CSV.iloc[:,Column]
-                                    Exact_temp_space = WHOLE_CSV.iloc[:,Column+1]
                                     for step in step_coutner:
-                                        Exact_1_Usage.append(Exact_use_space[step])
-                                        Exact_1_Temp.append(Exact_temp_space[step])
-                                    Exact_1_Usage = pd.DataFrame(Exact_1_Usage[:])
-                                    Exact_1_Temp = pd.DataFrame(Exact_1_Temp[:])
+                                        Exact_1_Usage.append(WHOLE_CSV.iloc[step,Column])
+                                        Exact_1_Temp.append(WHOLE_CSV.iloc[step,Column+1])
+                                    Exact_1_Usage = pd.Series(Exact_1_Usage[:])
+                                    Exact_1_Temp = pd.Series(Exact_1_Temp[:])
                                 else:    
                                     Exact_1_Usage = WHOLE_CSV.iloc[0:Minute_log_length,Column]
                                     Exact_1_Temp = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
-                                print('Why would data fram be so small ?',Household_Number,'____',Minute_log_length, type(WHOLE_CSV.iloc[:,0]), type(Decrease_to_min_log_length))
+                                #print('Why would data fram be so small ?',Household_Number,'____',Minute_log_length, type(WHOLE_CSV.iloc[:,0]), type(Decrease_to_min_log_length))
                             elif Metric[-6:-1] == Exact_2 and Exact_2_place == True and Metric[0:6] ==' Usage':
                                 if One_time == True:
                                     Exact_2_Usage = []
-                                    Exact_2_Temp = []
-                                    Exact_use_space = WHOLE_CSV.iloc[:,Column]
-                                    Exact_temp_space = WHOLE_CSV.iloc[:,Column+1]
+                                    Exact_2_Temp = [] 
                                     for step in step_coutner:
-                                        Exact_2_Usage.append(Exact_use_space[step])
-                                        Exact_2_Temp.append(Exact_temp_space[step])
-                                    Exact_2_Usage = pd.DataFrame(Exact_2_Usage)
-                                    Exact_2_Temp = pd.DataFrame(Exact_2_Temp)
+                                        Exact_2_Usage.append(WHOLE_CSV.iloc[step,Column])
+                                        Exact_2_Temp.append(WHOLE_CSV.iloc[step,Column+1])
+                                    Exact_2_Usage = pd.Series(Exact_2_Usage)
+                                    Exact_2_Temp = pd.Series(Exact_2_Temp)
                                 else:
                                     Exact_2_Usage = WHOLE_CSV.iloc[0:Minute_log_length,Column]
                                     Exact_2_Temp = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
@@ -325,7 +316,7 @@ for file in l_files:
 # I have all of the values and organizaiton done.
 # if there is not a split of time values, Going to have to convert Hapex, Exact to minute sets
 
-
+print('------Battery ', len(USB_Battery), '----- Exact 1---', len(Exact_1_Temp), len(Kitchen_Hapex_PM))
 
 
 if USB_time_place == False and Fuel_time_place == False:
@@ -340,11 +331,11 @@ if (Household_Number == 'HH4') or (Household_Number == 'HH5') or (Household_Numb
     if Exact_1_place == True:
         Exact_1_Usage_ext = Functions_malawi.Add_repeated_values(Exact_1_Usage, Log_rate_per_min, len(USB_time))
         Exact_1_Temp_ext = Functions_malawi.Add_repeated_values(Exact_1_Temp, Log_rate_per_min, len(USB_time))
-        EXACT_1_FF_usage, EXACT_1_fire_start, EXACT_1_fire_end = Functions_malawi.FireFinder(Exact_1_Temp, Exact_1_Usage, cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        EXACT_1_FF_usage, EXACT_1_fire_start, EXACT_1_fire_end = Functions_malawi.FireFinder(Exact_1_Temp, Exact_1_Usage, Exact_1_place, cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
     if Exact_2_place == True:
         Exact_2_Usage_ext = Functions_malawi.Add_repeated_values(Exact_2_Usage, Log_rate_per_min, len(USB_time))
         Exact_2_Temp_ext = Functions_malawi.Add_repeated_values(Exact_2_Temp, Log_rate_per_min, len(USB_time))
-        EXACT_2_FF_usage, EXACT_2_fire_start, EXACT_2_fire_end = Functions_malawi.FireFinder(Exact_2_Temp,Exact_2_Usage, cooking_threshold, length_decrease, start_threshold,end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+        EXACT_2_FF_usage, EXACT_2_fire_start, EXACT_2_fire_end = Functions_malawi.FireFinder(Exact_2_Temp,Exact_2_Usage, Exact_2_place, cooking_threshold, length_decrease, start_threshold,end_threshold, merge_CE_threshold, min_CE_length, window_slope)
     if Kitchen_Hapex_place == True:
         Kitchen_Hapex_Comp_ext = Functions_malawi.Add_repeated_values(Kitchen_Hapex_Comp, Log_rate_per_min, len(USB_time))
         Kitchen_Hapex_PM_ext = Functions_malawi.Add_repeated_values(Kitchen_Hapex_PM, Log_rate_per_min, len(USB_time))

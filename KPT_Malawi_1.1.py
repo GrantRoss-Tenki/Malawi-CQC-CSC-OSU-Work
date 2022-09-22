@@ -12,7 +12,7 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH3' #input("HH1 or HH2... etc:  ")
+Household_Number = 'HH4' #input("HH1 or HH2... etc:  ")
 Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
@@ -28,6 +28,7 @@ elif Source != 'laptop':
 USB_time_place = False
 Fuel_time_place = False
 if Household_Number == 'HH1':
+    One_time = True
     Cook_beacon = '3409'
     Child_beacon = '3408'
     Cook_Beacon_place = False
@@ -43,6 +44,7 @@ if Household_Number == 'HH1':
     Fuel_2_place = False
     USB_name_place = True 
 if Household_Number == 'HH2' and KPT_NUM == '1' :
+    One_time = True
     Cook_beacon = '3404'
     Child_beacon = '3414'
     Cook_Beacon_place = False
@@ -59,6 +61,7 @@ if Household_Number == 'HH2' and KPT_NUM == '1' :
     USB_name_place = True
     print('********NEED TO RUN TWICE FOR THE TWO DOWNLOADS, change -KPT_NUM to 2 *********************')
 if Household_Number == 'HH2' and KPT_NUM == '2' :
+    One_time = True
     Cook_beacon = '3404'
     Child_beacon = '3414'
     Cook_Beacon_place = False
@@ -74,6 +77,7 @@ if Household_Number == 'HH2' and KPT_NUM == '2' :
     Fuel_2_place = True
     USB_name_place = True
 if Household_Number == 'HH3'and KPT_NUM == '1' :
+    One_time = True
     Cook_beacon = '3405'
     Child_beacon = '3416'
     Cook_Beacon_place = False
@@ -90,6 +94,7 @@ if Household_Number == 'HH3'and KPT_NUM == '1' :
     USB_name_place = True
     print('********THERE IS A SECOND, BUT DOES NOT WORK AND IS SHORTER FOR THE SAME DAYS *********************')
 if Household_Number == 'HH4':
+    One_time = False
     Cook_beacon = '3415'
     Child_beacon = '3413'
     Cook_Beacon_place = False
@@ -105,6 +110,7 @@ if Household_Number == 'HH4':
     Fuel_2_place = True
     USB_name_place = True
 if Household_Number == 'HH5':
+    One_time = False
     Cook_beacon = '3401'
     Child_beacon = '3393'
     Cook_Beacon_place = False
@@ -120,6 +126,7 @@ if Household_Number == 'HH5':
     Fuel_2_place = False
     USB_name_place = True
 if Household_Number == 'HH6':
+    One_time = False
     Cook_beacon = '3407'
     Child_beacon = '3400'
     Cook_Beacon_place = False
@@ -198,10 +205,23 @@ for file in l_files:
                         print('USB Logger',USB_name, type(USB_name))
 
                     elif 'Timestamp' in row:
+                        print('here is the timestamp :', idx)
                         WHOLE_CSV = pd.read_csv(file_path, skiprows=(idx))
-                        First_time = WHOLE_CSV.iloc[:,0]
-                        Minute_log_length = (len(First_time_Clean))
-                        #print('Time',First_time[0:6])
+                        
+                        if One_time == False:
+                            First_time = WHOLE_CSV.iloc[:,0]
+                            First_time_Clean = [item for item in First_time if not(pd.isnull(item)) == True]
+                            Minute_log_length = (len(First_time_Clean))
+  
+                        elif One_time == True:
+                            First_time_Clean = WHOLE_CSV.iloc[:,0]
+                            step_coutner = np.arange(1, len(First_time_Clean), Log_rate_per_min)
+                            Minute_log_length = len(step_coutner)
+                            Decrease_to_min_log_length = []
+                            for step in step_coutner:
+                                Decrease_to_min_log_length.append(First_time_Clean[step])
+
+                        print('Why would data fram be so small ?',Household_Number,'____',Minute_log_length, type(WHOLE_CSV.iloc[:,0]), type(Decrease_to_min_log_length), len(WHOLE_CSV.iloc[:,0]))
                         for Column, Metric in enumerate(row):
                             if Metric[-6:-1] == Fuel_1 and Fuel_1_place == True and Metric[0:13] == 'Battery level' :
                                 Fuel_1_Battery = WHOLE_CSV.iloc[:,Column]
@@ -216,20 +236,64 @@ for file in l_files:
                                 KG_burned_2, KG_2_mean = Functions_malawi.FUEL_REMOVAL(Fuel_2_KG, 0.05, Log_rate_per_min, True, 10)
                                
                             elif (Metric[-6:-1] == Kitchen_Hapex) and (Kitchen_Hapex_place == True) and (Metric[0:18] =='kitchen Compliance'):
-                                Kitchen_Hapex_Comp = WHOLE_CSV.iloc[0:Minute_log_length,Column]
-                                Kitchen_Hapex_PM = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
+                                if One_time == True:
+                                    Kitchen_Hapex_Comp = []
+                                    Kitchen_Hapex_PM = []
+                                    comp_space = WHOLE_CSV.iloc[:,Column]
+                                    PM_space = WHOLE_CSV.iloc[:,Column+1]
+                                    for step in step_coutner:
+                                        Kitchen_Hapex_Comp.append(comp_space[step])
+                                        Kitchen_Hapex_PM.append(PM_space[step])
+                                    Kitchen_Hapex_Comp = pd.DataFrame(Kitchen_Hapex_Comp)
+                                    Kitchen_Hapex_PM = pd.DataFrame(Kitchen_Hapex_PM)
+                                else:
+                                    Kitchen_Hapex_Comp = WHOLE_CSV.iloc[0:Minute_log_length,Column]
+                                    Kitchen_Hapex_PM = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
 
                             elif Metric[-6:-1] == Cook_Hapex and Cook_Hapex_place == True and Metric[0:Log_rate_per_min] =='cook Compliance':
-                                CooK_Hapex_Comp = WHOLE_CSV.iloc[0:Minute_log_length,Column]
-                                Cook_Hapex_PM = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
+                                if One_time == True:
+                                    CooK_Hapex_Comp = []
+                                    Cook_Hapex_PM = []
+                                    comp_space = WHOLE_CSV.iloc[:,Column]
+                                    PM_space = WHOLE_CSV.iloc[:,Column+1]
+                                    for step in step_coutner:
+                                        CooK_Hapex_Comp.append(comp_space[step])
+                                        Cook_Hapex_PM.append(PM_space[step])
+                                    CooK_Hapex_Comp = pd.DataFrame(CooK_Hapex_Comp)
+                                    Cook_Hapex_PM = pd.DataFrame(Cook_Hapex_PM)
+                                else:
+                                    CooK_Hapex_Comp = WHOLE_CSV.iloc[0:Minute_log_length,Column]
+                                    Cook_Hapex_PM = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
                                 
                             elif Metric[-6:-1] == Exact_1 and Exact_1_place == True and Metric[0:6] ==' Usage':
-                                Exact_1_Usage = WHOLE_CSV.iloc[0:Minute_log_length,Column]
-                                Exact_1_Temp = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
-                                
+                                if One_time == True:
+                                    Exact_1_Usage = []
+                                    Exact_1_Temp = []
+                                    Exact_use_space = WHOLE_CSV.iloc[:,Column]
+                                    Exact_temp_space = WHOLE_CSV.iloc[:,Column+1]
+                                    for step in step_coutner:
+                                        Exact_1_Usage.append(Exact_use_space[step])
+                                        Exact_1_Temp.append(Exact_temp_space[step])
+                                    Exact_1_Usage = pd.DataFrame(Exact_1_Usage[:])
+                                    Exact_1_Temp = pd.DataFrame(Exact_1_Temp[:])
+                                else:    
+                                    Exact_1_Usage = WHOLE_CSV.iloc[0:Minute_log_length,Column]
+                                    Exact_1_Temp = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
+                                print('Why would data fram be so small ?',Household_Number,'____',Minute_log_length, type(WHOLE_CSV.iloc[:,0]), type(Decrease_to_min_log_length))
                             elif Metric[-6:-1] == Exact_2 and Exact_2_place == True and Metric[0:6] ==' Usage':
-                                Exact_2_Usage = WHOLE_CSV.iloc[0:Minute_log_length,Column]
-                                Exact_2_Temp = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
+                                if One_time == True:
+                                    Exact_2_Usage = []
+                                    Exact_2_Temp = []
+                                    Exact_use_space = WHOLE_CSV.iloc[:,Column]
+                                    Exact_temp_space = WHOLE_CSV.iloc[:,Column+1]
+                                    for step in step_coutner:
+                                        Exact_2_Usage.append(Exact_use_space[step])
+                                        Exact_2_Temp.append(Exact_temp_space[step])
+                                    Exact_2_Usage = pd.DataFrame(Exact_2_Usage)
+                                    Exact_2_Temp = pd.DataFrame(Exact_2_Temp)
+                                else:
+                                    Exact_2_Usage = WHOLE_CSV.iloc[0:Minute_log_length,Column]
+                                    Exact_2_Temp = WHOLE_CSV.iloc[0:Minute_log_length,Column+1]
                                 
 
                             elif Metric[-6:-1] == USB_name and USB_name_place == True and Metric[0:8]==' Battery' :
@@ -260,14 +324,17 @@ for file in l_files:
                                     
 # I have all of the values and organizaiton done.
 # if there is not a split of time values, Going to have to convert Hapex, Exact to minute sets
+
+
+
+
 if USB_time_place == False and Fuel_time_place == False:
-    #First_time_Clean = [item for item in First_time if not(pd.isnull(item)) == True]
     USB_time = First_time_Clean
     Fuel_time = First_time_Clean
-    step_coutner = np.arange(0, Minute_log_length, Log_rate_per_min)
-    print('step new array--------------', Exact_2_Temp[step_coutner[0]], Exact_2_Temp[step_coutner[1]],Exact_2_Temp[step_coutner[2]],)
-else:
-    First_time_Clean = [item for item in First_time if not(pd.isnull(item)) == True]
+    
+elif USB_time_place == False and Fuel_time_place == True:
+    USB_time = Fuel_time
+
 # Next, the Exact and Hapex need to be extended to reach the 4 seconds for HH 4, 5, 6
 if (Household_Number == 'HH4') or (Household_Number == 'HH5') or (Household_Number == 'HH6'):
     if Exact_1_place == True:
@@ -285,8 +352,10 @@ if (Household_Number == 'HH4') or (Household_Number == 'HH5') or (Household_Numb
         CooK_Hapex_Comp_ext = Functions_malawi.Add_repeated_values(CooK_Hapex_Comp, Log_rate_per_min, len(USB_time))
         Cook_Hapex_PM_ext = Functions_malawi.Add_repeated_values(Cook_Hapex_PM, Log_rate_per_min, len(USB_time))
 else:
-    EXACT_1_FF_usage, EXACT_1_fire_start, EXACT_1_fire_end = Functions_malawi.FireFinder(Exact_1_Temp, Exact_1_Usage, cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
-    EXACT_2_FF_usage, EXACT_2_fire_start, EXACT_2_fire_end = Functions_malawi.FireFinder(Exact_2_Temp, Exact_2_Usage, cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+    if Exact_1_place == True:
+        EXACT_1_FF_usage, EXACT_1_fire_start, EXACT_1_fire_end = Functions_malawi.FireFinder(Exact_1_Temp, Exact_1_Usage, Exact_1_place,cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+    if Exact_2_place == True:
+        EXACT_2_FF_usage, EXACT_2_fire_start, EXACT_2_fire_end = Functions_malawi.FireFinder(Exact_2_Temp, Exact_2_Usage, Exact_2_place,cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
 #Getting Metrics For the events and collection
 #Combining stove usage
 
@@ -317,9 +386,9 @@ if (Exact_1_place == False) and (Exact_2_place == True):
     Combined_Cooking_start.append(EXACT_2_fire_start)
     Combined_Cooking_end.append(EXACT_2_fire_end)
 
-print('# events - stove 1:',EXACT_1_fire_start)
-print('# events - stove 2:',EXACT_2_fire_start)
-print('# events - stove 1:',len(EXACT_1_fire_start),'# events - stove 2:',len(EXACT_2_fire_start),'# events - combined:',Combined_events, 'Combined Stove:',Combined_Cooking_start)
+# print('# events - stove 1:',EXACT_1_fire_start)
+# print('# events - stove 2:',EXACT_2_fire_start)
+# print('# events - stove 1:',len(EXACT_1_fire_start),'# events - stove 2:',len(EXACT_2_fire_start),'# events - combined:',Combined_events, 'Combined Stove:',Combined_Cooking_start)
 #finding new event start and stop
 
 
@@ -535,10 +604,10 @@ Fast_log_rate_day_Start_TV = np.arange(0,Fast_log_rate_day_breakdown, (60*24*Log
 Minute_Day_End_TV= np.arange((60*24),Munute_Day_breakdown+1, (60*24))
 Fast_log_rate_day_End_TV = np.arange((60*24*Log_rate_per_min),Fast_log_rate_day_breakdown+1, (60*24*Log_rate_per_min))
 
-print('Day Breakdowns', Munute_Day_breakdown, Fast_log_rate_day_breakdown)
-print('are these the minute breakdowns', how_many_days, Minute_Day_Start_TV, Fast_log_rate_day_Start_TV)
-print('are these the minute breakdowns', Day_counter, Minute_Day_End_TV, Fast_log_rate_day_End_TV)
-print('envent numbers',Combined_Cooking_start, Combined_Cooking_end )
+# print('Day Breakdowns', Munute_Day_breakdown, Fast_log_rate_day_breakdown)
+# print('are these the minute breakdowns', how_many_days, Minute_Day_Start_TV, Fast_log_rate_day_Start_TV)
+# print('are these the minute breakdowns', Day_counter, Minute_Day_End_TV, Fast_log_rate_day_End_TV)
+# print('envent numbers',Combined_Cooking_start, Combined_Cooking_end )
 Event_per_Day = []
 Average_length_of_CE = []
 Day_date = []
@@ -711,7 +780,7 @@ for Day in Day_counter:
     else:
         Average_Beacon_Cook_Accel_per_Day.append(-1)
 
-print('events per day---------',Event_per_Day )
+# print('events per day---------',Event_per_Day )
 
 #Exporting Metrics to CSV
 Dict_sensors = {'~Exact 1~': [Exact_1], '~Exact 2~':[Exact_2], '~Cook HAPEx~':[Cook_Hapex], 
@@ -776,8 +845,8 @@ Dict_Day = {'|Day|': Day_counter,'|Day Date|':Day_date,'|Number of Events for th
     '|Average (Beacon) Child Movement for Day|':Average_Beacon_Child_Move_per_Day 
 
 }
-print('-------len check -----', HAPEX_title_column[0:(len(Day_counter))], len(Day_date), len(Beacon_title_column[0:(len(Day_counter))]), len(Average_Cook_Comp_per_day), USB_title_column[0:(len(Day_counter))], len(Average_Cook_Comp_per_day_per_startup),len(Fuel_title_column[0:(len(Day_counter))]))
-print(Dict_Day)
+# print('-------len check -----', HAPEX_title_column[0:(len(Day_counter))], len(Day_date), len(Beacon_title_column[0:(len(Day_counter))]), len(Average_Cook_Comp_per_day), USB_title_column[0:(len(Day_counter))], len(Average_Cook_Comp_per_day_per_startup),len(Fuel_title_column[0:(len(Day_counter))]))
+print('DONE WITH FILE.....')
 
 DF_Dict_Day= pd.DataFrame(Dict_Day)
 Path_Raw_Events = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary.csv"

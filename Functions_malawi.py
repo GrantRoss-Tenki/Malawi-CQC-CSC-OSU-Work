@@ -11,9 +11,9 @@ import datetime
 from io import StringIO
 import matplotlib.pyplot as plt
 # Fire Finder Algorithm
-def FireFinder(temp, Usage, cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope):
+def FireFinder(temp, Usage, False_or_true,cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope):
         n = len(Usage) - 1
-        if temp[0] == 'NO EXACT':
+        if False_or_true == False:
             No_exact = 0
         else:
             No_exact = 1

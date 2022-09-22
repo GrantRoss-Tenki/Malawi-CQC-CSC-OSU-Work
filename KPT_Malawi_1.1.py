@@ -480,6 +480,9 @@ for Event in Event_counter:
         Event_Average_Child_Beacon_Movement.append(-1)
         Event_RAW_Child_Beacon_Acceleration.append(-1)
         Event_RAW_Child_Beacon_Movement.append(-1)
+# need to see the averages for the Kitchen Hapex and Firefinder start
+print('-------Before startup metric finder ---', Event_Average_Kitchen_PM, ' <-Kit Hapex PM --- Combing CE Start->' ,Combined_Cooking_start)
+
 # Event Startup
 
 Startup_Average_Kitchen_Compliance = []; Startup_Average_Cook_Compliance = []

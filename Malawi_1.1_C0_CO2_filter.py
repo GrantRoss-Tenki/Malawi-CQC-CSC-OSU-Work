@@ -14,10 +14,10 @@ HH_Number_array = ['HH1', 'HH2', 'HH3', 'HH4', 'HH5','HH6']
 Stove_array = ['1','2','3']
 CCT_array = ['1','2','3', '4']
 
-Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH4' #input("HH1 or HH2... etc:  ")
-Stove = '1'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
-CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
+Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
+Household = 'HH6' #input("HH1 or HH2... etc:  ")
+Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
+CCT_Num = '2'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
     USB = 'D'
@@ -327,10 +327,17 @@ ax1.plot(X_Max_CO_Cooking, Y_Max_CO_Cooking, label='Local Max ',color = 'k', mar
 
 ax22 = ax1.twinx()
 
-ax1.plot(Gas_CO, label='Orginal CO', color='green')
-ax1.plot(co_filter, color='r', label='CO Filter')
-ax22.plot(Inline_Hap_PM, color = 'blue',) #label='Inline HAPEx',
-ax22.plot(Cook_Hap_PM,  color = 'm',label='Cook HAPEx') #label='Cook HAPEx',
+
+Cooldown_len = len(co_filter)-GAS_FIRE_START_TV
+Shift = Cooldown_len - Gas_CE
+CO_revy = (co_filter[::-1])
+CO_revy.insert(0:Shift+1,0)
+
+#ax1.plot(Gas_CO, label='Orginal CO', color='green')
+ax22.plot(CO_revy.iloc[0:(len(co_filter)-Shift)], color='green',label='CO Filter - Rev' )
+ax22.plot(co_filter, color='r', label='CO Filter')
+#ax22.plot(Inline_Hap_PM, color = 'blue',) #label='Inline HAPEx',
+#ax22.plot(Cook_Hap_PM,  color = 'm',label='Cook HAPEx') #label='Cook HAPEx',
 
 
 #going to solve for CO cooldown usingx previous steady state work
@@ -351,5 +358,6 @@ Co_MIN_tv, Co_MAX_tv ,Co_MIN_Count, Co_MAX_Count = Functions_malawi.Local_Max_mi
 #ax1.plot(Steady_start_Time_value, Gas_CO[Steady_start_Time_value], label='Local Max ',color = 'k', marker=".", markersize=30)
 plt.legend()
 plt.show()
+
 
 

@@ -13,7 +13,7 @@ import Functions_malawi
 import itertools  
 
 Household_Number = 'HH2' #input("HH1 or HH2... etc:  ")
-Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
+Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
 Cooldown_Spread = 30
@@ -212,7 +212,7 @@ for file in l_files:
                             First_time = WHOLE_CSV.iloc[:,0]
                             First_time_Clean = [item for item in First_time if not(pd.isnull(item)) == True]
                             Minute_log_length = (len(First_time_Clean))
-  
+                            Decrease_to_min_log_length = First_time_Clean
                         elif One_time == True:
                             First_time_Clean = WHOLE_CSV.iloc[:,0]
                             step_coutner = np.arange(1, len(First_time_Clean), Log_rate_per_min)
@@ -220,7 +220,7 @@ for file in l_files:
                             Decrease_to_min_log_length = []
                             for step in step_coutner:
                                 Decrease_to_min_log_length.append(First_time_Clean[step])
-
+                            
                         for Column, Metric in enumerate(row):
                             if Metric[-6:-1] == Fuel_1 and Fuel_1_place == True and Metric[0:13] == 'Battery level' :
                                 Fuel_1_Battery = WHOLE_CSV.iloc[:,Column]
@@ -317,7 +317,7 @@ for file in l_files:
 # if there is not a split of time values, Going to have to convert Hapex, Exact to minute sets
 
 print('------Battery ', len(USB_Battery), '----- Exact 1---', len(Exact_1_Temp), len(Kitchen_Hapex_PM))
-
+print('Decrease to min decrease log length: ', len(Decrease_to_min_log_length), len(First_time_Clean),Decrease_to_min_log_length[0:5])
 
 if USB_time_place == False and Fuel_time_place == False:
     USB_time = First_time_Clean
@@ -377,11 +377,6 @@ if (Exact_1_place == False) and (Exact_2_place == True):
     Combined_Cooking_start.append(EXACT_2_fire_start)
     Combined_Cooking_end.append(EXACT_2_fire_end)
 
-# print('# events - stove 1:',EXACT_1_fire_start)
-# print('# events - stove 2:',EXACT_2_fire_start)
-# print('# events - stove 1:',len(EXACT_1_fire_start),'# events - stove 2:',len(EXACT_2_fire_start),'# events - combined:',Combined_events, 'Combined Stove:',Combined_Cooking_start)
-#finding new event start and stop
-
 
 
 
@@ -435,8 +430,8 @@ for Event in Event_counter:
         Event_Median_Kitchen_PM.append(-1);Event_StDeV_Kitchen_PM.append(-1)
 
     Event_Length.append((Combined_Cooking_end[Event])-(Combined_Cooking_start[Event]))
-    Event_start_time.append(First_time_Clean[(Combined_Cooking_start[Event])])
-
+    Event_start_time.append(Decrease_to_min_log_length[(Combined_Cooking_start[Event])])
+    #print('==== Event Start Time =====', Event_start_time)
     if Cook_Hapex_place == True:
         Event_Average_Cook_Compliance.append((int((np.average([a for a in CooK_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
         
@@ -500,6 +495,16 @@ Startup_StDeV_USB_Voltage = []
 Startup_RAW_USB_Voltage = []
 
 for Event in Event_counter:
+    # If the startup is too large betwene sensor launch and event start, need to modify the first start up event to account for this change
+    Start_too_soon = False
+    if Event == 0 and (Combined_Cooking_start[Event] - Start_Up_Spread) < 0:
+        Startup_place_holder = Start_Up_Spread
+        Start_Up_Spread = Combined_Cooking_start[Event]
+        Start_too_soon = True
+    elif Start_too_soon == True:
+        Start_Up_Spread = Startup_place_holder
+    else:
+        Start_Up_Spread = Start_Up_Spread
     if Kitchen_Hapex_place == True:
         Startup_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
         Startup_Average_Kitchen_PM.append((int((np.average([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
@@ -592,13 +597,13 @@ Munute_Day_breakdown = (int(Minute_log_length/(60*24))) * 60*24
 Fast_log_rate_day_breakdown = int(len(USB_time)/ (60*24*Log_rate_per_min)) * 60*24*Log_rate_per_min
 how_many_days = (int(Minute_log_length/(60*24)))
 Day_counter = np.arange(1,5,1)
-Minute_Day_Start_TV= np.arange(0,Munute_Day_breakdown, (60*24))
+Minute_Day_Start_TV= np.arange(0,Munute_Day_breakdown+1, (60*24))
 Fast_log_rate_day_Start_TV = np.arange(0,Fast_log_rate_day_breakdown, (60*24*Log_rate_per_min))
 
-Minute_Day_End_TV= np.arange((60*24),Munute_Day_breakdown+1, (60*24))
+Minute_Day_End_TV= np.arange((60*24),Munute_Day_breakdown+1+(60*24), (60*24))
 Fast_log_rate_day_End_TV = np.arange((60*24*Log_rate_per_min),Fast_log_rate_day_breakdown+1, (60*24*Log_rate_per_min))
 
-# print('Day Breakdowns', Munute_Day_breakdown, Fast_log_rate_day_breakdown)
+
 # print('are these the minute breakdowns', how_many_days, Minute_Day_Start_TV, Fast_log_rate_day_Start_TV)
 # print('are these the minute breakdowns', Day_counter, Minute_Day_End_TV, Fast_log_rate_day_End_TV)
 # print('envent numbers',Combined_Cooking_start, Combined_Cooking_end )
@@ -635,8 +640,8 @@ Average_Beacon_Child_Move_per_Day = []
 
 for Day in Day_counter:
     Event_per_Day_count = 0
-
-    Day_date.append(First_time_Clean[Minute_Day_Start_TV[Day-1]])
+    print('Day Breakdowns', Day,Munute_Day_breakdown, Fast_log_rate_day_breakdown, Minute_Day_Start_TV,Minute_Day_End_TV,Minute_log_length)
+    Day_date.append(Decrease_to_min_log_length[Minute_Day_Start_TV[Day-1]])
     EVENT_LENGTH_count = []
     Fuel_1_Event = []; Fuel_2_Event = []
     Kit_Comp_event =[]; Cook_Comp_event = []

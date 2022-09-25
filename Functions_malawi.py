@@ -561,3 +561,12 @@ def Add_repeated_values(arrays, length, Stop):
         New_Array.extend([last_value]*Dif)
     return New_Array
 
+def Beacon_Movement_change(array_b):
+    prev = array_b[0]
+    zero_to_one = []
+    for b in array_b:
+        if b == prev:
+            continue
+        else:
+            if b != prev:
+                zero_to_one = b

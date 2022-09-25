@@ -14,8 +14,8 @@ HH_Number_array = ['HH1', 'HH2', 'HH3', 'HH4', 'HH5','HH6']
 Stove_array = ['1','2','3']
 CCT_array = ['1','2','3', '4']
 
-Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH6' #input("HH1 or HH2... etc:  ")
+Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
+Household = 'HH5' #input("HH1 or HH2... etc:  ")
 Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
 CCT_Num = '2'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
@@ -100,7 +100,8 @@ for file in l_files:
                                     break
 
     elif file[0] == "B":
-        Cook_Beacon_name = 'Beacon ' + file[7:11]
+        Cook_Beacon_name = 'Beacon  ' + file[7:11]
+        print('Beacon Name and Number: ', Cook_Beacon_name)
         C_Beacon_File = os.getcwd()
         C_Beacon_open = glob.glob((file_path))
         for files in C_Beacon_open:
@@ -109,6 +110,7 @@ for file in l_files:
                 for idx, row in enumerate(csv_reader):
                     if 'Timestamp' in row:
                         Beacon_Failure = False
+                        Beacon_Proximity_to_cook = False
                         Cook_Beacon_csv = pd.read_csv(file_path, skiprows=(idx))
                         Cook_Beacon_Time = Cook_Beacon_csv.iloc[:, 0]
                         Cook_Beacon_Move= Cook_Beacon_csv.iloc[:, 1]
@@ -141,6 +143,12 @@ for file in l_files:
                             if f[11:16] == Fire_Start[9:] or str(f[10:16]) == Fire_Start[10:]:
                                 USB_FIRE_START_TV = tv
                                 break
+                        for col ,name in enumerate(USB_Proximity_DF):
+                            if name[0:17] == ('RSSI ' + Cook_Beacon_name):
+                                Beacon_Proximity_to_cook = True
+                                Cook_beacon_proximity = USB_Proximity_DF.iloc[:,col]
+                                print('beacon proximity: ', Proximity_to_cook)
+
     elif file[0] == 'G':
         Gas_name = 'GasSense ' + file[9:13]
         Gas_File = os.getcwd()
@@ -167,15 +175,23 @@ for file in l_files:
                             if f[11:16] == Fire_Start[9:] or str(f[10:16]) == Fire_Start[10:] or str(f[9:16]) == Fire_Start[10:]:
                                 GAS_FIRE_START_TV = tv
                                 break
+
     elif file[0] != 'B':
         Beacon_Failure = True
-        print('There is no Beacon data')
+        print('******There is no Beacon data')
     elif file[0] != 'U':
         USB_Failure = True
-        print('There is no USB data')
+        print('******There is no USB data')
     elif file[0] != 'G':
         GasSense_Failure = True
-        print('There is no GasSense data')
+        print('******There is no GasSense data')
+
+# Beacon Breakdown
+
+Cook_beacon_proximity
+
+
+
 
 co2_filter = Functions_malawi.Running_Average(Gas_CO2, Running_Average_length)
 co_filter = Functions_malawi.Running_Average(Gas_CO, Running_Average_length)
@@ -331,14 +347,15 @@ ax22 = ax1.twinx()
 Cooldown_len = len(co_filter)-GAS_FIRE_START_TV
 Shift = Cooldown_len - Gas_CE
 CO_revy = (co_filter[::-1])
-CO_revy.insert(0:Shift+1,0)
+print(' Length of the co revy and CO: ', len(CO_revy), '---',len(co_filter))
+
 
 #ax1.plot(Gas_CO, label='Orginal CO', color='green')
-ax22.plot(CO_revy.iloc[0:(len(co_filter)-Shift)], color='green',label='CO Filter - Rev' )
-ax22.plot(co_filter, color='r', label='CO Filter')
+#ax22.plot(CO_revy, color='green',label='CO Filter - Rev' )
+ax1.plot(co_filter, color='r', label='CO Filter')
 #ax22.plot(Inline_Hap_PM, color = 'blue',) #label='Inline HAPEx',
 #ax22.plot(Cook_Hap_PM,  color = 'm',label='Cook HAPEx') #label='Cook HAPEx',
-
+ax22.plot(Gas_Pressure, color='b', label='Gas Sense Pressure')
 
 #going to solve for CO cooldown usingx previous steady state work
 # First USe Local Max

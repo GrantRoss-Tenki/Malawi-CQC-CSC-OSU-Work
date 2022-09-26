@@ -29,7 +29,7 @@ Threshold_array = np.arange(.0001, 0.06,0.0001)
 
 KG_Removed = []
 for thresh in Threshold_array:
-    KG_burned_1, KG_1_mean = Functions_malawi.FUEL_REMOVAL(Fueel, thresh, 15, True, 15)
+    KG_burned_1, KG_1_mean = Functions_malawi.FUEL_REMOVAL(Fueel, thresh, 15, True, 30)
     
     #eliminate_repeat = Functions_malawi.Remove_Repeated_Values(KG_burned_1)
     KG_Removed.append(sum(list(set(KG_burned_1))))

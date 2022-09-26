@@ -12,8 +12,8 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH2' #input("HH1 or HH2... etc:  ")
-Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
+Household_Number = 'HH4' #input("HH1 or HH2... etc:  ")
+Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
 Cooldown_Spread = 30
@@ -610,6 +610,8 @@ Fast_log_rate_day_End_TV = np.arange((60*24*Log_rate_per_min),Fast_log_rate_day_
 Event_per_Day = []
 Average_length_of_CE = []
 Day_date = []
+Event_number_With_JFK = []
+
 # Fuel
 Sum_Fuel_1_removed_per_day_per_event = []; Fuel_1_Removed_per_day = []
 Sum_Fuel_2_removed_per_day_per_event = []; Fuel_2_Removed_per_day = []
@@ -640,6 +642,7 @@ Average_Beacon_Child_Move_per_Day = []
 
 for Day in Day_counter:
     Event_per_Day_count = 0
+    JFK_count_E = 0
     print('Day Breakdowns', Day,Munute_Day_breakdown, Fast_log_rate_day_breakdown, Minute_Day_Start_TV,Minute_Day_End_TV,Minute_log_length)
     Day_date.append(Decrease_to_min_log_length[Minute_Day_Start_TV[Day-1]])
     EVENT_LENGTH_count = []
@@ -693,10 +696,11 @@ for Day in Day_counter:
                 Kit_PM_Cooldown.extend(Kitchen_Hapex_PM[(Combined_Cooking_end[E]):(Combined_Cooking_end[E]+Cooldown_Spread)])
             else:
                 Kit_Comp_event= [-1, -1]; Kit_PM_event = [-1, -1]; Kit_Comp_startup = [-1, -1]; Kit_PM_startup = [-1, -1]; Kit_Comp_Cooldown = [-1, -1]; Kit_PM_Cooldown = [-1, -1]      
-            if USB_name_place == True:
+            if USB_name_place == True and Event_RAW_USB_Current[E] != 0:
                 USB_Current_Event.extend(Event_RAW_USB_Current[E]); USB_Voltage_Event.extend(Event_RAW_USB_Voltage[E])
                 USB_Current_Startup.extend(Startup_RAW_USB_Current[E])  ; USB_Voltage_Startup.extend(Startup_RAW_USB_Voltage[E])
                 USB_Current_Cooldown.extend(Cooldown_RAW_USB_Current[E]) ; USB_Voltage_Cooldown.extend(Cooldown_RAW_USB_Voltage[E])
+                JFK_count_E = JFK_count_E + 1
             else:
                 USB_Current_Event = [-1, -1]; USB_Voltage_Event = [-1, -1]; USB_Current_Startup = [-1, -1]; USB_Voltage_Startup = [-1, -1];USB_Current_Cooldown = [-1, -1];USB_Voltage_Cooldown = [-1, -1]
 
@@ -763,6 +767,7 @@ for Day in Day_counter:
     Average_USB_Current_per_Event.append(np.average(USB_Current_Event)) ; Average_USB_Voltage_per_Event.append(np.average(USB_Voltage_Event))
     Average_USB_Current_per_Startup.append(np.average(USB_Current_Startup)) ; Average_USB_Voltage_per_Startup.append(np.average(USB_Voltage_Startup))
     Average_USB_Current_per_Cooldown.append(np.average(USB_Current_Cooldown)) ; Average_USB_Voltage_per_cooldown.append(np.average(USB_Voltage_Cooldown))
+    Event_number_With_JFK.append(JFK_count_E)
     #Beacon
     Average_Beacon_Cook_Accel_per_day_per_event.append(np.average(Beacon_Cook_accel_Event))
     Average_Beacon_Child_Accel_per_day_per_event.append(np.average(Beacon_Child_accel_Event))
@@ -814,7 +819,7 @@ Dict_Cooldown = {'|Event|': Event_counter,'|Length of Event|':Event_Length,'----
 DF_Dict_Cooldown = pd.DataFrame(Dict_Cooldown)
 #---------------------------------
 
-Dict_Day = {'|Day|': Day_counter,'|Day Date|':Day_date,'|Number of Events for the day|':Event_per_Day,'|Average length of Cooking Length (min)|':Average_length_of_CE,'----FUEL----':Fuel_title_column[0:(len(Day_counter))],
+Dict_Day = {'|Day|': Day_counter,'|Day Date|':Day_date,'|Number of Events for the day|':Event_per_Day,'|Jet Flame Use For Number of Events|':Event_number_With_JFK,'|Average length of Cooking Length (min)|':Average_length_of_CE,'----FUEL----':Fuel_title_column[0:(len(Day_counter))],
 '|Fuel 1 - Removed for Whole Day|':Fuel_1_Removed_per_day, '|Fuel 2 - Removed for Whole Day|':Fuel_2_Removed_per_day, '|Sum of Fuel Removed for Whole Day|':Combined_Fuel_Removed_per_day,
 '|Fuel 1 - Sum of Fuel For Each Event|':Sum_Fuel_1_removed_per_day_per_event,'|Fuel 2 - Sum of Fuel For Each Event|':Sum_Fuel_2_removed_per_day_per_event,
 '|Fuel Combined - Removed for Each Event|':Sum_Combined_Fuel_removed_per_day_per_event,'----HAPEx----':HAPEX_title_column[0:(len(Day_counter))],
@@ -849,12 +854,12 @@ print('DONE WITH FILE.....')
 
 DF_Dict_Day= pd.DataFrame(Dict_Day)
 Path_Raw_Events = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary.csv"
-# Path_Raw_Event = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact"
-# File_event_Raw_metrics = str(Path_Raw_Event) + "/Raw_E_metrics/"+Phase+"_HH_raw_Event_metrics_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
-        #Df_sensor.to_csv(File_event_Raw_metrics)
-        #Df_raw_event.to_csv(File_event_Raw_metrics,index=False,mode='a')
-# DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
-# DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
-# DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
-# DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
-# DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')
+#Path_Raw_Event = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact"
+#File_event_Raw_metrics = str(Path_Raw_Event) + "/Raw_E_metrics/"+Phase+"_HH_raw_Event_metrics_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
+# Df_sensor.to_csv(File_event_Raw_metrics)
+# Df_raw_event.to_csv(File_event_Raw_metrics,index=False,mode='a')
+DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')

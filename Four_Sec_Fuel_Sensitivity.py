@@ -24,19 +24,22 @@ import Functions_malawi
 read = (pd.read_csv("C:/Users/gvros/Documents/CSV_FUEL_tester.csv"))
 Fueel = read.iloc[:,0]
 print('-------', Fueel[1])
-Threshold_array = np.arange(.0001, 0.06,0.0001)
+Threshold_array = np.arange(.01, 0.06,0.001)
 #Threshold_array = np.arange(1, 30,0.1)
 
-KG_Removed = []
-for thresh in Threshold_array:
-    KG_burned_1, KG_1_mean = Functions_malawi.FUEL_REMOVAL(Fueel, thresh, 15, True, 30)
+#KG_Removed = []
+#or thresh in Threshold_array:
+KG_burned_1, KG_1_mean = Functions_malawi.FUEL_REMOVAL(Fueel, 0.03, 15, True, 15)
     
     #eliminate_repeat = Functions_malawi.Remove_Repeated_Values(KG_burned_1)
-    KG_Removed.append(sum(list(set(KG_burned_1))))
+KG_Removed = (sum(list(set(KG_burned_1))))
+KG_Removes_mean = (sum(list(set(KG_1_mean))))
 
+print('----Plotting Fuel Algorithm----',KG_Removed,'======',KG_Removes_mean,KG_burned_1[-1]  )
+xs = np.linspace(0.0, len(KG_burned_1), int(len(KG_burned_1)/(15*5)))
 
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=Threshold_array, y=KG_Removed,
+fig.add_trace(go.Scatter(y=KG_burned_1,
                 mode='lines+markers'))
                     
 fig.update_layout(title=" Sensitivity for Fuel Threshold",

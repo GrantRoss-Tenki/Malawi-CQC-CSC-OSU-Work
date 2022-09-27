@@ -408,20 +408,25 @@ for Event in Event_counter:
     #first Fuel
     if Fuel_1_place == True:
         fuel_bounds_1 = list(set(KG_burned_1[((Combined_Cooking_start[Event]-(Start_Up_Spread*Log_rate_per_min))*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))
-        print('Fuel Bounds 1----', Event,sum(fuel_bounds_1),'last fuel bound--',fuel_bounds_1)
+        
 
-        if Event != 0 and prev_fuel_bound_1 != []:
-            if prev_fuel_bound_1 != fuel_bounds_1[0]:
+        if Event != 0 and fuel_bounds_1 != []:
+            print('Fuel Bounds 1----', Event, sum(fuel_bounds_1),'last fuel bound--',prev_fuel_bound_1)
+            if ((prev_fuel_bound_1)*10000) != ((fuel_bounds_1[0])*10000):
                 Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
-                
-            elif prev_fuel_bound_1 == fuel_bounds_1[0]:
+                print('THer is nothing that FUCKIng Works ----', Event,(prev_fuel_bound_1)*10000,(fuel_bounds_1[0])*10000)
+                prev_fuel_bound_1 = fuel_bounds_1[-1]
+            elif ((prev_fuel_bound_1)*10000) == ((fuel_bounds_1[0])*10000):
                 Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1[1:]))*1000)/1000))
-                
+            else:
+                Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
+                prev_fuel_bound_1 = fuel_bounds_1[-1]
         elif Event == 0 or fuel_bounds_1 == []:
             Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
+            prev_fuel_bound_1 = fuel_bounds_1
         else:
             Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
-        prev_fuel_bound_1 = fuel_bounds_1
+            prev_fuel_bound_1 = fuel_bounds_1[-1]
         
     else:
         Event_KG_Removed_Fuel_1.append(-1)
@@ -429,18 +434,22 @@ for Event in Event_counter:
     if Fuel_2_place == True:
         
         fuel_bounds_2 = list(set(KG_burned_2[((Combined_Cooking_start[Event]-(Start_Up_Spread*Log_rate_per_min))*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))
-        if Event != 0 and prev_fuel_bound_2 != []:
-            if prev_fuel_bound_2 != fuel_bounds_2[0]:
+        #print('Fuel Bounds 2----', Event, sum(fuel_bounds_2),'last fuel bound--')
+        if Event != 0 and fuel_bounds_2 != []:
+            if ((prev_fuel_bound_2)*10000) != ((fuel_bounds_2[0])*10000):
                 Event_KG_Removed_Fuel_2.append((int((sum(fuel_bounds_2))*1000)/1000))
                 
-            elif prev_fuel_bound_2 == fuel_bounds_1[0]:
+            elif ((prev_fuel_bound_2)*10000) == ((fuel_bounds_2[0])*10000):
                 Event_KG_Removed_Fuel_2.append((int((sum(fuel_bounds_2[1:]))*1000)/1000))
-                
+            else:
+                Event_KG_Removed_Fuel_2.append((int((sum(fuel_bounds_2))*1000)/1000))
+                prev_fuel_bound_2 = fuel_bounds_2[-1]
         elif Event == 0 or fuel_bounds_2 == []:
             Event_KG_Removed_Fuel_2.append((int((sum(fuel_bounds_2))*1000)/1000))
+            prev_fuel_bound_2 = fuel_bounds_2
         else:
             Event_KG_Removed_Fuel_2.append((int((sum(fuel_bounds_2))*1000)/1000))
-        prev_fuel_bound_2 = fuel_bounds_2
+            prev_fuel_bound_2 = fuel_bounds_2[-1]
     else:
         Event_KG_Removed_Fuel_2.append(-1)
 
@@ -508,7 +517,7 @@ for Event in Event_counter:
 # need to see the averages for the Kitchen Hapex and Firefinder start
 print('-------Before startup metric finder ---', Event_Average_Kitchen_PM, ' <-Kit Hapex PM --- Combing CE Start->' ,Combined_Cooking_start)
 print('Current RAW--', np.average(Event_RAW_USB_Current[3]))
-print('--- Fuel USed for event fuel 1--', Event_KG_Removed_Fuel_1, Event_KG_Removed_Fuel_2)
+print('--- Fuel USed for event fuel 1--', len(Event_KG_Removed_Fuel_1), len(Event_KG_Removed_Fuel_2))
 # Event Startup
 
 Startup_Average_Kitchen_Compliance = []; Startup_Average_Cook_Compliance = []
@@ -728,7 +737,7 @@ for Day in Day_counter:
             else:
                 Kit_Comp_event= [-1, -1]; Kit_PM_event = [-1, -1]; Kit_Comp_startup = [-1, -1]; Kit_PM_startup = [-1, -1]; Kit_Comp_Cooldown = [-1, -1]; Kit_PM_Cooldown = [-1, -1]      
             
-            if (USB_name_place == True) or (Event_Average_USB_Current[E] != 0):
+            if (USB_name_place == True) and (Event_Average_USB_Current[E] != 0):
                 USB_Current_Event.extend(Event_RAW_USB_Current[E]); USB_Voltage_Event.extend(Event_RAW_USB_Voltage[E])
                 USB_Current_Startup.extend(Startup_RAW_USB_Current[E])  ; USB_Voltage_Startup.extend(Startup_RAW_USB_Voltage[E])
                 USB_Current_Cooldown.extend(Cooldown_RAW_USB_Current[E]) ; USB_Voltage_Cooldown.extend(Cooldown_RAW_USB_Voltage[E])
@@ -777,26 +786,44 @@ for Day in Day_counter:
     Average_Kitchen_PM_per_day_per_startup.append(np.average(Kit_PM_startup)) ; Average_Cook_PM_per_day_per_startup.append(np.average(Cook_PM_startup)) 
     Average_Kitchen_PM_per_day_per_cooldown.append(np.average(Kit_PM_Cooldown)); Average_Cook_PM_per_day_per_cooldown.append(np.average(Cook_PM_Cooldown))
     #Fuel Metrics
+    #First Fuel
     if Fuel_1_place == True:
         fuel_bounds_Day_1 = list(set(KG_burned_1[(Minute_Day_Start_TV[Day-1]*Log_rate_per_min):(Minute_Day_End_TV[Day-1]*Log_rate_per_min)])); Fuel_1_Removed_per_day.append((int((sum(fuel_bounds_1)) * 1000) / 1000))
         if Day !=1:
             if fuel_bounds_Day_1[0] == Previous_day_fuel_1:
-                Sum_Fuel_1_removed_per_day_per_event.append(sum(fuel_bounds_Day_1[0:]))
+                Sum_Fuel_1_removed_per_day_per_event.append(sum(fuel_bounds_Day_1[1:]))
             else:
                 Sum_Fuel_1_removed_per_day_per_event.append(sum(fuel_bounds_Day_1))
         else:
             Sum_Fuel_1_removed_per_day_per_event.append(sum(fuel_bounds_Day_1))
-        Previous_day_fuel_1 = fuel_bounds_1[-1]
+        Previous_day_fuel_1 = fuel_bounds_Day_1[-1]
+        
+        # if Day != 0 and fuel_bounds_Day_1 != []:
+        #     if prev_fuel_day_bound_1 != fuel_bounds_Day_1[0]:
+        #         Sum_Fuel_1_removed_per_day_per_event.append((int((sum(fuel_bounds_Day_1))*1000)/1000))
+                
+        #     elif prev_fuel_bound_1 == fuel_bounds_1[0]:
+        #         Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1[1:]))*1000)/1000))
+        #     else:
+        #         Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
+        #         prev_fuel_day_bound_1 = fuel_bounds_1[-1]
+        # elif Event == 0 or fuel_bounds_1 == []:
+        #     Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
+        #     prev_fuel_day_bound_1 = fuel_bounds_1
+        # else:
+        #     Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
+        #     prev_fuel_day_bound_1 = fuel_bounds_1[-1]
     else:
         Fuel_1_Removed_per_day.append(-1)
         Sum_Fuel_1_removed_per_day_per_event.append(-1)
+    #Second Fuel
     if Fuel_2_place == True:
         fuel_bounds_2 = list(set(KG_burned_2[(Minute_Day_Start_TV[Day-1]*Log_rate_per_min):(Minute_Day_End_TV[Day-1]*Log_rate_per_min)])); Fuel_2_Removed_per_day.append((int((sum(fuel_bounds_2)) * 1000) / 1000))
         Sum_Fuel_2_removed_per_day_per_event.append(sum(Fuel_2_Event))
     else:
         Fuel_2_Removed_per_day.append(-1)
         Sum_Fuel_2_removed_per_day_per_event.append(-1)
-
+    #Combine Fuel
     if Fuel_2_place == True and Fuel_1_place == True:
         Sum_Combined_Fuel_removed_per_day_per_event.append(sum(Fuel_1_Event)+sum(Fuel_2_Event))  ; Combined_Fuel_Removed_per_day.append(Fuel_2_Removed_per_day[-1]+Fuel_1_Removed_per_day[-1])
     else:
@@ -806,7 +833,10 @@ for Day in Day_counter:
     Average_USB_Current_per_Event.append(np.average(USB_Current_Event)) ; Average_USB_Voltage_per_Event.append(np.average(USB_Voltage_Event))
     Average_USB_Current_per_Startup.append(np.average(USB_Current_Startup)) ; Average_USB_Voltage_per_Startup.append(np.average(USB_Voltage_Startup))
     Average_USB_Current_per_Cooldown.append(np.average(USB_Current_Cooldown)) ; Average_USB_Voltage_per_cooldown.append(np.average(USB_Voltage_Cooldown))
-    Event_number_With_JFK.append(JFK_count_E)
+    if USB_Current_Event != 0:
+        Event_number_With_JFK.append(JFK_count_E)
+    else:
+        Event_number_With_JFK.append(0)
     #Beacon
     Average_Beacon_Cook_Accel_per_day_per_event.append(np.average(Beacon_Cook_accel_Event))
     Average_Beacon_Child_Accel_per_day_per_event.append(np.average(Beacon_Child_accel_Event))

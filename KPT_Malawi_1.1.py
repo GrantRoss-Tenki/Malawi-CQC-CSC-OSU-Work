@@ -12,7 +12,7 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH4' #input("HH1 or HH2... etc:  ")
+Household_Number = 'HH6' #input("HH1 or HH2... etc:  ")
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
@@ -133,17 +133,17 @@ if Household_Number == 'HH6':
     Child_Beacon_place = False
     Hapex = True
     Exact = True
-    Fuel = False
+    Fuel = True
     Exact_1_place = True
     Exact_2_place = True
     Cook_Hapex_place = True
     Kitchen_Hapex_place = True
-    Fuel_1_place = False
+    Fuel_1_place = True
     Fuel_2_place = False
     USB_name_place = True
 
 # Fire finder metrics for jet flame and CQC stove
-cooking_threshold = 5
+cooking_threshold = 7
 length_decrease = 40
 start_threshold = 1
 end_threshold = -5
@@ -316,8 +316,8 @@ for file in l_files:
 # I have all of the values and organizaiton done.
 # if there is not a split of time values, Going to have to convert Hapex, Exact to minute sets
 
-print('------Battery ', len(USB_Battery), '----- Exact 1---', len(Exact_1_Temp), len(Kitchen_Hapex_PM))
-print('Decrease to min decrease log length: ', len(Decrease_to_min_log_length), len(First_time_Clean),Decrease_to_min_log_length[0:5])
+#print('------Battery ', len(USB_Battery), '----- Exact 1---', len(Exact_1_Temp), len(Kitchen_Hapex_PM))
+#print('Decrease to min decrease log length: ', len(Decrease_to_min_log_length), len(First_time_Clean),Decrease_to_min_log_length[0:5])
 
 if USB_time_place == False and Fuel_time_place == False:
     USB_time = First_time_Clean
@@ -357,17 +357,21 @@ if (Exact_1_place == True) and (Exact_2_place == True):
     count_onez_and_zeros = 0
     Combined_Cooking_start = []
     Combined_Cooking_end = []
+    Cooking = False
     for Fire in Combined_Stove:
         count_onez_and_zeros = count_onez_and_zeros + 1
-        if count_onez_and_zeros == len(Combined_Stove):
+        if (count_onez_and_zeros + min_CE_length == len(Combined_Stove)-1):
             break
-        elif (Fire == 0) and (Combined_Stove[count_onez_and_zeros] == 1):
+        elif (Fire == 0) and (Combined_Stove[count_onez_and_zeros] == 1) and (Combined_Stove[count_onez_and_zeros+ min_CE_length] == 1):
             Combined_Cooking_start.append(count_onez_and_zeros)
-        elif (Fire == 1) and Combined_Stove[count_onez_and_zeros] == 0:
+            Cooking = True
+        elif (Fire == 1) and (Combined_Stove[count_onez_and_zeros] == 0) and (Cooking == True):
             Combined_Cooking_end.append(count_onez_and_zeros-1)
+            Cooking = False
 
-
-
+print('----FF Start----------',Combined_Cooking_start)
+print('----FF End------------',Combined_Cooking_end)
+print('length of minute log: ',len(USB_time),'Length of log rate: ', len(EXACT_1_FF_usage))
 
 if (Exact_1_place == True) and (Exact_2_place == False):
     Combined_Cooking_start.append(EXACT_1_fire_start)
@@ -380,7 +384,7 @@ if (Exact_1_place == False) and (Exact_2_place == True):
 
 
 
-Event_counter = np.arange(0,Combined_events, 1)
+Event_counter = np.arange(0,len(Combined_Cooking_start), 1)
 #Event Metrics that I need to gather
 Event_KG_Removed_Fuel_1 = []
 Event_KG_Removed_Fuel_2 =[]
@@ -403,27 +407,31 @@ Event_Average_USB_Voltage = []
 Event_Median_USB_Voltage = []
 Event_StDeV_USB_Voltage = []
 Event_RAW_USB_Voltage = []
-
+prev_fuel_bound_1 = [0]
+prev_fuel_bound_2 = [0]
 for Event in Event_counter:
     #first Fuel
     if Fuel_1_place == True:
         fuel_bounds_1 = list(set(KG_burned_1[((Combined_Cooking_start[Event]-(Start_Up_Spread*Log_rate_per_min))*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))
         
 
-        if Event != 0 and fuel_bounds_1 != []:
-            print('Fuel Bounds 1----', Event, sum(fuel_bounds_1),'last fuel bound--',prev_fuel_bound_1)
+        if (Event != 0) and (fuel_bounds_1 != []):
+            #print('Fuel Bounds 1----', Event, sum(fuel_bounds_1),'last fuel bound--',prev_fuel_bound_1)
+            #print('--- are they the same?----', ((prev_fuel_bound_1)*10000),'==',((fuel_bounds_1[0])*10000))
             if ((prev_fuel_bound_1)*10000) != ((fuel_bounds_1[0])*10000):
                 Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
-                print('THer is nothing that FUCKIng Works ----', Event,(prev_fuel_bound_1)*10000,(fuel_bounds_1[0])*10000)
                 prev_fuel_bound_1 = fuel_bounds_1[-1]
+                #print('!=!=!=!=!= Non Equal !=!=!=!=!=!=')
             elif ((prev_fuel_bound_1)*10000) == ((fuel_bounds_1[0])*10000):
                 Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1[1:]))*1000)/1000))
+                prev_fuel_bound_1 = fuel_bounds_1[-1]
+                #print('===== Equal =======')
             else:
                 Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
                 prev_fuel_bound_1 = fuel_bounds_1[-1]
         elif Event == 0 or fuel_bounds_1 == []:
             Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
-            prev_fuel_bound_1 = fuel_bounds_1
+            prev_fuel_bound_1 = 0
         else:
             Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
             prev_fuel_bound_1 = fuel_bounds_1[-1]
@@ -514,10 +522,12 @@ for Event in Event_counter:
         Event_Average_Child_Beacon_Movement.append(-1)
         Event_RAW_Child_Beacon_Acceleration.append(-1)
         Event_RAW_Child_Beacon_Movement.append(-1)
+    #print('<<<<<<<<<<<<<<<<<<<<<<<<<<<',Event,'-----',Event_KG_Removed_Fuel_1[-1],'-----',sum(fuel_bounds_1),' Next Event>>>>>>>>>>>>>>>>>>>>>>>>>>',prev_fuel_bound_1,'+++++',fuel_bounds_1)
+    #print('-')
 # need to see the averages for the Kitchen Hapex and Firefinder start
-print('-------Before startup metric finder ---', Event_Average_Kitchen_PM, ' <-Kit Hapex PM --- Combing CE Start->' ,Combined_Cooking_start)
-print('Current RAW--', np.average(Event_RAW_USB_Current[3]))
-print('--- Fuel USed for event fuel 1--', len(Event_KG_Removed_Fuel_1), len(Event_KG_Removed_Fuel_2))
+#print('-------Before startup metric finder ---', Event_Average_Kitchen_PM, ' <-Kit Hapex PM --- Combing CE Start->' ,Combined_Cooking_start)
+#print('Current RAW--', np.average(Event_RAW_USB_Current[3]))
+#print('--- Fuel USed for event fuel 1--', len(Event_KG_Removed_Fuel_1), len(Event_KG_Removed_Fuel_2))
 # Event Startup
 
 Startup_Average_Kitchen_Compliance = []; Startup_Average_Cook_Compliance = []
@@ -683,7 +693,7 @@ Average_Beacon_Child_Move_per_Day = []
 for Day in Day_counter:
     Event_per_Day_count = 0
     JFK_count_E = 0
-    print('Day Breakdowns', Day,Munute_Day_breakdown, Fast_log_rate_day_breakdown, Minute_Day_Start_TV,Minute_Day_End_TV,Minute_log_length)
+    #print('Day Breakdowns', Day,Munute_Day_breakdown, Fast_log_rate_day_breakdown, Minute_Day_Start_TV,Minute_Day_End_TV,Minute_log_length)
     Day_date.append(Decrease_to_min_log_length[Minute_Day_Start_TV[Day-1]])
     EVENT_LENGTH_count = []
     Fuel_1_Event = []; Fuel_2_Event = []
@@ -788,38 +798,35 @@ for Day in Day_counter:
     #Fuel Metrics
     #First Fuel
     if Fuel_1_place == True:
-        fuel_bounds_Day_1 = list(set(KG_burned_1[(Minute_Day_Start_TV[Day-1]*Log_rate_per_min):(Minute_Day_End_TV[Day-1]*Log_rate_per_min)])); Fuel_1_Removed_per_day.append((int((sum(fuel_bounds_1)) * 1000) / 1000))
+        fuel_bounds_Day_1 = list(set(KG_burned_1[(Minute_Day_Start_TV[Day-1]*Log_rate_per_min):(Minute_Day_End_TV[Day-1]*Log_rate_per_min)]))
         if Day !=1:
             if fuel_bounds_Day_1[0] == Previous_day_fuel_1:
-                Sum_Fuel_1_removed_per_day_per_event.append(sum(fuel_bounds_Day_1[1:]))
+                Sum_Fuel_1_removed_per_day_per_event.append(sum(Fuel_1_Event[1:]))
+                Fuel_1_Removed_per_day.append((int((sum(fuel_bounds_Day_1[1:])) * 1000) / 1000))
             else:
-                Sum_Fuel_1_removed_per_day_per_event.append(sum(fuel_bounds_Day_1))
+                Sum_Fuel_1_removed_per_day_per_event.append(sum(Fuel_1_Event))
+                Fuel_1_Removed_per_day.append((int((sum(fuel_bounds_Day_1)) * 1000) / 1000))
         else:
-            Sum_Fuel_1_removed_per_day_per_event.append(sum(fuel_bounds_Day_1))
+            Sum_Fuel_1_removed_per_day_per_event.append(sum(Fuel_1_Event))
+            Fuel_1_Removed_per_day.append((int((sum(fuel_bounds_Day_1)) * 1000) / 1000))
         Previous_day_fuel_1 = fuel_bounds_Day_1[-1]
-        
-        # if Day != 0 and fuel_bounds_Day_1 != []:
-        #     if prev_fuel_day_bound_1 != fuel_bounds_Day_1[0]:
-        #         Sum_Fuel_1_removed_per_day_per_event.append((int((sum(fuel_bounds_Day_1))*1000)/1000))
-                
-        #     elif prev_fuel_bound_1 == fuel_bounds_1[0]:
-        #         Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1[1:]))*1000)/1000))
-        #     else:
-        #         Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
-        #         prev_fuel_day_bound_1 = fuel_bounds_1[-1]
-        # elif Event == 0 or fuel_bounds_1 == []:
-        #     Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
-        #     prev_fuel_day_bound_1 = fuel_bounds_1
-        # else:
-        #     Event_KG_Removed_Fuel_1.append((int((sum(fuel_bounds_1))*1000)/1000))
-        #     prev_fuel_day_bound_1 = fuel_bounds_1[-1]
     else:
         Fuel_1_Removed_per_day.append(-1)
         Sum_Fuel_1_removed_per_day_per_event.append(-1)
     #Second Fuel
     if Fuel_2_place == True:
-        fuel_bounds_2 = list(set(KG_burned_2[(Minute_Day_Start_TV[Day-1]*Log_rate_per_min):(Minute_Day_End_TV[Day-1]*Log_rate_per_min)])); Fuel_2_Removed_per_day.append((int((sum(fuel_bounds_2)) * 1000) / 1000))
-        Sum_Fuel_2_removed_per_day_per_event.append(sum(Fuel_2_Event))
+        fuel_bounds_Day_2 = list(set(KG_burned_2[(Minute_Day_Start_TV[Day-1]*Log_rate_per_min):(Minute_Day_End_TV[Day-1]*Log_rate_per_min)]))
+        if Day !=1:
+            if fuel_bounds_Day_2[0] == Previous_day_fuel_2:
+                Sum_Fuel_2_removed_per_day_per_event.append(sum(Fuel_2_Event[1:]))
+                Fuel_2_Removed_per_day.append((int((sum(fuel_bounds_Day_2[1:])) * 1000) / 1000))
+            else:
+                Sum_Fuel_2_removed_per_day_per_event.append(sum(Fuel_2_Event))
+                Fuel_2_Removed_per_day.append((int((sum(fuel_bounds_Day_2)) * 1000) / 1000))
+        else:
+            Sum_Fuel_2_removed_per_day_per_event.append(sum(Fuel_2_Event))
+            Fuel_2_Removed_per_day.append((int((sum(fuel_bounds_Day_2)) * 1000) / 1000))
+        Previous_day_fuel_2 = fuel_bounds_Day_2[-1]
     else:
         Fuel_2_Removed_per_day.append(-1)
         Sum_Fuel_2_removed_per_day_per_event.append(-1)

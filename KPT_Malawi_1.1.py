@@ -12,7 +12,7 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH6' #input("HH1 or HH2... etc:  ")
+Household_Number = 'HH5' #input("HH1 or HH2... etc:  ")
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
@@ -148,7 +148,7 @@ length_decrease = 40
 start_threshold = 1
 end_threshold = -5
 merge_CE_threshold = 60
-min_CE_length = 5
+min_CE_length = 15
 window_slope = 8
 
 

@@ -12,7 +12,7 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH5' #input("HH1 or HH2... etc:  ")
+Household_Number = 'HH1' #input("HH1 or HH2... etc:  ")
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
@@ -929,7 +929,7 @@ Dict_Day = {'|Day|': Day_counter,'|Day Date|':Day_date,'|Number of Events for th
 print('DONE WITH FILE.....')
 
 DF_Dict_Day= pd.DataFrame(Dict_Day)
-Path_Raw_Events = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary.csv"
+Path_Raw_Events = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary_"+KPT_NUM+".csv"
 #Path_Raw_Event = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact"
 #File_event_Raw_metrics = str(Path_Raw_Event) + "/Raw_E_metrics/"+Phase+"_HH_raw_Event_metrics_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
 # Df_sensor.to_csv(File_event_Raw_metrics)

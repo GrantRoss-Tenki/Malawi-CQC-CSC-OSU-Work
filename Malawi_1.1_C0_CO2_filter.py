@@ -15,8 +15,8 @@ Stove_array = ['1','2','3']
 CCT_array = ['1','2','3', '4']
 
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH5' #input("HH1 or HH2... etc:  ")
-Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
+Household = 'HH3' #input("HH1 or HH2... etc:  ")
+Stove = '2'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
 CCT_Num = '2'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
@@ -147,7 +147,7 @@ for file in l_files:
                             if name[0:17] == ('RSSI ' + Cook_Beacon_name):
                                 Beacon_Proximity_to_cook = True
                                 Cook_beacon_proximity = USB_Proximity_DF.iloc[:,col]
-                                print('beacon proximity: ', Proximity_to_cook)
+                                #print('beacon proximity: ', Proximity_to_cook)
 
     elif file[0] == 'G':
         Gas_name = 'GasSense ' + file[9:13]
@@ -188,7 +188,7 @@ for file in l_files:
 
 # Beacon Breakdown
 
-Cook_beacon_proximity
+#Cook_beacon_proximity
 
 
 

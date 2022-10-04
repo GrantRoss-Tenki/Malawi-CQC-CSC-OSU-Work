@@ -423,8 +423,8 @@ prev_fuel_bound_2 = [0]
 #Beacon Proximity
 Beacon_Use_event_number = []
 Length_of_time_at_stove = []
-
-
+length_of_time_away_from_stove = []
+Time_at_stove = []
 for Event in Event_counter:
     #first Fuel
     if Fuel_1_place == True:
@@ -516,8 +516,10 @@ for Event in Event_counter:
         Event_RAW_USB_Voltage.append(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
         if IS_there_a_Cook_beacon_proximity == True:
             Beacon_Use_event_number.append(Event)
-            At_stove, zero_to_one, zero_to_one_tv, Reaching_to_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv = Functions_malawi.Beacon_Movement_change(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
-            Length_of_time_at_stove.append(At_stove)
+            At_stove, Time_away_from_stove,zero_to_one, zero_to_one_tv, Reaching_to_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv = Functions_malawi.Beacon_Movement_change(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
+            Length_of_time_at_stove.append(At_stove/Log_rate_per_min)
+            length_of_time_away_from_stove.append(Time_away_from_stove/Log_rate_per_min)
+            #Time_at_stove.apppend(Fuel_time[Reaching_to_stove_tv])
         #else: 
 
     else:
@@ -952,6 +954,9 @@ Dict_Day = {'|Day|': Day_counter,'|Day Date|':Day_date,'|Number of Events for th
 
 }
 # print('-------len check -----', HAPEX_title_column[0:(len(Day_counter))], len(Day_date), len(Beacon_title_column[0:(len(Day_counter))]), len(Average_Cook_Comp_per_day), USB_title_column[0:(len(Day_counter))], len(Average_Cook_Comp_per_day_per_startup),len(Fuel_title_column[0:(len(Day_counter))]))
+Event_Proximity = {'|Event Number|':Beacon_Use_event_number, '|Time at Stove (Min)|': Length_of_time_at_stove,'|Time Away from Stove (Min)|':length_of_time_away_from_stove}
+#'|Time date at Stove|':Time_at_stove}
+
 print('DONE WITH FILE.....')
 
 DF_Dict_Day= pd.DataFrame(Dict_Day)
@@ -966,6 +971,7 @@ Path_Raw_Events = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary_"+KPT_NUM
 
 # DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
 # DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
+
 # DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
 # DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
 # DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')

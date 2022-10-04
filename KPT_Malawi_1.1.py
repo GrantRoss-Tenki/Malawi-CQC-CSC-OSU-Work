@@ -295,7 +295,17 @@ for file in l_files:
                                 USB_Power = WHOLE_CSV.iloc[:,Column+3]
                                 USB_Energy = WHOLE_CSV.iloc[:,Column+4]
                                 USB_Usage = WHOLE_CSV.iloc[:,Column+5]
-                                
+                                Proxmimity_column_count = np.arange(Column + 6, len(row), 1)
+                                for prox in Proxmimity_column_count:
+                                    row_Name = row[prox]
+                                    if row_Name[0:17] == ('RSSI Beacon  ' + Cook_beacon):
+
+                                        print('There is a proximity BEacon to USB logger !!')
+                                        Beacon_proximity = WHOLE_CSV.iloc[:,prox]
+                                        IS_there_a_Cook_beacon_proximity = True 
+                                        break
+                                    else:
+                                        IS_there_a_Cook_beacon_proximity = False
                             elif 'Timestamp Fuel' == Metric:
                                 Fuel_time = WHOLE_CSV.iloc[:,Column]
                                 Fuel_time_place = True
@@ -409,6 +419,12 @@ Event_StDeV_USB_Voltage = []
 Event_RAW_USB_Voltage = []
 prev_fuel_bound_1 = [0]
 prev_fuel_bound_2 = [0]
+
+#Beacon Proximity
+Beacon_Use_event_number = []
+Length_of_time_at_stove = []
+
+
 for Event in Event_counter:
     #first Fuel
     if Fuel_1_place == True:
@@ -498,6 +514,12 @@ for Event in Event_counter:
         Event_Median_USB_Voltage.append(np.median(list(set(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
         Event_StDeV_USB_Voltage.append((int((stat.stdev(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])) * 100)) / 100)
         Event_RAW_USB_Voltage.append(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
+        if IS_there_a_Cook_beacon_proximity == True:
+            Beacon_Use_event_number.append(Event)
+            At_stove, zero_to_one, zero_to_one_tv, Reaching_to_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv = Functions_malawi.Beacon_Movement_change(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
+            Length_of_time_at_stove.append(At_stove)
+        #else: 
+
     else:
         Event_Average_USB_Current.append(-1);Event_Median_USB_Voltage.append(-1)
         Event_Median_USB_Current.append(-1); Event_StDeV_USB_Voltage.append(-1)
@@ -543,6 +565,10 @@ Startup_Average_USB_Voltage = []
 Startup_Median_USB_Voltage = []
 Startup_StDeV_USB_Voltage = []
 Startup_RAW_USB_Voltage = []
+
+Approaching_stove  = []
+Approaching_stove_tv = []
+
 
 for Event in Event_counter:
     # If the startup is too large betwene sensor launch and event start, need to modify the first start up event to account for this change
@@ -938,8 +964,8 @@ Path_Raw_Events = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary_"+KPT_NUM
 
 
 
-DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
-DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
-DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
-DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
-DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')

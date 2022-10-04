@@ -1,5 +1,6 @@
 import itertools
 import os
+#from typing_extensions import clear_overloads
 import pandas as pd
 import numpy as np
 import csv
@@ -562,11 +563,30 @@ def Add_repeated_values(arrays, length, Stop):
     return New_Array
 
 def Beacon_Movement_change(array_b):
-    prev = array_b[0]
-    zero_to_one = []
-    for b in array_b:
+    # first creation and run through are for one event. not all events use the USB power meter
+    prev = array_b.iloc[0]
+    zero_to_one = 0
+    zero_to_one_tv = []
+    Reaching_to_stove = 0
+    Reaching_to_stove_tv = []
+    Going_away_from_stove = 0
+    Going_away_from_stove_tv = []
+    At_stove = 0
+    for tv, b in enumerate(array_b):
         if b == prev:
             continue
         else:
-            if b != prev:
-                zero_to_one = b
+            if b == 1 and prev == 0:
+                zero_to_one = zero_to_one + 1
+                zero_to_one_tv.append(tv)
+            elif b == 3 and prev < 3:
+                Reaching_to_stove = Reaching_to_stove + 1
+                Reaching_to_stove_tv.append(tv)
+            elif b < 2 and prev == 3:
+                Going_away_from_stove = Going_away_from_stove + 1
+                Going_away_from_stove_tv.append(tv)
+            elif (b == 3 or b == 2) and (prev == 3 or b == 2):
+                At_stove = At_stove + 1
+            else:
+                continue
+    return At_stove, zero_to_one, zero_to_one_tv, Reaching_to_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv

@@ -15,9 +15,9 @@ Stove_array = ['1','2','3']
 CCT_array = ['1','2','3', '4']
 
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH3' #input("HH1 or HH2... etc:  ")
-Stove = '2'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
-CCT_Num = '2'#input("CCT Number - 1, 2, or 3: ")
+Household = 'HH1' #input("HH1 or HH2... etc:  ")
+Stove = '1'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
+CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
     USB = 'D'
@@ -51,6 +51,8 @@ if Stove == '3':
             Boil_time = CCT_TIMES_METRICS.iloc[rows, 16]
             Coking_Length = CCT_TIMES_METRICS.iloc[rows, 17]
 
+Beacon_Failure = True
+Beacon_Proximity_to_cook_Fali = True
 
 CCT_Stove_Path = USB+":/Malawi 1.1/"+Household+"/S- "+Stove+"; CCT-"+CCT_Num
 l_files = os.listdir(CCT_Stove_Path)
@@ -100,6 +102,7 @@ for file in l_files:
                                     break
 
     elif file[0] == "B":
+        Beacon_Failure = False
         Cook_Beacon_name = 'Beacon  ' + file[7:11]
         print('Beacon Name and Number: ', Cook_Beacon_name)
         C_Beacon_File = os.getcwd()
@@ -109,8 +112,6 @@ for file in l_files:
                 csv_reader = csv.reader(f)
                 for idx, row in enumerate(csv_reader):
                     if 'Timestamp' in row:
-                        Beacon_Failure = False
-                        Beacon_Proximity_to_cook = False
                         Cook_Beacon_csv = pd.read_csv(file_path, skiprows=(idx))
                         Cook_Beacon_Time = Cook_Beacon_csv.iloc[:, 0]
                         Cook_Beacon_Move= Cook_Beacon_csv.iloc[:, 1]
@@ -144,10 +145,16 @@ for file in l_files:
                                 USB_FIRE_START_TV = tv
                                 break
                         for col ,name in enumerate(USB_Proximity_DF):
-                            if name[0:17] == ('RSSI ' + Cook_Beacon_name):
-                                Beacon_Proximity_to_cook = True
-                                Cook_beacon_proximity = USB_Proximity_DF.iloc[:,col]
-                                #print('beacon proximity: ', Proximity_to_cook)
+                            if Beacon_Failure == False:
+                                if name[0:17] == ('RSSI ' + Cook_Beacon_name):
+                                    Beacon_Proximity_to_cook_Fali = False
+                                    Cook_beacon_proximity = USB_Proximity_DF.iloc[:,col]
+                                    #print('beacon proximity: ', Proximity_to_cook)
+                            else:
+                                if Beacon_Proximity_to_cook_Fali == False:
+                                    break
+                                else:
+                                    Beacon_Proximity_to_cook_Fali = True
 
     elif file[0] == 'G':
         Gas_name = 'GasSense ' + file[9:13]
@@ -186,10 +193,17 @@ for file in l_files:
         GasSense_Failure = True
         print('******There is no GasSense data')
 
-# Beacon Breakdown
 
 #Cook_beacon_proximity
+# Beacon_prox_before = []
+# Beacon_prox_Cooking = []
+# Beacon_prox_Done = []
+if  Beacon_Proximity_to_cook_Fali == False:
+    Beacon_prox_before = (np.average(Cook_beacon_proximity[0:(GAS_FIRE_START_TV+1)]))
+    Beacon_prox_Cooking = (np.average(Cook_beacon_proximity[GAS_FIRE_START_TV:(Coking_Length+1)]))
+    Beacon_prox_Done = (np.average(Cook_beacon_proximity[(Coking_Length):-1]))
 
+    print('----Beacon Proximity------ Before---',Beacon_prox_before,'-- Cooking ---', Beacon_prox_Cooking,'--- After ---',Beacon_prox_Done)
 
 
 
@@ -374,7 +388,7 @@ Co_MIN_tv, Co_MAX_tv ,Co_MIN_Count, Co_MAX_Count = Functions_malawi.Local_Max_mi
 #print(HAPEX_Steady_start_Time_value)
 #ax1.plot(Steady_start_Time_value, Gas_CO[Steady_start_Time_value], label='Local Max ',color = 'k', marker=".", markersize=30)
 plt.legend()
-plt.show()
+#plt.show()
 
 
 

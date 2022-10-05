@@ -147,7 +147,7 @@ cooking_threshold = 7
 length_decrease = 40
 start_threshold = 1
 end_threshold = -5
-merge_CE_threshold = 60
+merge_CE_threshold = 40
 min_CE_length = 15
 window_slope = 8
 

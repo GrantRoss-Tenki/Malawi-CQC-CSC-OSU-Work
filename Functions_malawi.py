@@ -562,12 +562,12 @@ def Add_repeated_values(arrays, length, Stop):
         New_Array.extend([last_value]*Dif)
     return New_Array
 
-def Beacon_Movement_change(array_b):
+def Beacon_Movement_change(Start_tv, array_b):
     # first creation and run through are for one event. not all events use the USB power meter
     prev = array_b.iloc[0]
     zero_to_one = 0
     zero_to_one_tv = []
-    Reaching_to_stove = 0
+    # Reaching_to_stove = 0
     Reaching_to_stove_tv = []
     Going_away_from_stove = 0
     Going_away_from_stove_tv = []
@@ -581,24 +581,26 @@ def Beacon_Movement_change(array_b):
             #print('From funciton: ', prev, b)
             if (b == 1 and prev == 0):
                 zero_to_one = zero_to_one + 1
-                zero_to_one_tv.append(tv)
+                zero_to_one_tv.append(tv + Start_tv)
+                At_stove = At_stove + 1
                 prev = b
             elif (prev == 1 and b == 0) or (b == 0 and prev == 0):
                 Time_away_from_stove = Time_away_from_stove + 1
                 prev = b
-            elif b == 2 and prev < 2:
-                Reaching_to_stove = Reaching_to_stove + 1
-                Reaching_to_stove_tv.append(tv)
+            elif (b == 2 or b == 3) and prev < 3:
+                At_stove = At_stove + 1
+                Reaching_to_stove_tv.append(tv + Start_tv)
                 prev = b
             elif b < 2 and prev == 3:
                 Going_away_from_stove = Going_away_from_stove + 1
-                Going_away_from_stove_tv.append(tv)
-                prev = b
-            elif (b == 3):
+                Going_away_from_stove_tv.append(tv+ Start_tv)
                 At_stove = At_stove + 1
                 prev = b
+            # elif (b == 3):
+                
+            #     prev = b
             else:
                 prev = b
                 continue
             
-    return At_stove, Time_away_from_stove,zero_to_one, zero_to_one_tv, Reaching_to_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv
+    return At_stove, Time_away_from_stove,zero_to_one, zero_to_one_tv,  Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv

@@ -326,8 +326,8 @@ for file in l_files:
 # I have all of the values and organizaiton done.
 # if there is not a split of time values, Going to have to convert Hapex, Exact to minute sets
 
-#print('------Battery ', len(USB_Battery), '----- Exact 1---', len(Exact_1_Temp), len(Kitchen_Hapex_PM))
-#print('Decrease to min decrease log length: ', len(Decrease_to_min_log_length), len(First_time_Clean),Decrease_to_min_log_length[0:5])
+print('------Battery ', len(USB_Battery), '----- Exact 1---', len(Exact_1_Temp), len(Kitchen_Hapex_PM))
+#print('Decrease to min decrease log length: ', len(Decrease_to_min_log_length), len(First_gtime_Clean),Decrease_to_min_log_length[0:5])
 
 if USB_time_place == False and Fuel_time_place == False:
     USB_time = First_time_Clean

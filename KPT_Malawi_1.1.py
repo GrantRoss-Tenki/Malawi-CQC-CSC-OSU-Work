@@ -12,7 +12,7 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH1' #input("HH1 or HH2... etc:  ")
+Household_Number = 'HH4' #input("HH1 or HH2... etc:  ")
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
@@ -507,6 +507,7 @@ for Event in Event_counter:
 
     if USB_name_place == True:
         Event_Average_USB_Current.append(np.average(list((USB_Current[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
+        EVENT_CURRENT_CHECK = np.average(list((USB_Current[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])))
         Event_Median_USB_Current.append(np.median(list((USB_Current[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
         Event_StDeV_USB_Current.append((int((stat.stdev(USB_Current[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])) * 100)) / 100)
         Event_RAW_USB_Current.append(USB_Current[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
@@ -514,12 +515,13 @@ for Event in Event_counter:
         Event_Median_USB_Voltage.append(np.median(list(set(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
         Event_StDeV_USB_Voltage.append((int((stat.stdev(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])) * 100)) / 100)
         Event_RAW_USB_Voltage.append(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
-        if IS_there_a_Cook_beacon_proximity == True:
+        if (IS_there_a_Cook_beacon_proximity == True) and (EVENT_CURRENT_CHECK != 0):
             Beacon_Use_event_number.append(Event)
-            At_stove, Time_away_from_stove,zero_to_one, zero_to_one_tv, Reaching_to_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv = Functions_malawi.Beacon_Movement_change(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
+            At_stove, Time_away_from_stove,zero_to_one, zero_to_one_tv, Reaching_to_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv = Functions_malawi.Beacon_Movement_change(Beacon_proximity[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
+            print('==-=-=proximity-=-=-=-', At_stove, Time_away_from_stove, Reaching_to_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv )
             Length_of_time_at_stove.append(At_stove/Log_rate_per_min)
             length_of_time_away_from_stove.append(Time_away_from_stove/Log_rate_per_min)
-            #Time_at_stove.apppend(Fuel_time[Reaching_to_stove_tv])
+            Time_at_stove.append(Fuel_time[Reaching_to_stove_tv])
         #else: 
 
     else:
@@ -953,25 +955,28 @@ Dict_Day = {'|Day|': Day_counter,'|Day Date|':Day_date,'|Number of Events for th
     '|Average (Beacon) Child Movement for Day|':Average_Beacon_Child_Move_per_Day 
 
 }
+DF_Dict_Day= pd.DataFrame(Dict_Day)
 # print('-------len check -----', HAPEX_title_column[0:(len(Day_counter))], len(Day_date), len(Beacon_title_column[0:(len(Day_counter))]), len(Average_Cook_Comp_per_day), USB_title_column[0:(len(Day_counter))], len(Average_Cook_Comp_per_day_per_startup),len(Fuel_title_column[0:(len(Day_counter))]))
-Event_Proximity = {'|Event Number|':Beacon_Use_event_number, '|Time at Stove (Min)|': Length_of_time_at_stove,'|Time Away from Stove (Min)|':length_of_time_away_from_stove}
-#'|Time date at Stove|':Time_at_stove}
-
+Event_Proximity = {'|Event Number|':Beacon_Use_event_number, '|Time at Stove (Min)|': Length_of_time_at_stove,'|Time Away from Stove (Min)|':length_of_time_away_from_stove,
+'|Time date at Stove|':Time_at_stove}
+print('proximity dtatframe', Event_Proximity)
+#Df_Event_Proximity = pd.DataFrame(Event_Proximity)
 print('DONE WITH FILE.....')
 
-DF_Dict_Day= pd.DataFrame(Dict_Day)
+
+
+
 Path_Raw_Events = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary_"+KPT_NUM+".csv"
+Path_Proximity = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_BEacon_Proximity_"+KPT_NUM+".csv"
 #Path_Raw_Event = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact"
 #File_event_Raw_metrics = str(Path_Raw_Event) + "/Raw_E_metrics/"+Phase+"_HH_raw_Event_metrics_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
 # Df_sensor.to_csv(File_event_Raw_metrics)
 # Df_raw_event.to_csv(File_event_Raw_metrics,index=False,mode='a')
 
 
-
-
 # DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
 # DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
-
+#Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
 # DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
 # DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
 # DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')

@@ -12,7 +12,7 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH4' #input("HH1 or HH2... etc:  ")
+Household_Number = 'HH3' #input("HH1 or HH2... etc:  ")
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
@@ -326,7 +326,7 @@ for file in l_files:
 # I have all of the values and organizaiton done.
 # if there is not a split of time values, Going to have to convert Hapex, Exact to minute sets
 
-print('------Battery ', len(USB_Battery), '----- Exact 1---', len(Exact_1_Temp), len(Kitchen_Hapex_PM))
+#print('------Battery ', len(USB_Battery), '----- Exact 1---', len(Exact_1_Temp), len(Kitchen_Hapex_PM))
 #print('Decrease to min decrease log length: ', len(Decrease_to_min_log_length), len(First_gtime_Clean),Decrease_to_min_log_length[0:5])
 
 if USB_time_place == False and Fuel_time_place == False:
@@ -517,8 +517,9 @@ for Event in Event_counter:
         Event_RAW_USB_Voltage.append(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
         if (IS_there_a_Cook_beacon_proximity == True) and (EVENT_CURRENT_CHECK != 0):
             Beacon_Use_event_number.append(Event)
-            At_stove, Time_away_from_stove,zero_to_one, zero_to_one_tv, Reaching_to_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv = Functions_malawi.Beacon_Movement_change(Beacon_proximity[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
-            print('==-=-=proximity-=-=-=-', At_stove, Time_away_from_stove, Reaching_to_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv )
+            print('==-=-=proximity -- Start Time Value -=-', (Combined_Cooking_start[Event]))
+            At_stove, Time_away_from_stove,zero_to_one, zero_to_one_tv, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv = Functions_malawi.Beacon_Movement_change((Combined_Cooking_start[Event]*Log_rate_per_min),Beacon_proximity[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
+            print('==-=-=proximity-=-=-=-', At_stove, Time_away_from_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv )
             Length_of_time_at_stove.append(At_stove/Log_rate_per_min)
             length_of_time_away_from_stove.append(Time_away_from_stove/Log_rate_per_min)
             Time_at_stove.append(Fuel_time[Reaching_to_stove_tv])
@@ -957,9 +958,10 @@ Dict_Day = {'|Day|': Day_counter,'|Day Date|':Day_date,'|Number of Events for th
 }
 DF_Dict_Day= pd.DataFrame(Dict_Day)
 # print('-------len check -----', HAPEX_title_column[0:(len(Day_counter))], len(Day_date), len(Beacon_title_column[0:(len(Day_counter))]), len(Average_Cook_Comp_per_day), USB_title_column[0:(len(Day_counter))], len(Average_Cook_Comp_per_day_per_startup),len(Fuel_title_column[0:(len(Day_counter))]))
-Event_Proximity = {'|Event Number|':Beacon_Use_event_number, '|Time at Stove (Min)|': Length_of_time_at_stove,'|Time Away from Stove (Min)|':length_of_time_away_from_stove,
-'|Time date at Stove|':Time_at_stove}
+Event_Proximity = {'|Event Number|':Beacon_Use_event_number, '|Time at Stove (Min)|': Length_of_time_at_stove,'|Time Away from Stove (Min)|':length_of_time_away_from_stove}
+#'|Time date at Stove|':Time_at_stove}
 print('proximity dtatframe', Event_Proximity)
+print('Time Vlaue for tending: ', Time_at_stove)
 #Df_Event_Proximity = pd.DataFrame(Event_Proximity)
 print('DONE WITH FILE.....')
 

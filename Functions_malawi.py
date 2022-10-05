@@ -574,22 +574,31 @@ def Beacon_Movement_change(array_b):
     At_stove = 0
     Time_away_from_stove = 0
     for tv, b in enumerate(array_b):
-        if b == prev:
+        if tv == 0:
+            prev = b
             continue
         else:
+            #print('From funciton: ', prev, b)
             if (b == 1 and prev == 0):
                 zero_to_one = zero_to_one + 1
                 zero_to_one_tv.append(tv)
+                prev = b
             elif (prev == 1 and b == 0) or (b == 0 and prev == 0):
                 Time_away_from_stove = Time_away_from_stove + 1
-            elif b == 3 and prev < 3:
+                prev = b
+            elif b == 2 and prev < 2:
                 Reaching_to_stove = Reaching_to_stove + 1
                 Reaching_to_stove_tv.append(tv)
+                prev = b
             elif b < 2 and prev == 3:
                 Going_away_from_stove = Going_away_from_stove + 1
                 Going_away_from_stove_tv.append(tv)
-            elif (b == 3 or b == 2) and (prev == 3 or prev == 2):
+                prev = b
+            elif (b == 3):
                 At_stove = At_stove + 1
+                prev = b
             else:
+                prev = b
                 continue
+            
     return At_stove, Time_away_from_stove,zero_to_one, zero_to_one_tv, Reaching_to_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv

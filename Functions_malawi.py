@@ -588,7 +588,7 @@ def Beacon_Movement_change(array_b):
             elif b < 2 and prev == 3:
                 Going_away_from_stove = Going_away_from_stove + 1
                 Going_away_from_stove_tv.append(tv)
-            elif (b == 3 or b == 2) and (prev == 3 or b == 2):
+            elif (b == 3 or b == 2) and (prev == 3 or prev == 2):
                 At_stove = At_stove + 1
             else:
                 continue

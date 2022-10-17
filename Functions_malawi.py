@@ -605,3 +605,9 @@ def Beacon_Movement_change(Start_tv, array_b):
                 continue
             
     return At_stove, Time_away_from_stove,zero_to_one, zero_to_one_tv,  Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv
+
+def FF_to_jet_flame_usage(FF_start, FF_end, USB_JFK_usage_array):
+    total_CE_length = FF_end - FF_start
+    USB_usage_sum = sum(USB_JFK_usage_array[FF_start:FF_end])
+    percentage = (int((USB_usage_sum/total_CE_length)*100))/100
+    return percentage

@@ -12,8 +12,8 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH2' #input("HH1 or HH2... etc:  ")
-Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
+Household_Number = 'HH1' #input("HH1 or HH2... etc:  ")
+Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
 Cooldown_Spread = 30
@@ -22,7 +22,7 @@ Log_rate_per_min = 15
 if Source == 'laptop':
     USB_D = 'D'
 elif Source != 'laptop':
-    USB_D = 'E'
+    USB_D = 'F'
 
 # sorting out the missing data
 USB_time_place = False
@@ -206,7 +206,7 @@ for file in l_files:
 
                     elif 'Timestamp' in row:
                         print('here is the timestamp :', idx)
-                        WHOLE_CSV = pd.read_csv(file_path, skiprows=(idx))
+                        WHOLE_CSV = pd.read_csv(file_path, skiprows=(idx), encoding='unicode_escape')
                         
                         if One_time == False:
                             First_time = WHOLE_CSV.iloc[:,0]
@@ -961,7 +961,7 @@ Event_Proximity = {'|Event Number|':Beacon_Use_event_number, '|Time at Stove (Mi
 #'|Time date at Stove|':Time_at_stove}
 print('proximity dtatframe', Event_Proximity)
 print('Time Vlaue for tending: ', Time_at_stove)
-#Df_Event_Proximity = pd.DataFrame(Event_Proximity)
+Df_Event_Proximity = pd.DataFrame(Event_Proximity)
 print('DONE WITH FILE.....')
 
 
@@ -977,7 +977,7 @@ Path_Proximity = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_BEacon_Proximity_"
 
 # DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
 # DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
-#Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
+# Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
 # DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
 # DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
 # DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')

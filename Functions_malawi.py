@@ -564,6 +564,7 @@ def Add_repeated_values(arrays, length, Stop):
 
 def Beacon_Movement_change(Start_tv, array_b):
     # first creation and run through are for one event. not all events use the USB power meter
+    # Since fire Finder is minute by minute log rate, Start TV need to be mulitiplied by the log rate per minute 
     prev = array_b.iloc[0]
     zero_to_one = 0
     zero_to_one_tv = []

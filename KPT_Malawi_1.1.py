@@ -378,6 +378,8 @@ if (Exact_1_place == True) and (Exact_2_place == True):
         elif (Fire == 1) and (Combined_Stove[count_onez_and_zeros] == 0) and (Cooking == True):
             Combined_Cooking_end.append(count_onez_and_zeros-1)
             Cooking = False
+    if len(Combined_Cooking_start) > len(Combined_Cooking_end):
+        Combined_Cooking_end.append(count_onez_and_zeros)
 
 print('----FF Start----------',Combined_Cooking_start)
 print('----FF End------------',Combined_Cooking_end)

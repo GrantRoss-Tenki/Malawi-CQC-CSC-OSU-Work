@@ -429,8 +429,6 @@ for Event in Event_counter:
     #first Fuel
     if Fuel_1_place == True:
         fuel_bounds_1 = list(set(KG_burned_1[((Combined_Cooking_start[Event]-(Start_Up_Spread*Log_rate_per_min))*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))
-        
-
         if (Event != 0) and (fuel_bounds_1 != []):
             #print('Fuel Bounds 1----', Event, sum(fuel_bounds_1),'last fuel bound--',prev_fuel_bound_1)
             #print('--- are they the same?----', ((prev_fuel_bound_1)*10000),'==',((fuel_bounds_1[0])*10000))

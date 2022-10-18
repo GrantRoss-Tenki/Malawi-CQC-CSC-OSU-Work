@@ -13,7 +13,7 @@ import Functions_malawi
 import itertools  
 
 Household_Number = 'HH1' #input("HH1 or HH2... etc:  ")
-Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
+Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
 Cooldown_Spread = 30
@@ -296,6 +296,7 @@ for file in l_files:
                                 USB_Energy = WHOLE_CSV.iloc[:,Column+4]
                                 USB_Usage = WHOLE_CSV.iloc[:,Column+5]
                                 Proxmimity_column_count = np.arange(Column + 6, len(row), 1)
+                                print('~~~~~~~USB first values ~~~~~',USB_Current[0],USB_Power[0],sum(USB_Usage[2641:2655])   )
                                 for prox in Proxmimity_column_count:
                                     row_Name = row[prox]
                                     if row_Name[0:17] == ('RSSI Beacon  ' + Cook_beacon):
@@ -432,6 +433,7 @@ Length_of_time_at_stove = []
 length_of_time_away_from_stove = []
 Time_at_stove = []
 for Event in Event_counter:
+    print('|||Event||', Event, '|||Cooking start||',Combined_Cooking_start[Event], Combined_Cooking_start[Event]*Log_rate_per_min )
     #first Fuel
     if Fuel_1_place == True:
         fuel_bounds_1 = list(set(KG_burned_1[((Combined_Cooking_start[Event]-(Start_Up_Spread*Log_rate_per_min))*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))
@@ -509,7 +511,7 @@ for Event in Event_counter:
         Event_Average_Cook_Compliance.append(-1);Event_Average_Cook_PM.append(-1)
         Event_Median_Cook_PM.append(-1);Event_StDeV_Cook_PM.append(-1)
 
-    if USB_name_place == True:
+    if USB_name_place == True and sum(USB_Usage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]) != 0:
         Event_Average_USB_Current.append(np.average(list((USB_Current[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
         EVENT_CURRENT_CHECK = np.average(list((USB_Current[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])))
         Event_Median_USB_Current.append(np.median(list((USB_Current[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
@@ -519,16 +521,16 @@ for Event in Event_counter:
         Event_Median_USB_Voltage.append(np.median(list(set(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
         Event_StDeV_USB_Voltage.append((int((stat.stdev(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])) * 100)) / 100)
         Event_RAW_USB_Voltage.append(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
-        JFK_percent, JFK_start, JFK_end = Functions_malawi.FF_to_jet_flame_usage((Combined_Cooking_start[Event]),(Combined_Cooking_end[Event]),USB_Usage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
+        JFK_percent, JFK_start, JFK_end = Functions_malawi.FF_to_jet_flame_usage((Combined_Cooking_start[Event]*Log_rate_per_min),(Combined_Cooking_end[Event]*Log_rate_per_min),USB_Usage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
         
         Event_jet_flame_percent.append(JFK_percent)
         Event_jet_flame_start_min.append(JFK_start/Log_rate_per_min)
         Event_jet_flame_end_min.append(JFK_end/Log_rate_per_min)
         if (IS_there_a_Cook_beacon_proximity == True) and (EVENT_CURRENT_CHECK != 0):
             Beacon_Use_event_number.append(Event)
-            print('==-=-=proximity -- Start Time Value -=-', (Combined_Cooking_start[Event]))
-            At_stove,Jet_flame_adjust ,Time_away_from_stove,zero_to_one, zero_to_one_tv, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv = Functions_malawi.Beacon_Movement_change((Combined_Cooking_start[Event]*Log_rate_per_min),Beacon_proximity[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
-            print('==-=-=proximity-=-=-=-', At_stove, Time_away_from_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv )
+            #print('==-=-=proximity -- Start Time Value -=-', (Combined_Cooking_start[Event]))
+            At_stove,Jet_flame_adjust ,Time_away_from_stove,zero_to_one, zero_to_one_tv, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv = Functions_malawi.Beacon_Movement_change((Combined_Cooking_start[Event]*Log_rate_per_min),Beacon_proximity.loc[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
+            #print('==-=-=proximity-=-=-=-', At_stove, Time_away_from_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv )
             Length_of_time_at_stove.append(At_stove/Log_rate_per_min)
             length_of_time_away_from_stove.append(Time_away_from_stove/Log_rate_per_min)
             Time_at_stove.append(Fuel_time[Reaching_to_stove_tv])
@@ -614,7 +616,9 @@ for Event in Event_counter:
     else:
         Startup_Average_Cook_Compliance.append(-1); Startup_Average_Cook_PM.append(-1)
         Startup_Median_Cook_PM.append(-1);Startup_StDeV_Cook_PM.append(-1)
+
     if USB_name_place == True:
+
         Startup_Average_USB_Current.append(np.average(list((USB_Current[((Combined_Cooking_start[Event]*Log_rate_per_min)-(Start_Up_Spread*Log_rate_per_min)):((Combined_Cooking_start[Event]*Log_rate_per_min)+1)]))))
         Startup_Median_USB_Current.append(np.median(list(USB_Current[((Combined_Cooking_start[Event]*Log_rate_per_min)-(Start_Up_Spread*Log_rate_per_min)):((Combined_Cooking_start[Event]*Log_rate_per_min)+1)])))
         Startup_StDeV_USB_Current.append((int((stat.stdev(USB_Current[((Combined_Cooking_start[Event]*Log_rate_per_min)-(Start_Up_Spread*Log_rate_per_min)):((Combined_Cooking_start[Event]*Log_rate_per_min)+1)])) * 100)) / 100)
@@ -971,8 +975,8 @@ DF_Dict_Day= pd.DataFrame(Dict_Day)
 # print('-------len check -----', HAPEX_title_column[0:(len(Day_counter))], len(Day_date), len(Beacon_title_column[0:(len(Day_counter))]), len(Average_Cook_Comp_per_day), USB_title_column[0:(len(Day_counter))], len(Average_Cook_Comp_per_day_per_startup),len(Fuel_title_column[0:(len(Day_counter))]))
 Event_Proximity = {'|Event Number|':Beacon_Use_event_number, '|Time at Stove (Min)|': Length_of_time_at_stove,'|Time Away from Stove (Min)|':length_of_time_away_from_stove}
 #'|Time date at Stove|':Time_at_stove}
-print('proximity dtatframe', Event_Proximity)
-print('Time Vlaue for tending: ', Time_at_stove)
+#print('proximity dtatframe', Event_Proximity)
+#print('Time Vlaue for tending: ', Time_at_stove)
 Df_Event_Proximity = pd.DataFrame(Event_Proximity)
 print('DONE WITH FILE.....')
 
@@ -989,7 +993,7 @@ Path_Proximity = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_BEacon_Proximity_"
 
 DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
 DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
-Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
+#Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
 DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
 DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
 DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')

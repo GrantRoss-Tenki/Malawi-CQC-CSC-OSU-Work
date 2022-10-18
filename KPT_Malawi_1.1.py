@@ -419,6 +419,10 @@ Event_Average_USB_Voltage = []
 Event_Median_USB_Voltage = []
 Event_StDeV_USB_Voltage = []
 Event_RAW_USB_Voltage = []
+Event_jet_flame_percent = []
+Event_jet_flame_start_min = []
+Event_jet_flame_end_min = []
+
 prev_fuel_bound_1 = [0]
 prev_fuel_bound_2 = [0]
 
@@ -515,6 +519,11 @@ for Event in Event_counter:
         Event_Median_USB_Voltage.append(np.median(list(set(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
         Event_StDeV_USB_Voltage.append((int((stat.stdev(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])) * 100)) / 100)
         Event_RAW_USB_Voltage.append(USB_Voltage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
+        JFK_percent, JFK_start, JFK_end = Functions_malawi.FF_to_jet_flame_usage((Combined_Cooking_start[Event]),(Combined_Cooking_end[Event]),USB_Usage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
+        
+        Event_jet_flame_percent.append(JFK_percent)
+        Event_jet_flame_start_min.append(JFK_start/Log_rate_per_min)
+        Event_jet_flame_end_min.append(JFK_end/Log_rate_per_min)
         if (IS_there_a_Cook_beacon_proximity == True) and (EVENT_CURRENT_CHECK != 0):
             Beacon_Use_event_number.append(Event)
             print('==-=-=proximity -- Start Time Value -=-', (Combined_Cooking_start[Event]))
@@ -530,6 +539,8 @@ for Event in Event_counter:
         Event_Median_USB_Current.append(-1); Event_StDeV_USB_Voltage.append(-1)
         Event_StDeV_USB_Current.append(-1); Event_RAW_USB_Voltage.append(-1)
         Event_RAW_USB_Current.append(-1);Event_Average_USB_Voltage.append(-1)
+        Event_jet_flame_percent.append(-1);Event_jet_flame_start_min.append(-1)
+        Event_jet_flame_end_min.append(-1)
 
     if Cook_Beacon_place == True:
         Event_Avergage_Cook_Beacon_Acceleration.append(np.average(list(set(Cook_Beacon_accel[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
@@ -904,7 +915,8 @@ Dict_Event = {'|Event|': Event_counter, '|Start Time|':Event_start_time, '|End T
    '|Median Cook PM|':Event_Median_Cook_PM, '|StDev Kitchen PM|':Event_StDeV_Kitchen_PM, '|StDev Cook PM|':Event_StDeV_Cook_PM,'|Cook Beacon Acceleration|':Event_Avergage_Cook_Beacon_Acceleration,
    '----BEACON----':Beacon_title_column[0:(len(Event_counter)+1)],'|Child Beacon Accleration|': Event_Average_Child_Beacon_Acceleration, '|Child Beacon Movement|':Event_Average_Child_Beacon_Movement, '----USB----':USB_title_column[0:(len(Event_counter)+1)],'|Avg. USB Current|':Event_Average_USB_Current,
    '|Median USB Current|':Event_Median_USB_Current, '|StDev USB Current|':Event_StDeV_USB_Current,'|Avg. USB Voltage|':Event_Average_USB_Voltage,
-    '|Median USB Voltage|':Event_Median_USB_Voltage, '|StDev USB Voltage|':Event_StDeV_USB_Voltage}
+    '|Median USB Voltage|':Event_Median_USB_Voltage, '|StDev USB Voltage|':Event_StDeV_USB_Voltage,'|Jet Flame Percentage|':Event_jet_flame_percent,
+    '|Jet Flame Start from Fire (min)|':Event_jet_flame_start_min, '|Jet Flame End from Fire end (min)|':Event_jet_flame_end_min}
 
 
 DF_Dict_Event = pd.DataFrame(Dict_Event)
@@ -975,9 +987,9 @@ Path_Proximity = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_BEacon_Proximity_"
 # Df_raw_event.to_csv(File_event_Raw_metrics,index=False,mode='a')
 
 
-# DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
-# DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
-# Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
-# DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
-# DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
-# DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
+Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
+DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')

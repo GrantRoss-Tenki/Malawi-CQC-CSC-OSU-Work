@@ -614,7 +614,7 @@ def FF_to_jet_flame_usage(FF_start, FF_end, USB_JFK_usage_array):
     #USB_JFK_usage_array = USB_JFK_usage_array[FF_start:FF_end]
     USB_usage_sum = sum(USB_JFK_usage_array)
     #print('---------------------from Function -----: ',USB_usage_sum,total_CE_length, USB_JFK_usage_array[10:25] )
-    percentage = (int((USB_usage_sum/total_CE_length)*100))/100
+    percentage = (int((USB_usage_sum/total_CE_length)*1000))/100
     is_one = False
     is_zero = True
     Jet_flame_start_min = FF_start
@@ -622,12 +622,17 @@ def FF_to_jet_flame_usage(FF_start, FF_end, USB_JFK_usage_array):
     for tv, a in enumerate(USB_JFK_usage_array):
         if a == 0 and is_one == False:
             is_zero = True
-        if is_one == False and a == 1:
+        elif is_one == False and a == 1 and is_zero == True:
             Jet_flame_start_min = tv
+            JFK_on_place = tv
             is_one = True
             is_zero = False
-        elif is_zero == False and a == 0:
-            Jet_Flame_end_min = FF_end - tv
+        elif is_zero == False and a == 0 and is_one == True:
+            Jet_Flame_end_min = FF_end - tv - FF_start
             is_one = False
             is_zero = True
-    return percentage,Jet_flame_start_min ,Jet_Flame_end_min
+            JFK_off_place = tv
+            break
+    jet_flame_on = round(JFK_off_place - JFK_on_place)
+    print('---------------------from Function -----: ',total_CE_length, Jet_Flame_end_min, FF_end, tv,Jet_flame_start_min)
+    return percentage,Jet_flame_start_min ,Jet_Flame_end_min, jet_flame_on

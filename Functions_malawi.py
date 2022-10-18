@@ -566,6 +566,7 @@ def Beacon_Movement_change(Start_tv, array_b):
     # first creation and run through are for one event. not all events use the USB power meter
     # Since fire Finder is minute by minute log rate, Start TV need to be mulitiplied by the log rate per minute 
     prev = array_b.iloc[0]
+    
     zero_to_one = 0
     zero_to_one_tv = []
     # Reaching_to_stove = 0
@@ -574,12 +575,14 @@ def Beacon_Movement_change(Start_tv, array_b):
     Going_away_from_stove_tv = []
     At_stove = 0
     Time_away_from_stove = 0
+    Adjusting_Jet_flame = 0
     for tv, b in enumerate(array_b):
+        #print('From funciton: ', prev, b)  
         if tv == 0:
             prev = b
             continue
         else:
-            #print('From funciton: ', prev, b)
+            
             if (b == 1 and prev == 0):
                 zero_to_one = zero_to_one + 1
                 zero_to_one_tv.append(tv + Start_tv)
@@ -597,17 +600,32 @@ def Beacon_Movement_change(Start_tv, array_b):
                 Going_away_from_stove_tv.append(tv+ Start_tv)
                 At_stove = At_stove + 1
                 prev = b
-            # elif (b == 3):
-                
-            #     prev = b
+            if (b == 3):
+                Adjusting_Jet_flame = Adjusting_Jet_flame +1
+                prev = b
             else:
                 prev = b
                 continue
             
-    return At_stove, Time_away_from_stove,zero_to_one, zero_to_one_tv,  Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv
+    return At_stove, Adjusting_Jet_flame,Time_away_from_stove,zero_to_one, zero_to_one_tv,  Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv
 
 def FF_to_jet_flame_usage(FF_start, FF_end, USB_JFK_usage_array):
     total_CE_length = FF_end - FF_start
     USB_usage_sum = sum(USB_JFK_usage_array[FF_start:FF_end])
     percentage = (int((USB_usage_sum/total_CE_length)*100))/100
-    return percentage
+    is_one = False
+    is_zero = True
+    Jet_flame_start_min = FF_start
+    Jet_Flame_end_min = FF_end
+    for tv, a in enumerate(USB_JFK_usage_array):
+        if a == 0 and is_one == False:
+            is_zero = True
+        if is_one == False and a == 1:
+            Jet_flame_start_min = tv
+            is_one = True
+            is_zero = False
+        elif is_zero == False and a == 0:
+            Jet_Flame_end_min = FF_end - tv
+            is_one = False
+            is_zero = True
+    return percentage,Jet_flame_start_min ,Jet_Flame_end_min

@@ -530,7 +530,7 @@ for Event in Event_counter:
         Event_jet_flame_percent.append(str(JFK_percent) + ' %')
         Event_jet_flame_start_min.append(int(JFK_start/Log_rate_per_min))
         Event_jet_flame_end_min.append(int(JFK_end/Log_rate_per_min))
-        Event_jet_flame_time_on.append(int((jet_flame_on/Log_rate_per_min)*10)/10)
+        Event_jet_flame_time_on.append(round((jet_flame_on/Log_rate_per_min)))
         if (IS_there_a_Cook_beacon_proximity == True) and (EVENT_CURRENT_CHECK != 0):
             Beacon_Use_event_number.append(Event)
             #print('==-=-=proximity -- Start Time Value -=-', (Combined_Cooking_start[Event]))

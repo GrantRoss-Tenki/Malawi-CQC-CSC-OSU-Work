@@ -432,6 +432,7 @@ prev_fuel_bound_2 = [0]
 Beacon_Use_event_number = []
 Length_of_time_at_stove = []
 length_of_time_away_from_stove = []
+Adjusting_the_jet_flame = []
 Time_at_stove = []
 for Event in Event_counter:
     print('|||Event||', Event, '|||Cooking start||',Combined_Cooking_start[Event], Combined_Cooking_start[Event]*Log_rate_per_min )
@@ -536,10 +537,16 @@ for Event in Event_counter:
             #print('==-=-=proximity -- Start Time Value -=-', (Combined_Cooking_start[Event]))
             At_stove,Jet_flame_adjust ,Time_away_from_stove,zero_to_one, zero_to_one_tv, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv = Functions_malawi.Beacon_Movement_change((Combined_Cooking_start[Event]*Log_rate_per_min),Beacon_proximity.loc[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
             #print('==-=-=proximity-=-=-=-', At_stove, Time_away_from_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv )
-            Length_of_time_at_stove.append(At_stove/Log_rate_per_min)
-            length_of_time_away_from_stove.append(Time_away_from_stove/Log_rate_per_min)
-            Time_at_stove.append(Fuel_time[Reaching_to_stove_tv])
-
+            if Event_Length[-1] == Time_away_from_stove/Log_rate_per_min:
+                Length_of_time_at_stove.append('No Cook Beacon')
+                length_of_time_away_from_stove.append('No Cook Beacon')
+                Adjusting_the_jet_flame.append('No Cook Beacon')
+            else:
+                Length_of_time_at_stove.append(At_stove/Log_rate_per_min)
+                length_of_time_away_from_stove.append(Time_away_from_stove/Log_rate_per_min)
+                Time_at_stove.append(Fuel_time[Reaching_to_stove_tv])
+                Adjusting_the_jet_flame.append(Jet_flame_adjust)
+            
     else:
         Event_Average_USB_Current.append(-1);Event_Median_USB_Voltage.append(-1)
         Event_Median_USB_Current.append(-1); Event_StDeV_USB_Voltage.append(-1)
@@ -552,6 +559,7 @@ for Event in Event_counter:
         length_of_time_away_from_stove.append(-1)
         Length_of_time_at_stove.append(-1)
         Event_jet_flame_time_on.append(-1)
+        Adjusting_the_jet_flame.append(-1)
 
     if Cook_Beacon_place == True:
         Event_Avergage_Cook_Beacon_Acceleration.append(np.average(list(set(Cook_Beacon_accel[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
@@ -929,7 +937,8 @@ Dict_Event = {'|Event|': Event_counter, '|Start Time|':Event_start_time, '|End T
    '----BEACON----':Beacon_title_column[0:(len(Event_counter)+1)],'|Child Beacon Accleration|': Event_Average_Child_Beacon_Acceleration, '|Child Beacon Movement|':Event_Average_Child_Beacon_Movement, '----USB----':USB_title_column[0:(len(Event_counter)+1)],'|Avg. USB Current|':Event_Average_USB_Current,
    '|Median USB Current|':Event_Median_USB_Current, '|StDev USB Current|':Event_StDeV_USB_Current,'|Avg. USB Voltage|':Event_Average_USB_Voltage,
     '|Median USB Voltage|':Event_Median_USB_Voltage, '|StDev USB Voltage|':Event_StDeV_USB_Voltage,'|Jet Flame on for ~(min)|':Event_jet_flame_time_on,'|Jet Flame Percentage(%)|':Event_jet_flame_percent,
-    '|Jet Flame Start from Fire (min)|':Event_jet_flame_start_min, '|Jet Flame End from Fire end (min)|':Event_jet_flame_end_min}
+    '|Jet Flame Start from Fire (min)|':Event_jet_flame_start_min, '|Jet Flame End from Fire end (min)|':Event_jet_flame_end_min,'|Time at Stove (Min)|': Length_of_time_at_stove,'|Time Away from Stove (Min)|':length_of_time_away_from_stove, 
+    '|# of times adjusting the Jet flame|':Adjusting_the_jet_flame}
 
 
 DF_Dict_Event = pd.DataFrame(Dict_Event)
@@ -982,8 +991,10 @@ Dict_Day = {'|Day|': Day_counter,'|Day Date|':Day_date,'|Number of Events for th
 }
 DF_Dict_Day= pd.DataFrame(Dict_Day)
 # print('-------len check -----', HAPEX_title_column[0:(len(Day_counter))], len(Day_date), len(Beacon_title_column[0:(len(Day_counter))]), len(Average_Cook_Comp_per_day), USB_title_column[0:(len(Day_counter))], len(Average_Cook_Comp_per_day_per_startup),len(Fuel_title_column[0:(len(Day_counter))]))
-Event_Proximity = {'|Event Number|':Beacon_Use_event_number, '|Time at Stove (Min)|': Length_of_time_at_stove,'|Time Away from Stove (Min)|':length_of_time_away_from_stove}
-#'|Time date at Stove|':Time_at_stove}
+Event_Proximity = {'|Time date at Stove|':Time_at_stove}
+
+#'|Event Number|':Beacon_Use_event_number, 
+#
 #print('proximity dtatframe', Event_Proximity)
 #print('Time Vlaue for tending: ', Time_at_stove)
 Df_Event_Proximity = pd.DataFrame(Event_Proximity)
@@ -993,7 +1004,7 @@ print('DONE WITH FILE.....')
 
 
 Path_Raw_Events = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary_"+KPT_NUM+".csv"
-Path_Proximity = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_BEacon_Proximity_"+KPT_NUM+".csv"
+Path_Proximity = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Beacon_Proximity_"+KPT_NUM+".csv"
 #Path_Raw_Event = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact"
 #File_event_Raw_metrics = str(Path_Raw_Event) + "/Raw_E_metrics/"+Phase+"_HH_raw_Event_metrics_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"
 # Df_sensor.to_csv(File_event_Raw_metrics)

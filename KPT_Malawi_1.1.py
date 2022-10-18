@@ -518,7 +518,7 @@ for Event in Event_counter:
         if (IS_there_a_Cook_beacon_proximity == True) and (EVENT_CURRENT_CHECK != 0):
             Beacon_Use_event_number.append(Event)
             print('==-=-=proximity -- Start Time Value -=-', (Combined_Cooking_start[Event]))
-            At_stove, Time_away_from_stove,zero_to_one, zero_to_one_tv, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv = Functions_malawi.Beacon_Movement_change((Combined_Cooking_start[Event]*Log_rate_per_min),Beacon_proximity[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
+            At_stove,Jet_flame_adjust ,Time_away_from_stove,zero_to_one, zero_to_one_tv, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv = Functions_malawi.Beacon_Movement_change((Combined_Cooking_start[Event]*Log_rate_per_min),Beacon_proximity[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
             print('==-=-=proximity-=-=-=-', At_stove, Time_away_from_stove, Reaching_to_stove_tv, Going_away_from_stove, Going_away_from_stove_tv )
             Length_of_time_at_stove.append(At_stove/Log_rate_per_min)
             length_of_time_away_from_stove.append(Time_away_from_stove/Log_rate_per_min)

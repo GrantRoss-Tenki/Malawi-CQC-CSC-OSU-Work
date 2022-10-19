@@ -936,7 +936,7 @@ DF_Dict_sensors = pd.DataFrame(Dict_sensors)
 
 Dict_Event = {'|Event|': Event_counter, '|Start Time|':Event_start_time, '|End Time|':Event_End_time,'|Length of Event|':Event_Length,'----FUEL----':Fuel_title_column[0:(len(Event_counter)+1)],'|Fuel 1 Removed|': Event_KG_Removed_Fuel_1, 
 '|Fuel 2 Removed|': Event_KG_Removed_Fuel_2, '|Combined Fuel Removed|':Event_KG_Combined_Fuel, '----HAPEx----':HAPEX_title_column[0:(len(Event_counter)+1)],'|Avg. Kitchen Comp|':Event_Average_Kitchen_Compliance,'|Avg. Cook Comp|':Event_Average_Cook_Compliance,
-   '|Average Kitchen PM|':Event_Average_Kitchen_PM, '|Average Cook PM|':Event_Average_Cook_PM,
+   '|Average Kitchen PM|':Event_Average_Kitchen_PM, '|Average Cook PM|':Event_Average_Cook_PM,'|Median Kitchen PM|':Event_Median_Kitchen_PM,
    '|Median Cook PM|':Event_Median_Cook_PM, '|StDev Kitchen PM|':Event_StDeV_Kitchen_PM, '|StDev Cook PM|':Event_StDeV_Cook_PM,'|Cook Beacon Acceleration|':Event_Avergage_Cook_Beacon_Acceleration,
    '----BEACON----':Beacon_title_column[0:(len(Event_counter)+1)],'|Child Beacon Accleration|': Event_Average_Child_Beacon_Acceleration, '|Child Beacon Movement|':Event_Average_Child_Beacon_Movement, '----USB----':USB_title_column[0:(len(Event_counter)+1)],'|Avg. USB Current|':Event_Average_USB_Current,
    '|Median USB Current|':Event_Median_USB_Current, '|StDev USB Current|':Event_StDeV_USB_Current,'|Avg. USB Voltage|':Event_Average_USB_Voltage,

@@ -12,7 +12,7 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH1' #input("HH1 or HH2... etc:  ")
+Household_Number = 'HH6' #input("HH1 or HH2... etc:  ")
 Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
@@ -425,6 +425,7 @@ Event_jet_flame_start_min = []
 Event_jet_flame_end_min = []
 Event_jet_flame_time_on = []
 
+
 prev_fuel_bound_1 = [0]
 prev_fuel_bound_2 = [0]
 
@@ -433,9 +434,10 @@ Beacon_Use_event_number = []
 Length_of_time_at_stove = []
 length_of_time_away_from_stove = []
 Adjusting_the_jet_flame = []
+Percentage_away_from_stove_CE = []
 Time_at_stove = []
 for Event in Event_counter:
-    print('|||Event||', Event, '|||Cooking start||',Combined_Cooking_start[Event], Combined_Cooking_start[Event]*Log_rate_per_min )
+    #print('|||Event||', Event, '|||Cooking start||', Event_RAW_USB_Voltage )
     #first Fuel
     if Fuel_1_place == True:
         fuel_bounds_1 = list(set(KG_burned_1[((Combined_Cooking_start[Event]-(Start_Up_Spread*Log_rate_per_min))*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))
@@ -461,7 +463,7 @@ for Event in Event_counter:
             prev_fuel_bound_1 = fuel_bounds_1[-1]
         
     else:
-        Event_KG_Removed_Fuel_1.append(-1)
+        Event_KG_Removed_Fuel_1.append("")
     #Second Fuel
     if Fuel_2_place == True:
         
@@ -488,7 +490,7 @@ for Event in Event_counter:
     if Fuel_2_place == True and Fuel_1_place == True:
         Event_KG_Combined_Fuel.append((Event_KG_Removed_Fuel_1[-1] + Event_KG_Removed_Fuel_2[-1]))
     else:
-        Event_KG_Combined_Fuel.append(-1)
+        Event_KG_Combined_Fuel.append("")
 
     if Kitchen_Hapex_place == True:
         Event_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
@@ -496,8 +498,8 @@ for Event in Event_counter:
         Event_Median_Kitchen_PM.append((int((np.median([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
         Event_StDeV_Kitchen_PM.append((int((stat.stdev(Kitchen_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])])) * 100)) / 100)
     else:
-        Event_Average_Kitchen_Compliance.append(-1);Event_Average_Kitchen_PM.append(-1)
-        Event_Median_Kitchen_PM.append(-1);Event_StDeV_Kitchen_PM.append(-1)
+        Event_Average_Kitchen_Compliance.append("");Event_Average_Kitchen_PM.append("")
+        Event_Median_Kitchen_PM.append("");Event_StDeV_Kitchen_PM.append("")
 
     Event_Length.append((Combined_Cooking_end[Event])-(Combined_Cooking_start[Event]))
     Event_start_time.append(Decrease_to_min_log_length[(Combined_Cooking_start[Event])])
@@ -510,8 +512,8 @@ for Event in Event_counter:
         Event_Median_Cook_PM.append((int((np.median([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]]))*100))/100)
         Event_StDeV_Cook_PM.append((int((stat.stdev(Cook_Hapex_PM[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])])) * 100)) / 100)
     else:
-        Event_Average_Cook_Compliance.append(-1);Event_Average_Cook_PM.append(-1)
-        Event_Median_Cook_PM.append(-1);Event_StDeV_Cook_PM.append(-1)
+        Event_Average_Cook_Compliance.append("");Event_Average_Cook_PM.append("")
+        Event_Median_Cook_PM.append("");Event_StDeV_Cook_PM.append("")
 
     if USB_name_place == True and sum(USB_Usage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]) != 0:
         JFK_percent, JFK_start, JFK_end, jet_flame_on = Functions_malawi.FF_to_jet_flame_usage((Combined_Cooking_start[Event]*Log_rate_per_min),(Combined_Cooking_end[Event]*Log_rate_per_min),USB_Usage[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
@@ -528,7 +530,7 @@ for Event in Event_counter:
         Event_StDeV_USB_Voltage.append((int((stat.stdev(USB_Voltage.loc[Jet_flame_Start:Jet_flame_End])) * 100)) / 100)
         Event_RAW_USB_Voltage.append(USB_Voltage.loc[Jet_flame_Start:Jet_flame_End])
         
-        Event_jet_flame_percent.append(str(JFK_percent) + ' %')
+        Event_jet_flame_percent.append((JFK_percent))
         Event_jet_flame_start_min.append(int(JFK_start/Log_rate_per_min))
         Event_jet_flame_end_min.append(int(JFK_end/Log_rate_per_min))
         Event_jet_flame_time_on.append(round((jet_flame_on/Log_rate_per_min)))
@@ -541,32 +543,34 @@ for Event in Event_counter:
                 Length_of_time_at_stove.append('No Cook Beacon')
                 length_of_time_away_from_stove.append('No Cook Beacon')
                 Adjusting_the_jet_flame.append('No Cook Beacon')
+                Percentage_away_from_stove_CE.append('No Cook Beacon')
             else:
                 Length_of_time_at_stove.append(At_stove/Log_rate_per_min)
                 length_of_time_away_from_stove.append(Time_away_from_stove/Log_rate_per_min)
-                Time_at_stove.append(Fuel_time[Reaching_to_stove_tv])
+                #Time_at_stove.append(Fuel_time[Reaching_to_stove_tv])
                 Adjusting_the_jet_flame.append(Jet_flame_adjust)
-            
+                Percentage_away_from_stove_CE.append((int(((length_of_time_away_from_stove[-1])/(Event_Length[-1]))*100)))
     else:
-        Event_Average_USB_Current.append(-1);Event_Median_USB_Voltage.append(-1)
-        Event_Median_USB_Current.append(-1); Event_StDeV_USB_Voltage.append(-1)
-        Event_StDeV_USB_Current.append(-1); Event_RAW_USB_Voltage.append(-1)
-        Event_RAW_USB_Current.append(-1);Event_Average_USB_Voltage.append(-1)
-        Event_jet_flame_percent.append(-1);Event_jet_flame_start_min.append(-1)
-        Event_jet_flame_end_min.append(-1)
-        Time_at_stove.append(-1)
+        Event_Average_USB_Current.append("");Event_Median_USB_Voltage.append("")
+        Event_Median_USB_Current.append(""); Event_StDeV_USB_Voltage.append("")
+        Event_StDeV_USB_Current.append(""); Event_RAW_USB_Voltage.append("")
+        Event_RAW_USB_Current.append("");Event_Average_USB_Voltage.append("")
+        Event_jet_flame_percent.append("");Event_jet_flame_start_min.append("")
+        Event_jet_flame_end_min.append("")
+        Time_at_stove.append("")
         Beacon_Use_event_number.append(Event)
-        length_of_time_away_from_stove.append(-1)
-        Length_of_time_at_stove.append(-1)
-        Event_jet_flame_time_on.append(-1)
-        Adjusting_the_jet_flame.append(-1)
+        length_of_time_away_from_stove.append("")
+        Length_of_time_at_stove.append("")
+        Event_jet_flame_time_on.append("")
+        Adjusting_the_jet_flame.append("")
+        Percentage_away_from_stove_CE.append("")
 
     if Cook_Beacon_place == True:
         Event_Avergage_Cook_Beacon_Acceleration.append(np.average(list(set(Cook_Beacon_accel[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
         Event_RAW_Beacon_Cook_accel.append(Cook_Beacon_accel[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
     else:
-        Event_Avergage_Cook_Beacon_Acceleration.append(-1)
-        Event_RAW_Beacon_Cook_accel.append(-1)
+        Event_Avergage_Cook_Beacon_Acceleration.append("")
+        Event_RAW_Beacon_Cook_accel.append("")
 
     if Child_Beacon_place == True:
         Event_Average_Child_Beacon_Acceleration.append(np.average(list(set(Child_Beacon_accel[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
@@ -575,10 +579,10 @@ for Event in Event_counter:
         Event_RAW_Child_Beacon_Movement.append(Child_Beacon_move[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)])
 
     else:
-        Event_Average_Child_Beacon_Acceleration.append(-1)
-        Event_Average_Child_Beacon_Movement.append(-1)
-        Event_RAW_Child_Beacon_Acceleration.append(-1)
-        Event_RAW_Child_Beacon_Movement.append(-1)
+        Event_Average_Child_Beacon_Acceleration.append("")
+        Event_Average_Child_Beacon_Movement.append("")
+        Event_RAW_Child_Beacon_Acceleration.append("")
+        Event_RAW_Child_Beacon_Movement.append("")
     #print('<<<<<<<<<<<<<<<<<<<<<<<<<<<',Event,'-----',Event_KG_Removed_Fuel_1[-1],'-----',sum(fuel_bounds_1),' Next Event>>>>>>>>>>>>>>>>>>>>>>>>>>',prev_fuel_bound_1,'+++++',fuel_bounds_1)
     #print('-')
 # need to see the averages for the Kitchen Hapex and Firefinder start
@@ -622,8 +626,8 @@ for Event in Event_counter:
         Startup_Median_Kitchen_PM.append((int((np.median([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
         Startup_StDeV_Kitchen_PM.append((int((stat.stdev(Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)])) * 100)) / 100)
     else:
-        Startup_Average_Kitchen_Compliance.append(-1); Startup_Average_Kitchen_PM.append(-1)
-        Startup_Median_Kitchen_PM.append(-1);Startup_StDeV_Kitchen_PM.append(-1)
+        Startup_Average_Kitchen_Compliance.append(""); Startup_Average_Kitchen_PM.append("")
+        Startup_Median_Kitchen_PM.append("");Startup_StDeV_Kitchen_PM.append("")
 
     if Cook_Hapex_place == True:
         Startup_Average_Cook_Compliance.append((int((np.average([a for a in CooK_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
@@ -631,8 +635,8 @@ for Event in Event_counter:
         Startup_Median_Cook_PM.append((int((np.median([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
         Startup_StDeV_Cook_PM.append((int((stat.stdev(Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)])) * 100)) / 100)
     else:
-        Startup_Average_Cook_Compliance.append(-1); Startup_Average_Cook_PM.append(-1)
-        Startup_Median_Cook_PM.append(-1);Startup_StDeV_Cook_PM.append(-1)
+        Startup_Average_Cook_Compliance.append(""); Startup_Average_Cook_PM.append("")
+        Startup_Median_Cook_PM.append("");Startup_StDeV_Cook_PM.append("")
 
     if USB_name_place == True:
 
@@ -645,17 +649,17 @@ for Event in Event_counter:
         Startup_StDeV_USB_Voltage.append((int((stat.stdev(USB_Voltage[((Combined_Cooking_start[Event]*Log_rate_per_min)-(Start_Up_Spread*Log_rate_per_min)):((Combined_Cooking_start[Event]*Log_rate_per_min)+1)])) * 100)) / 100)
         Startup_RAW_USB_Voltage.append(USB_Voltage[((Combined_Cooking_start[Event]*Log_rate_per_min)-(Start_Up_Spread*Log_rate_per_min)):((Combined_Cooking_start[Event]*Log_rate_per_min)+1)])
     else: 
-        Startup_Average_USB_Current.append(-1);Startup_Median_USB_Current.append(-1)
-        Startup_StDeV_USB_Current.append(-1); Startup_RAW_USB_Current.append(-1)
-        Startup_Average_USB_Voltage.append(-1); Startup_Median_USB_Voltage.append(-1)
-        Startup_StDeV_USB_Voltage.append(-1);Startup_RAW_USB_Voltage.append(-1)
+        Startup_Average_USB_Current.append("");Startup_Median_USB_Current.append("")
+        Startup_StDeV_USB_Current.append(""); Startup_RAW_USB_Current.append(-1)
+        Startup_Average_USB_Voltage.append(""); Startup_Median_USB_Voltage.append("")
+        Startup_StDeV_USB_Voltage.append("");Startup_RAW_USB_Voltage.append("")
 
     if Cook_Beacon_place == True:
         Startup_Avergage_Cook_Beacon_Acceleration.append(np.average(list(set(Cook_Beacon_accel[((Combined_Cooking_start[Event]*Log_rate_per_min)-(Start_Up_Spread*Log_rate_per_min)):((Combined_Cooking_start[Event]*Log_rate_per_min)+1)]))))
         Startup_RAW_Cook_Beacon_Acceleration.append(Cook_Beacon_accel[((Combined_Cooking_start[Event]*Log_rate_per_min)-(Start_Up_Spread*Log_rate_per_min)):((Combined_Cooking_start[Event]*Log_rate_per_min)+1)])
     else:
-        Startup_Avergage_Cook_Beacon_Acceleration.append(-1)
-        Startup_RAW_Cook_Beacon_Acceleration.append(-1)
+        Startup_Avergage_Cook_Beacon_Acceleration.append("")
+        Startup_RAW_Cook_Beacon_Acceleration.append("")
 # Cooldown
 
 Cooldown_Average_Kitchen_Compliance = []; Cooldown_Average_Cook_Compliance = []
@@ -679,16 +683,16 @@ for Event in Event_counter:
         Cooldown_StDeV_Kitchen_PM.append((int((stat.stdev(Kitchen_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])) * 100)) / 100)
         Cooldown_Average_Kitchen_PM.append((int((np.average([a for a in Kitchen_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)
     else:
-        Cooldown_Average_Kitchen_Compliance.append(-1);Cooldown_Average_Kitchen_PM.append(-1)
-        Cooldown_Median_Kitchen_PM.append(-1);Cooldown_StDeV_Kitchen_PM.append(-1)
+        Cooldown_Average_Kitchen_Compliance.append("");Cooldown_Average_Kitchen_PM.append("")
+        Cooldown_Median_Kitchen_PM.append("");Cooldown_StDeV_Kitchen_PM.append("")
     if Cook_Hapex_place == True:
         Cooldown_Average_Cook_Compliance.append((int((np.average([a for a in CooK_Hapex_Comp[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)
         Cooldown_Average_Cook_PM.append((int((np.average([a for a in Cook_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)
         Cooldown_Median_Cook_PM.append((int((np.median([a for a in Cook_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)
         Cooldown_StDeV_Cook_PM.append((int((stat.stdev(Cook_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])) * 100)) / 100)
     else: 
-        Cooldown_Average_Cook_Compliance.append(-1);Cooldown_Average_Cook_PM.append(-1)
-        Cooldown_Median_Cook_PM.append(-1);Cooldown_StDeV_Cook_PM.append(-1)
+        Cooldown_Average_Cook_Compliance.append("");Cooldown_Average_Cook_PM.append("")
+        Cooldown_Median_Cook_PM.append("");Cooldown_StDeV_Cook_PM.append("")
     if USB_name_place == True:
         Cooldown_Average_USB_Current.append(np.average(list((USB_Current[(Combined_Cooking_end[Event]*Log_rate_per_min):((Combined_Cooking_end[Event]*Log_rate_per_min)+(Cooldown_Spread*Log_rate_per_min))]))))
         Cooldown_Median_USB_Current.append(np.median(list(USB_Current[(Combined_Cooking_end[Event]*Log_rate_per_min):((Combined_Cooking_end[Event]*Log_rate_per_min)+(Cooldown_Spread*Log_rate_per_min))])))
@@ -699,10 +703,10 @@ for Event in Event_counter:
         Cooldown_StDeV_USB_Voltage.append((int((stat.stdev(USB_Voltage[(Combined_Cooking_end[Event]*Log_rate_per_min):((Combined_Cooking_end[Event]*Log_rate_per_min)+(Cooldown_Spread*Log_rate_per_min))])) * 100)) / 100)
         Cooldown_RAW_USB_Voltage.append(USB_Voltage[(Combined_Cooking_end[Event]*Log_rate_per_min):((Combined_Cooking_end[Event]*Log_rate_per_min)+(Cooldown_Spread*Log_rate_per_min))])
     else:
-        Cooldown_Average_USB_Current.append(-1);Cooldown_Median_USB_Current.append(-1)
-        Cooldown_StDeV_USB_Current.append(-1); Cooldown_RAW_USB_Current.append(-1)
-        Cooldown_Average_USB_Voltage.append(-1); Cooldown_Median_USB_Voltage.append(-1)
-        Cooldown_StDeV_USB_Voltage.append(-1);Cooldown_RAW_USB_Voltage.append(-1)
+        Cooldown_Average_USB_Current.append("");Cooldown_Median_USB_Current.append("")
+        Cooldown_StDeV_USB_Current.append(""); Cooldown_RAW_USB_Current.append("")
+        Cooldown_Average_USB_Voltage.append(""); Cooldown_Median_USB_Voltage.append("")
+        Cooldown_StDeV_USB_Voltage.append("");Cooldown_RAW_USB_Voltage.append("")
 
     # Next- Day Breakdown for Each metric
 
@@ -789,7 +793,7 @@ for Day in Day_counter:
             if Fuel_2_place == True and Fuel_1_place == True:
                 Combined_Fuel.append(Event_KG_Removed_Fuel_1[E]+Event_KG_Removed_Fuel_2[E])
             else:
-                Combined_Fuel.append(-1)
+                Combined_Fuel.append("")
             if Cook_Hapex_place == True:
                 Cook_Comp_event.extend(CooK_Hapex_Comp[Combined_Cooking_start[E]:Combined_Cooking_end[E]])
                 Cook_PM_event.extend(Cook_Hapex_PM[Combined_Cooking_start[E]:Combined_Cooking_end[E]])
@@ -798,7 +802,7 @@ for Day in Day_counter:
                 Cook_Comp_Cooldown.extend(CooK_Hapex_Comp[(Combined_Cooking_end[E]):(Combined_Cooking_end[E]+Cooldown_Spread)])
                 Cook_PM_Cooldown.extend(Cook_Hapex_PM[(Combined_Cooking_end[E]):(Combined_Cooking_end[E]+Cooldown_Spread)])
             else:
-                Cook_Comp_event = [-1, -1]; Cook_PM_event = [-1, -1]; Cook_Comp_startup = [-1, -1]; Cook_PM_startup = [-1, -1]; Cook_Comp_Cooldown = [-1, -1]; Cook_PM_Cooldown = [-1, -1]
+                Cook_Comp_event.extend(""); Cook_PM_event.extend(""); Cook_Comp_startup.extend(""); Cook_PM_startup.extend(""); Cook_Comp_Cooldown.extend(""); Cook_PM_Cooldown.extend("")
 
             if Kitchen_Hapex_place == True:
                 Kit_Comp_event.extend(Kitchen_Hapex_Comp[Combined_Cooking_start[E]:Combined_Cooking_end[E]])
@@ -808,7 +812,7 @@ for Day in Day_counter:
                 Kit_Comp_Cooldown.extend(Kitchen_Hapex_Comp[(Combined_Cooking_end[E]):(Combined_Cooking_end[Event]+Cooldown_Spread)])
                 Kit_PM_Cooldown.extend(Kitchen_Hapex_PM[(Combined_Cooking_end[E]):(Combined_Cooking_end[E]+Cooldown_Spread)])
             else:
-                Kit_Comp_event= [-1, -1]; Kit_PM_event = [-1, -1]; Kit_Comp_startup = [-1, -1]; Kit_PM_startup = [-1, -1]; Kit_Comp_Cooldown = [-1, -1]; Kit_PM_Cooldown = [-1, -1]      
+                Kit_Comp_event.extend(""); Kit_PM_event.extend(""); Kit_Comp_startup.extend(""); Kit_PM_startup.extend(""); Kit_Comp_Cooldown.extend(""); Kit_PM_Cooldown.extend("")      
             
             if (USB_name_place == True) and (Event_Average_USB_Current[E] != 0):
                 USB_Current_Event.extend(Event_RAW_USB_Current[E]); USB_Voltage_Event.extend(Event_RAW_USB_Voltage[E])
@@ -816,18 +820,18 @@ for Day in Day_counter:
                 USB_Current_Cooldown.extend(Cooldown_RAW_USB_Current[E]) ; USB_Voltage_Cooldown.extend(Cooldown_RAW_USB_Voltage[E])
                 JFK_count_E = JFK_count_E + 1
             else:
-                USB_Current_Event = [-1, -1]; USB_Voltage_Event = [-1, -1]; USB_Current_Startup = [-1, -1]; USB_Voltage_Startup = [-1, -1];USB_Current_Cooldown = [-1, -1];USB_Voltage_Cooldown = [-1, -1]
+                USB_Current_Event.extend(""); USB_Voltage_Event.extend(""); USB_Current_Startup.extend(""); USB_Voltage_Startup.extend("");USB_Current_Cooldown.extend("");USB_Voltage_Cooldown.extend("")
 
             if Cook_Beacon_place == True:
                 Beacon_Cook_accel_Event.extend(Event_RAW_Beacon_Cook_accel[E])
                 #Beacon_Cook_move_Event.extend(Event_RAW_Child_Beacon_Movement[E])
             else:
-                Beacon_Cook_accel_Event = [-1, -1]; Beacon_Cook_move_Event = [-1, -1]
+                Beacon_Cook_accel_Event.extend("");# Beacon_Cook_move_Event = ""
             if Child_Beacon_place == True:
                 Beacon_Cook_accel_startup.extend(Startup_RAW_Cook_Beacon_Acceleration[E])
                 Beacon_Child_accel_Event.extend(Event_RAW_Child_Beacon_Acceleration[E])
             else:
-                Beacon_Cook_accel_startup = [-1, -1]; Beacon_Child_accel_Event = [-1, -1]
+                Beacon_Cook_accel_startup.extend(""); Beacon_Child_accel_Event.extend("")
 
     Event_per_Day.append(Event_per_Day_count)
     Average_length_of_CE.append(np.average(EVENT_LENGTH_count))
@@ -841,16 +845,16 @@ for Day in Day_counter:
         Average_Cook_PM_per_day.append(np.average(Cook_Hapex_PM[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
         Average_Cook_Comp_per_day.append(np.average(CooK_Hapex_Comp[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
     else:
-        Average_Cook_PM_per_day.append(-1)
-        Average_Cook_Comp_per_day.append(-1)
+        Average_Cook_PM_per_day.append("")
+        Average_Cook_Comp_per_day.append("")
 
 
     if Kitchen_Hapex_place == True:
         Average_Kitchen_Comp_per_day.append(np.average(Kitchen_Hapex_Comp[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
         Average_Kitchen_PM_per_day.append(np.average(Kitchen_Hapex_PM[Minute_Day_Start_TV[Day-1]:Minute_Day_End_TV[Day-1]]))
     else:
-        Average_Kitchen_Comp_per_day.append(-1)
-        Average_Kitchen_PM_per_day.append(-1)
+        Average_Kitchen_Comp_per_day.append("")
+        Average_Kitchen_PM_per_day.append("")
 
     #Hapex Compliance for Start up and Cooldown
     Average_Kitchen_Comp_per_day_per_startup.append(np.average(Kit_Comp_startup)) ; Average_Cook_Comp_per_day_per_startup.append(np.average(Cook_Comp_startup)) 
@@ -874,8 +878,8 @@ for Day in Day_counter:
             Fuel_1_Removed_per_day.append((int((sum(fuel_bounds_Day_1)) * 1000) / 1000))
         Previous_day_fuel_1 = fuel_bounds_Day_1[-1]
     else:
-        Fuel_1_Removed_per_day.append(-1)
-        Sum_Fuel_1_removed_per_day_per_event.append(-1)
+        Fuel_1_Removed_per_day.append("")
+        Sum_Fuel_1_removed_per_day_per_event.append("")
     #Second Fuel
     if Fuel_2_place == True:
         fuel_bounds_Day_2 = list(set(KG_burned_2[(Minute_Day_Start_TV[Day-1]*Log_rate_per_min):(Minute_Day_End_TV[Day-1]*Log_rate_per_min)]))
@@ -891,13 +895,13 @@ for Day in Day_counter:
             Fuel_2_Removed_per_day.append((int((sum(fuel_bounds_Day_2)) * 1000) / 1000))
         Previous_day_fuel_2 = fuel_bounds_Day_2[-1]
     else:
-        Fuel_2_Removed_per_day.append(-1)
-        Sum_Fuel_2_removed_per_day_per_event.append(-1)
+        Fuel_2_Removed_per_day.append("")
+        Sum_Fuel_2_removed_per_day_per_event.append("")
     #Combine Fuel
     if Fuel_2_place == True and Fuel_1_place == True:
         Sum_Combined_Fuel_removed_per_day_per_event.append(sum(Fuel_1_Event)+sum(Fuel_2_Event))  ; Combined_Fuel_Removed_per_day.append(Fuel_2_Removed_per_day[-1]+Fuel_1_Removed_per_day[-1])
     else:
-        Sum_Combined_Fuel_removed_per_day_per_event.append(-1); Combined_Fuel_Removed_per_day.append(-1)
+        Sum_Combined_Fuel_removed_per_day_per_event.append(""); Combined_Fuel_Removed_per_day.append("")
 
     #USB Power meter
     Average_USB_Current_per_Event.append(np.average(USB_Current_Event)) ; Average_USB_Voltage_per_Event.append(np.average(USB_Voltage_Event))
@@ -906,7 +910,7 @@ for Day in Day_counter:
     if USB_Current_Event != 0:
         Event_number_With_JFK.append(JFK_count_E)
     else:
-        Event_number_With_JFK.append(0)
+        Event_number_With_JFK.append("")
     #Beacon
     Average_Beacon_Cook_Accel_per_day_per_event.append(np.average(Beacon_Cook_accel_Event))
     Average_Beacon_Child_Accel_per_day_per_event.append(np.average(Beacon_Child_accel_Event))
@@ -916,12 +920,12 @@ for Day in Day_counter:
         Average_Beacon_Child_Accel_per_Day.append(np.average(Child_Beacon_accel[((Minute_Day_Start_TV[Day-1])*Log_rate_per_min):((Minute_Day_End_TV[Day-1])*Log_rate_per_min)]))
         Average_Beacon_Child_Move_per_Day.append(np.average(Child_Beacon_move[((Minute_Day_Start_TV[Day-1])*Log_rate_per_min):((Minute_Day_End_TV[Day-1])*Log_rate_per_min)]))
     else:
-        Average_Beacon_Child_Accel_per_Day.append(-1)
-        Average_Beacon_Child_Move_per_Day.append(-1)
+        Average_Beacon_Child_Accel_per_Day.append("")
+        Average_Beacon_Child_Move_per_Day.append("")
     if Cook_Beacon_place == True:
         Average_Beacon_Cook_Accel_per_Day.append(np.average(Cook_Beacon_accel[((Minute_Day_Start_TV[Day-1])*Log_rate_per_min):((Minute_Day_End_TV[Day-1])*Log_rate_per_min)]))
     else:
-        Average_Beacon_Cook_Accel_per_Day.append(-1)
+        Average_Beacon_Cook_Accel_per_Day.append("")
 
 # print('events per day---------',Event_per_Day )
 
@@ -938,7 +942,7 @@ Dict_Event = {'|Event|': Event_counter, '|Start Time|':Event_start_time, '|End T
    '|Median USB Current|':Event_Median_USB_Current, '|StDev USB Current|':Event_StDeV_USB_Current,'|Avg. USB Voltage|':Event_Average_USB_Voltage,
     '|Median USB Voltage|':Event_Median_USB_Voltage, '|StDev USB Voltage|':Event_StDeV_USB_Voltage,'|Jet Flame on for ~(min)|':Event_jet_flame_time_on,'|Jet Flame Percentage(%)|':Event_jet_flame_percent,
     '|Jet Flame Start from Fire (min)|':Event_jet_flame_start_min, '|Jet Flame End from Fire end (min)|':Event_jet_flame_end_min,'|Time at Stove (Min)|': Length_of_time_at_stove,'|Time Away from Stove (Min)|':length_of_time_away_from_stove, 
-    '|# of times adjusting the Jet flame|':Adjusting_the_jet_flame}
+    '|# of times adjusting the Jet flame|':Adjusting_the_jet_flame, '|Percent away from stove durring FF CE|':Percentage_away_from_stove_CE}
 
 
 DF_Dict_Event = pd.DataFrame(Dict_Event)
@@ -1013,7 +1017,7 @@ Path_Proximity = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Beacon_Proximity_"
 
 DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
 DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
-Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
+#Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
 DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
 DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
 DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')

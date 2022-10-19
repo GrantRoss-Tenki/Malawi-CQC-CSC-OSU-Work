@@ -614,7 +614,7 @@ def FF_to_jet_flame_usage(FF_start, FF_end, USB_JFK_usage_array):
     #USB_JFK_usage_array = USB_JFK_usage_array[FF_start:FF_end]
     USB_usage_sum = sum(USB_JFK_usage_array)
     #print('---------------------from Function -----: ',USB_usage_sum,total_CE_length, USB_JFK_usage_array[10:25] )
-    percentage = (int((USB_usage_sum/total_CE_length)*100))/100
+    percentage = (int((USB_usage_sum/total_CE_length)*100))
     is_one = False
     is_zero = True
     Jet_flame_start_min = FF_start

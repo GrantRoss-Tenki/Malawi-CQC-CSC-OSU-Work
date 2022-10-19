@@ -9,12 +9,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import csv
 import Functions_malawi
+import numpy.polynomial.polynomial as poly
 
 HH_Number_array = ['HH1', 'HH2', 'HH3', 'HH4', 'HH5','HH6']
 Stove_array = ['1','2','3']
 CCT_array = ['1','2','3', '4']
 
-Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
+Source = 'Work' #input("laptop or Work: ")  # 'work' or 'laptop'
 Household = 'HH1' #input("HH1 or HH2... etc:  ")
 Stove = '1'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
 CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
@@ -22,7 +23,7 @@ Running_Average_length = 12 #int(input(" Enter Number for running length (8 woul
 if Source == 'laptop':
     USB = 'D'
 else:
-    USB = 'E'
+    USB = 'F'
 # getting the metrics and times
 CCT_TIMES_METRICS = pd.read_csv(USB+":/Malawi 1.1 CCT Fire Start Times.csv")
 identifyer = Household+' - CCT-'+ CCT_Num
@@ -392,3 +393,18 @@ plt.legend()
 
 
 
+#trying co2 filter with polyfit
+#x = np.arange(1, len(Gas_CO2), 1)
+x_j = np.linspace(0, len(Gas_CO2), len(Gas_CO2))
+
+COEFf =  poly.polyfit(x_j,Gas_CO2,4)
+x_new = np.linspace(x_j[0], x_j[-1], num=len(x_j))
+fffit = poly.polyval(x_new, COEFf)
+print('lengths of x and gas co2   ', len(x_j), len(Gas_CO2), len(x_new))
+
+fig5, ax5 = plt.subplots()
+ax5.scatter(x_j, Gas_CO2, facecolors='None')
+ax.plot(x_new, fffit)
+plt.show()
+
+#co2_filter = np.polyfit(Gas_CO2, sine, deg=2)

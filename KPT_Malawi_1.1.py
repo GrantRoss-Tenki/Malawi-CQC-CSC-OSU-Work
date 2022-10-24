@@ -583,6 +583,15 @@ for Event in Event_counter:
         Event_Average_Child_Beacon_Movement.append("")
         Event_RAW_Child_Beacon_Acceleration.append("")
         Event_RAW_Child_Beacon_Movement.append("")
+
+    # I want to make a new algorithm for USB power meter and breakdown
+    JFK_event_matrix =  {'Event': Event, 'JFK start':JFK_start, 'JFK end':JFK_end}
+    Raw_Event_matrix = {'JFK current': USB_Current.loc[Jet_flame_Start:Jet_flame_End], 'JFK voltage':USB_Voltage.loc[Jet_flame_Start:Jet_flame_End], 'Kitchen PM': Kitchen_Hapex_PM.loc[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]
+    , 'Cook PM':Cook_Hapex_PM.loc[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])], 'Cook Comp':CooK_Hapex_Comp.loc[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])], }
+
+    HH_event_raw_timescale = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary_"+KPT_NUM+".csv"
+
+
     #print('<<<<<<<<<<<<<<<<<<<<<<<<<<<',Event,'-----',Event_KG_Removed_Fuel_1[-1],'-----',sum(fuel_bounds_1),' Next Event>>>>>>>>>>>>>>>>>>>>>>>>>>',prev_fuel_bound_1,'+++++',fuel_bounds_1)
     #print('-')
 # need to see the averages for the Kitchen Hapex and Firefinder start
@@ -621,19 +630,19 @@ for Event in Event_counter:
     else:
         Start_Up_Spread = Start_Up_Spread
     if Kitchen_Hapex_place == True:
-        Startup_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
-        Startup_Average_Kitchen_PM.append((int((np.average([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
-        Startup_Median_Kitchen_PM.append((int((np.median([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
-        Startup_StDeV_Kitchen_PM.append((int((stat.stdev(Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)])) * 100)) / 100)
+        Startup_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min]]))*100))/100)
+        Startup_Average_Kitchen_PM.append((int((np.average([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min]]))*100))/100)
+        Startup_Median_Kitchen_PM.append((int((np.median([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min]]))*100))/100)
+        Startup_StDeV_Kitchen_PM.append((int((stat.stdev(Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min])) * 100)) / 100)
     else:
         Startup_Average_Kitchen_Compliance.append(""); Startup_Average_Kitchen_PM.append("")
         Startup_Median_Kitchen_PM.append("");Startup_StDeV_Kitchen_PM.append("")
 
     if Cook_Hapex_place == True:
-        Startup_Average_Cook_Compliance.append((int((np.average([a for a in CooK_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
-        Startup_Average_Cook_PM.append((int((np.average([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
-        Startup_Median_Cook_PM.append((int((np.median([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
-        Startup_StDeV_Cook_PM.append((int((stat.stdev(Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)])) * 100)) / 100)
+        Startup_Average_Cook_Compliance.append((int((np.average([a for a in CooK_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min]]))*100))/100)
+        Startup_Average_Cook_PM.append((int((np.average([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min]]))*100))/100)
+        Startup_Median_Cook_PM.append((int((np.median([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min]]))*100))/100)
+        Startup_StDeV_Cook_PM.append((int((stat.stdev(Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min])) * 100)) / 100)
     else:
         Startup_Average_Cook_Compliance.append(""); Startup_Average_Cook_PM.append("")
         Startup_Median_Cook_PM.append("");Startup_StDeV_Cook_PM.append("")
@@ -678,7 +687,7 @@ Cooldown_RAW_USB_Voltage = []
 
 for Event in Event_counter:
     if Kitchen_Hapex_place == True:
-        Cooldown_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)
+        Cooldown_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_end[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)
         Cooldown_Median_Kitchen_PM.append((int((np.median([a for a in Kitchen_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)
         Cooldown_StDeV_Kitchen_PM.append((int((stat.stdev(Kitchen_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])) * 100)) / 100)
         Cooldown_Average_Kitchen_PM.append((int((np.average([a for a in Kitchen_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)

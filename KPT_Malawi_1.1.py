@@ -1,4 +1,5 @@
 import os
+from turtle import shape
 import pandas as pd
 import numpy as np
 import csv
@@ -12,7 +13,7 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH6' #input("HH1 or HH2... etc:  ")
+Household_Number = 'HH2' #input("HH1 or HH2... etc:  ")
 Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
@@ -358,6 +359,12 @@ else:
         EXACT_1_FF_usage, EXACT_1_fire_start, EXACT_1_fire_end = Functions_malawi.FireFinder(Exact_1_Temp, Exact_1_Usage, Exact_1_place,cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
     if Exact_2_place == True:
         EXACT_2_FF_usage, EXACT_2_fire_start, EXACT_2_fire_end = Functions_malawi.FireFinder(Exact_2_Temp, Exact_2_Usage, Exact_2_place,cooking_threshold, length_decrease, start_threshold, end_threshold, merge_CE_threshold, min_CE_length, window_slope)
+    if Kitchen_Hapex_place == True and len(Kitchen_Hapex_Comp) != len(USB_Usage):
+        Kitchen_Hapex_Comp_ext = Functions_malawi.Add_repeated_values(Kitchen_Hapex_Comp, Log_rate_per_min, len(USB_time))
+        Kitchen_Hapex_PM_ext = Functions_malawi.Add_repeated_values(Kitchen_Hapex_PM, Log_rate_per_min, len(USB_time))
+    if Cook_Hapex_place == True and len(CooK_Hapex_Comp) != len(USB_Usage):
+        CooK_Hapex_Comp_ext = Functions_malawi.Add_repeated_values(CooK_Hapex_Comp, Log_rate_per_min, len(USB_time))
+        Cook_Hapex_PM_ext = Functions_malawi.Add_repeated_values(Cook_Hapex_PM, Log_rate_per_min, len(USB_time))
 #Getting Metrics For the events and collection
 #Combining stove usage
 
@@ -534,6 +541,29 @@ for Event in Event_counter:
         Event_jet_flame_start_min.append(int(JFK_start/Log_rate_per_min))
         Event_jet_flame_end_min.append(int(JFK_end/Log_rate_per_min))
         Event_jet_flame_time_on.append(round((jet_flame_on/Log_rate_per_min)))
+         # I want to make a new algorithm for USB power meter and breakdown
+        Raw_JFK_Current = pd.Series(list((USB_Current.loc[(Jet_flame_Start-JFK_start):(Jet_flame_End + JFK_end)])))
+        Raw_JFK_Voltage = pd.Series(list((USB_Voltage.loc[(Jet_flame_Start-JFK_start):(Jet_flame_End + JFK_end)])))
+        Raw_Kitchen_PM = pd.Series(list( (Kitchen_Hapex_PM_ext[(Jet_flame_Start-JFK_start):(Jet_flame_End + JFK_end+1)])))
+        Raw_Cook_PM = pd.Series(list( (Cook_Hapex_PM_ext[(Jet_flame_Start-JFK_start):(Jet_flame_End + JFK_end+1)])))
+        Raw_Cook_Com = pd.Series(list((CooK_Hapex_Comp_ext[(Jet_flame_Start-JFK_start):(Jet_flame_End + JFK_end+1)])))
+
+        print('array check: ',len(USB_Current) ,len(CooK_Hapex_Comp_ext),len(Raw_Cook_PM), len(Raw_JFK_Current), Raw_Cook_PM.shape, Raw_JFK_Current.shape,Raw_Cook_PM[0:5],Raw_JFK_Current[0:5] )
+
+
+        JFK_event_matrix =  {'Event': Event, 'JFK start':Jet_flame_Start, 'JFK end':Jet_flame_End}
+        Raw_Event_matrix = {'JFK current': (Raw_JFK_Current), 'JFK voltage':(Raw_JFK_Voltage), 'Kitchen PM': (Raw_Kitchen_PM),'Cook PM':(Raw_Cook_PM), 'Cook Comp':(Raw_Cook_Com)}
+        
+        Df_JFK_event_matrix = pd.DataFrame(JFK_event_matrix, index= [0])
+        DF_Raw_Event_matrix = pd.DataFrame(Raw_Event_matrix)
+        print('lengths of the event exports  ',Event, JFK_start,'Size of dataframe: ',Df_JFK_event_matrix.shape, DF_Raw_Event_matrix.shape)
+
+        HH_event_raw_timescale_path = USB_D+":/Malawi 1.1/"+Household_Number+"/Raw Event/"+str(Event)+"_Breakdown.csv"
+        
+        Df_JFK_event_matrix.to_csv(HH_event_raw_timescale_path,index=False, mode='a')
+        DF_Raw_Event_matrix.to_csv(HH_event_raw_timescale_path,index=False, mode='a')
+
+
         if (IS_there_a_Cook_beacon_proximity == True) and (EVENT_CURRENT_CHECK != 0):
             Beacon_Use_event_number.append(Event)
             #print('==-=-=proximity -- Start Time Value -=-', (Combined_Cooking_start[Event]))
@@ -584,12 +614,7 @@ for Event in Event_counter:
         Event_RAW_Child_Beacon_Acceleration.append("")
         Event_RAW_Child_Beacon_Movement.append("")
 
-    # I want to make a new algorithm for USB power meter and breakdown
-    JFK_event_matrix =  {'Event': Event, 'JFK start':JFK_start, 'JFK end':JFK_end}
-    Raw_Event_matrix = {'JFK current': USB_Current.loc[Jet_flame_Start:Jet_flame_End], 'JFK voltage':USB_Voltage.loc[Jet_flame_Start:Jet_flame_End], 'Kitchen PM': Kitchen_Hapex_PM.loc[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])]
-    , 'Cook PM':Cook_Hapex_PM.loc[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])], 'Cook Comp':CooK_Hapex_Comp.loc[(Combined_Cooking_start[Event]):(Combined_Cooking_end[Event])], }
-
-    HH_event_raw_timescale = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary_"+KPT_NUM+".csv"
+   
 
 
     #print('<<<<<<<<<<<<<<<<<<<<<<<<<<<',Event,'-----',Event_KG_Removed_Fuel_1[-1],'-----',sum(fuel_bounds_1),' Next Event>>>>>>>>>>>>>>>>>>>>>>>>>>',prev_fuel_bound_1,'+++++',fuel_bounds_1)
@@ -630,19 +655,19 @@ for Event in Event_counter:
     else:
         Start_Up_Spread = Start_Up_Spread
     if Kitchen_Hapex_place == True:
-        Startup_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min]]))*100))/100)
-        Startup_Average_Kitchen_PM.append((int((np.average([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min]]))*100))/100)
-        Startup_Median_Kitchen_PM.append((int((np.median([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min]]))*100))/100)
-        Startup_StDeV_Kitchen_PM.append((int((stat.stdev(Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min])) * 100)) / 100)
+        Startup_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
+        Startup_Average_Kitchen_PM.append((int((np.average([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
+        Startup_Median_Kitchen_PM.append((int((np.median([a for a in Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
+        Startup_StDeV_Kitchen_PM.append((int((stat.stdev(Kitchen_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)])) * 100)) / 100)
     else:
         Startup_Average_Kitchen_Compliance.append(""); Startup_Average_Kitchen_PM.append("")
         Startup_Median_Kitchen_PM.append("");Startup_StDeV_Kitchen_PM.append("")
 
     if Cook_Hapex_place == True:
-        Startup_Average_Cook_Compliance.append((int((np.average([a for a in CooK_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min]]))*100))/100)
-        Startup_Average_Cook_PM.append((int((np.average([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min]]))*100))/100)
-        Startup_Median_Cook_PM.append((int((np.median([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min]]))*100))/100)
-        Startup_StDeV_Cook_PM.append((int((stat.stdev(Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread)))*Log_rate_per_min:(Combined_Cooking_start[Event]+1)*Log_rate_per_min])) * 100)) / 100)
+        Startup_Average_Cook_Compliance.append((int((np.average([a for a in CooK_Hapex_Comp[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
+        Startup_Average_Cook_PM.append((int((np.average([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
+        Startup_Median_Cook_PM.append((int((np.median([a for a in Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)]]))*100))/100)
+        Startup_StDeV_Cook_PM.append((int((stat.stdev(Cook_Hapex_PM[(Combined_Cooking_start[Event]-((Start_Up_Spread))):(Combined_Cooking_start[Event]+1)])) * 100)) / 100)
     else:
         Startup_Average_Cook_Compliance.append(""); Startup_Average_Cook_PM.append("")
         Startup_Median_Cook_PM.append("");Startup_StDeV_Cook_PM.append("")
@@ -687,7 +712,7 @@ Cooldown_RAW_USB_Voltage = []
 
 for Event in Event_counter:
     if Kitchen_Hapex_place == True:
-        Cooldown_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_end[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)
+        Cooldown_Average_Kitchen_Compliance.append((int((np.average([a for a in Kitchen_Hapex_Comp[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)
         Cooldown_Median_Kitchen_PM.append((int((np.median([a for a in Kitchen_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)
         Cooldown_StDeV_Kitchen_PM.append((int((stat.stdev(Kitchen_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)])) * 100)) / 100)
         Cooldown_Average_Kitchen_PM.append((int((np.average([a for a in Kitchen_Hapex_PM[(Combined_Cooking_end[Event]):(Combined_Cooking_end[Event]+Cooldown_Spread)]]))*100))/100)
@@ -1024,9 +1049,9 @@ Path_Proximity = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Beacon_Proximity_"
 # Df_raw_event.to_csv(File_event_Raw_metrics,index=False,mode='a')
 
 
-DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
-DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
-#Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
-DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
-DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
-DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
+# #Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
+# DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
+# DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')

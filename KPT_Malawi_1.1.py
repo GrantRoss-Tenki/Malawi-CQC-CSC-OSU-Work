@@ -551,7 +551,7 @@ for Event in Event_counter:
         print('array check: ',len(USB_Current) ,len(CooK_Hapex_Comp_ext),len(Raw_Cook_PM), len(Raw_JFK_Current), Raw_Cook_PM.shape, Raw_JFK_Current.shape,Raw_Cook_PM[0:5],Raw_JFK_Current[0:5] )
 
 
-        JFK_event_matrix =  {'Event': Event, 'JFK start':Jet_flame_Start, 'JFK end':Jet_flame_End}
+        JFK_event_matrix =  {'Event': Event, 'JFK start':Jet_flame_Start, 'JFK end':Jet_flame_End, 'jfk %': JFK_percent, 'JFLK on': jet_flame_on}
         Raw_Event_matrix = {'JFK current': (Raw_JFK_Current), 'JFK voltage':(Raw_JFK_Voltage), 'Kitchen PM': (Raw_Kitchen_PM),'Cook PM':(Raw_Cook_PM), 'Cook Comp':(Raw_Cook_Com)}
         
         Df_JFK_event_matrix = pd.DataFrame(JFK_event_matrix, index= [0])

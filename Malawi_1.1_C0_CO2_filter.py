@@ -401,7 +401,7 @@ COEFf =  poly.polyfit(x_j,Gas_CO2,4)
 x_new = np.linspace(x_j[0], x_j[-1], num=len(x_j))
 fffit = poly.polyval(x_new, COEFf)
 print('lengths of x and gas co2   ', len(x_j), len(Gas_CO2), len(x_new))
-
+print('typesesesesesesese', type(x_j), 'Gas- ',type(Gas_CO2), 'new',type(x_new))
 fig5, ax5 = plt.subplots()
 ax5.scatter(x_j, Gas_CO2, facecolors='None')
 ax.plot(x_new, fffit)

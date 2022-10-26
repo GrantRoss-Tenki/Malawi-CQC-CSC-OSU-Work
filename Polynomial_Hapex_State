@@ -23,4 +23,28 @@ path = USB+":/Test_Hapex.csv"
 
 array = pd.read_csv(path)
 
-print('array one', array[0:6])
+Kitchen_PM = np.array(array)
+print('array kitchen PM', Kitchen_PM[0:6], Kitchen_PM[1])
+
+where_max_array = np.array(np.where(Kitchen_PM == max(Kitchen_PM)))
+print('here is max: ',where_max_array)
+
+where_max = where_max_array[0][0]
+print('here is max: ', max(Kitchen_PM), where_max)
+Hapex_from_end = [int(a) for a in (Kitchen_PM[int(where_max): -2])]
+Kitchen_PM = [int(a) for a in (Kitchen_PM)]
+x = np.arange(0, len(Kitchen_PM), 1)
+x_j = np.arange(0, len(Hapex_from_end), 1)
+print('------Types ------',type(Hapex_from_end), len(Hapex_from_end), type(x_j), len(x_j))
+print('------',Hapex_from_end[0:30],x_j[0:30] )
+Hapex_from_end = list(map(float, Hapex_from_end))
+COEFf =  (np.polyfit(x,Kitchen_PM,4))
+#print('~~~~~~~ COEF ~~~~~~~ ', COEFf)
+x_new = np.linspace(x[0], x[-1], num=len(x))
+fffit = poly.polyval(x_new, COEFf)
+fig, ax = plt.subplots()
+ax2 = ax.twinx()
+ax.scatter(x, Kitchen_PM, label = "Raw", color = 'r')
+ax2.scatter(x_new, fffit, label = "line 1", color ='g')
+#ax5.plot(x_new, fffit)
+plt.show()

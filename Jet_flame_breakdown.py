@@ -12,9 +12,9 @@ import Functions_malawi
 import numpy.polynomial.polynomial as poly
 
 
-Source = 'Work' #input("laptop or Work: ")  # 'work' or 'laptop'
+Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 Household = 'HH2' #input("HH1 or HH2... etc:  ")
-
+log_rate_per_min = 15
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
     USB = 'D'
@@ -25,47 +25,69 @@ Specific_JFK_breakdown_METRICS = (USB+":/Malawi 1.1/"+Household+"/Raw Event")
 
 E_files = os.listdir(Specific_JFK_breakdown_METRICS)
 
+Stage_1_Kitchen_PM = []; Stage_2_Kitchen_PM = []; Stage_3_Kitchen_PM = []
+Stage_1_Cook_PM = []; Stage_2_Cook_PM = []; Stage_3_Cook_PM = []
+Stage_1_Cook_Comp = []; Stage_2_Cook_Comp = []; Stage_3_Cook_Comp = []
 
 
 for file in E_files:
     file_path = f'{Specific_JFK_breakdown_METRICS}\\{file}'
     print('----', Specific_JFK_breakdown_METRICS+"/"+str(file))
     JFK_event_compiler = pd.read_csv(Specific_JFK_breakdown_METRICS+"/"+str(file))
-    event = JFK_event_compiler.iloc[1,0]
-    JFK_start = JFK_event_compiler.iloc[1,1]
-    JFK_end = JFK_event_compiler.iloc[1,2]
-    JFK_current = JFK_event_compiler.iloc[3:,0]
-    JFK_voltage = JFK_event_compiler.iloc[3:,1]
-    Kitchen_PM = JFK_event_compiler.iloc[3:,2]
-    Cook_PM = JFK_event_compiler.iloc[3:,3]
-    Cook_comp =  JFK_event_compiler.iloc[3:,4]
+    event = JFK_event_compiler.iloc[0,0]
+    JFK_start = JFK_event_compiler.iloc[0,1]
+    JFK_end = JFK_event_compiler.iloc[0,2]
+    JFK_current = JFK_event_compiler.iloc[2:,0]
+    JFK_voltage = JFK_event_compiler.iloc[2:,1]
+    Kitchen_PM = JFK_event_compiler.iloc[2:,2]
+    Cook_PM = JFK_event_compiler.iloc[2:,3]
+    Cook_comp =  JFK_event_compiler.iloc[2:,4]
+    JFK_voltage = list(JFK_voltage)
+    print(type(JFK_voltage), JFK_voltage[0:6],'this is bulllshit  ',JFK_voltage[126]*2 )
+    # finding the start of Jet Flame
+    Start_jfk = 0
+    End_jfk = len(JFK_voltage)
+    for tv, on in enumerate(JFK_voltage):
+        if tv +1 == len(JFK_voltage):
+            
+            break
+        next = JFK_voltage[tv+1]
+        print('i am done', on, tv)
+        if on == 0.0 and next != 0.0:
+            Start_jfk = tv +1
+            
 
+        if on != 0.0 and next == 0.0:
+            End_jfk = tv -1
+            break
+    
+    print('start jfk',Start_jfk, 'end jfk',  End_jfk)
     
     
-    where_max_array = np.array(np.where(Kitchen_PM == max(Kitchen_PM)))
-    where_max = where_max_array[0][0]
-    print('here is max: ', max(Kitchen_PM), where_max)
-    Hapex_from_end = [int(a) for a in (Kitchen_PM[int(where_max): -2])]
-    Kitchen_PM = [int(a) for a in (Kitchen_PM)]
-    x = np.arange(0, len(Kitchen_PM), 1)
-    x_j = np.arange(0, len(Hapex_from_end), 1)
-    print('------Types ------',type(Hapex_from_end), len(Hapex_from_end), type(x_j), len(x_j))
+    # where_max_array = np.array(np.where(Kitchen_PM == max(Kitchen_PM)))
+    # where_max = where_max_array[0][0]
+    # print('here is max: ', max(Kitchen_PM), where_max)
+    # Hapex_from_end = [int(a) for a in (Kitchen_PM[int(where_max): -2])]
+    # Kitchen_PM = [int(a) for a in (Kitchen_PM)]
+    # x = np.arange(0, len(Kitchen_PM), 1)
+    # x_j = np.arange(0, len(Hapex_from_end), 1)
+    # print('------Types ------',type(Hapex_from_end), len(Hapex_from_end), type(x_j), len(x_j))
 
 
 
-    print('------',Hapex_from_end[0:30],x_j[0:30] )
-    Hapex_from_end = list(map(float, Hapex_from_end))
+    # print('------',Hapex_from_end[0:30],x_j[0:30] )
+    # Hapex_from_end = list(map(float, Hapex_from_end))
 
-    COEFf =  (np.polyfit(x,Kitchen_PM,5))
-    #print('~~~~~~~ COEF ~~~~~~~ ', COEFf)
-    x_new = np.linspace(x[0], x[-1], num=len(x))
-    fffit = poly.polyval(x_new, COEFf)
-    fig, ax = plt.subplots()
-    ax2 = ax.twinx()
-    ax.scatter(x, Kitchen_PM, label = "Raw", color = 'r')
-    ax2.scatter(x_new, fffit, label = "line 1", color ='g')
-    #ax5.plot(x_new, fffit)
-    plt.show()
+    # COEFf =  (np.polyfit(x,Kitchen_PM,5))
+    # #print('~~~~~~~ COEF ~~~~~~~ ', COEFf)
+    # x_new = np.linspace(x[0], x[-1], num=len(x))
+    # fffit = poly.polyval(x_new, COEFf)
+    # fig, ax = plt.subplots()
+    # ax2 = ax.twinx()
+    # ax.scatter(x, Kitchen_PM, label = "Raw", color = 'r')
+    # ax2.scatter(x_new, fffit, label = "line 1", color ='g')
+    # #ax5.plot(x_new, fffit)
+    # plt.show()
 
 
 

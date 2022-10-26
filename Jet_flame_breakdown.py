@@ -28,7 +28,7 @@ E_files = os.listdir(Specific_JFK_breakdown_METRICS)
 Stage_1_Kitchen_PM = []; Stage_2_Kitchen_PM = []; Stage_3_Kitchen_PM = []
 Stage_1_Cook_PM = []; Stage_2_Cook_PM = []; Stage_3_Cook_PM = []
 Stage_1_Cook_Comp = []; Stage_2_Cook_Comp = []; Stage_3_Cook_Comp = []
-
+Event = []
 
 for file in E_files:
     file_path = f'{Specific_JFK_breakdown_METRICS}\\{file}'
@@ -37,32 +37,45 @@ for file in E_files:
     event = JFK_event_compiler.iloc[0,0]
     JFK_start = JFK_event_compiler.iloc[0,1]
     JFK_end = JFK_event_compiler.iloc[0,2]
-    JFK_current = JFK_event_compiler.iloc[2:,0]
-    JFK_voltage = JFK_event_compiler.iloc[2:,1]
-    Kitchen_PM = JFK_event_compiler.iloc[2:,2]
-    Cook_PM = JFK_event_compiler.iloc[2:,3]
-    Cook_comp =  JFK_event_compiler.iloc[2:,4]
-    JFK_voltage = list(JFK_voltage)
-    print(type(JFK_voltage), JFK_voltage[0:6],'this is bulllshit  ',JFK_voltage[126]*2 )
+    JFK_current = [float(a) for a in JFK_event_compiler.iloc[2:,0]]
+    JFK_voltage = [float(a) for a in JFK_event_compiler.iloc[2:,1]]
+    Kitchen_PM = [float(a) for a in JFK_event_compiler.iloc[2:,2]]
+    Cook_PM = [float(a) for a in JFK_event_compiler.iloc[2:,3]]
+    Cook_comp =  [float(a) for a in JFK_event_compiler.iloc[2:,4]]
+    #JFK_voltage = list(JFK_voltage)
+    print(event, type(JFK_voltage), type(JFK_voltage[10]),'this is bulllshit  ',JFK_voltage[126], float(JFK_voltage[126])*2 )
     # finding the start of Jet Flame
     Start_jfk = 0
-    End_jfk = len(JFK_voltage)
+    End_jfk = len(JFK_voltage) -1
     for tv, on in enumerate(JFK_voltage):
-        if tv +1 == len(JFK_voltage):
-            
+        #print('i am done', on, tv)
+        if tv +1 != len(JFK_voltage):
+            next = JFK_voltage[tv+1]
+        else:
             break
-        next = JFK_voltage[tv+1]
-        print('i am done', on, tv)
+        
+        
         if on == 0.0 and next != 0.0:
             Start_jfk = tv +1
-            
-
-        if on != 0.0 and next == 0.0:
+        elif on != 0.0 and next == 0.0:
             End_jfk = tv -1
             break
     
     print('start jfk',Start_jfk, 'end jfk',  End_jfk)
-    
+    Event.append(event)
+    Stage_1_Kitchen_PM.append(np.median(Kitchen_PM[0:Start_jfk+1]))
+    Stage_2_Kitchen_PM.append(np.median(Kitchen_PM[Start_jfk:End_jfk+1]))
+    Stage_3_Kitchen_PM.append(np.median(Kitchen_PM[End_jfk:]))
+
+    Stage_1_Cook_PM.append(np.median(Cook_PM[0:Start_jfk+1]))
+    Stage_2_Cook_PM.append(np.median(Cook_PM[Start_jfk:End_jfk+1]))
+    Stage_3_Cook_PM.append(np.median(Cook_PM[End_jfk:]))
+
+    Stage_1_Cook_Comp.append(int(((sum(Cook_comp[0:Start_jfk+1]))/len(Cook_comp[0:Start_jfk+1]))*10)/10)
+    Stage_2_Cook_Comp.append(int(((sum(Cook_comp[Start_jfk:End_jfk+1]))/len(Cook_comp[0:Start_jfk+1]))*10)/10)
+    Stage_3_Cook_Comp.append(int(((sum(Cook_comp[End_jfk:]))/len(Cook_comp[0:Start_jfk+1]))*10)/10)
+
+
     
     # where_max_array = np.array(np.where(Kitchen_PM == max(Kitchen_PM)))
     # where_max = where_max_array[0][0]
@@ -89,5 +102,10 @@ for file in E_files:
     # #ax5.plot(x_new, fffit)
     # plt.show()
 
+#post export
 
+df_Jetflame_breakdown = pd.DataFrame({'Event ': Event, 'Median Kit Pm S1':Stage_1_Kitchen_PM, 'Median Kit Pm S2':Stage_2_Kitchen_PM,
+'Median Kit Pm S3':Stage_3_Kitchen_PM, 'Median Cook Pm S1':Stage_1_Cook_PM, 'Median Cook Pm S2':Stage_2_Cook_PM,'Median Cook Pm S3':Stage_3_Cook_PM,
+'% Cook comp S1':Stage_1_Cook_Comp, '% Cook comp S2':Stage_2_Cook_Comp,'% Cook comp S3':Stage_3_Cook_Comp})
 
+print(df_Jetflame_breakdown)

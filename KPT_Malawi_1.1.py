@@ -13,7 +13,7 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH2' #input("HH1 or HH2... etc:  ")
+Household_Number = 'HH6' #input("HH1 or HH2... etc:  ")
 Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
@@ -1049,9 +1049,9 @@ Path_Proximity = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Beacon_Proximity_"
 # Df_raw_event.to_csv(File_event_Raw_metrics,index=False,mode='a')
 
 
-# DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
-# DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
-# #Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
-# DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
-# DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
-# DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
+#Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
+DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_Day.to_csv(Path_Raw_Events,index=False, mode='a')

@@ -12,8 +12,8 @@ import Functions_malawi
 import numpy.polynomial.polynomial as poly
 
 
-Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH2' #input("HH1 or HH2... etc:  ")
+Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
+Household = 'HH6' #input("HH1 or HH2... etc:  ")
 log_rate_per_min = 15
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
@@ -109,3 +109,7 @@ df_Jetflame_breakdown = pd.DataFrame({'Event ': Event, 'Median Kit Pm S1':Stage_
 '% Cook comp S1':Stage_1_Cook_Comp, '% Cook comp S2':Stage_2_Cook_Comp,'% Cook comp S3':Stage_3_Cook_Comp})
 
 print(df_Jetflame_breakdown)
+
+path_export = USB+":/Malawi 1.1/"+Household+"_JFK_breakdown.csv"
+
+df_Jetflame_breakdown.to_csv(path_export,index=False, mode='a')

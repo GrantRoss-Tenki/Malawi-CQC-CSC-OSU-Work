@@ -144,6 +144,7 @@ def FUEL_REMOVAL(Fuel_KG_nf, Thresold, min_average_spread,No_fuel, running_avera
                     inside_spread = []
                     count = -1
                 elif not_first_value == 0:
+                    # could take out this for loop...
                     Mean_Count_min.append(Mean_Count_min[-1])
                     inside_spread.append(abs(kg))
                     not_first_value = 1

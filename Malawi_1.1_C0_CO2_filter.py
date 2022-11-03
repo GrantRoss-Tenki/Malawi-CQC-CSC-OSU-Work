@@ -220,16 +220,16 @@ for tt in x:
     xval.append(int(tt/15))
 
 fig, ax = plt.subplots()
-plt.title('CO2 Filter')
+plt.title('CO2 Profile')
 
 plt.plot(Gas_CO2, label='Orginal CO2', color='green')
 plt.plot(co2_filter, label='CO2 Filter', color='r')
 
-ax2 = ax.twinx()
+#ax2 = ax.twinx()
 labels = [x]
 
-ax2.plot(Inline_Hap_PM,label='Inline HAPEx', color = 'blue')
-ax2.plot(Cook_Hap_PM,label='Cook HAPEx',  color = 'm')
+#ax2.plot(Inline_Hap_PM,label='Inline HAPEx', color = 'blue')
+#ax2.plot(Cook_Hap_PM,label='Cook HAPEx',  color = 'm')
 
 #getting start up before fire start
 plt.axvline(GAS_FIRE_START_TV, color='k',linestyle = '--')#label='Fire Start',
@@ -245,7 +245,7 @@ print('CO2 Before Fire Slope:  ', int(Slope_CO2_to_Start))
 
 ax.set_ylabel('CO2 - PPM')
 ax.set_xlabel("Minutes")
-plt.ylabel('Hapex PM ')
+plt.ylabel('CO2 (PPM)')
 if Boil_time != '-1':
     Gas_boil = (GAS_FIRE_START_TV) + (15*int(Boil_time))
     plt.axvline(Gas_boil, color='k', linestyle=':')# label='Boil Time',
@@ -287,7 +287,7 @@ plt.legend()
 fig2, ax1 = plt.subplots()
 
 labels2 = [x]
-plt.title('CO Filter')
+plt.title('CO Profile')
 #plt.ylabel("CO - PPM")
 
 
@@ -303,9 +303,9 @@ print('Median CO PPM to Start:  ', int(Median_Fire_CO_Setup))
 Slope_CO_to_Start = (co_filter[GAS_FIRE_START_TV] - co_filter[0]) / ((GAS_FIRE_START_TV + 1 - 0) / 15)
 print('CO Before Fire Slope:  ', int(Slope_CO_to_Start))
 
-ax1.set_ylabel('CO - PPM')
+ax1.set_ylabel('CO (PPM)')
 ax1.set_xlabel("Minutes")
-plt.ylabel('Hapex PM ')
+#plt.ylabel('Hapex PM ')
 if Boil_time != '-1':
     Gas_boil = (GAS_FIRE_START_TV) + (15*int(Boil_time))
     plt.axvline(Gas_boil, color='k', linestyle=':') # label='Boil Time',
@@ -354,9 +354,9 @@ if Coking_Length != '-1' and Boil_time != '-1':
 
 
 plt.xticks(x, xval)
-ax1.plot(X_Max_CO_Cooking, Y_Max_CO_Cooking, label='Local Max ',color = 'k', marker=".", markersize=30)
+#ax1.plot(X_Max_CO_Cooking, Y_Max_CO_Cooking, label='Local Max ',color = 'k', marker=".", markersize=30)
 
-ax22 = ax1.twinx()
+#ax22 = ax1.twinx()
 
 
 Cooldown_len = len(co_filter)-GAS_FIRE_START_TV
@@ -367,10 +367,26 @@ print(' Length of the co revy and CO: ', len(CO_revy), '---',len(co_filter))
 
 #ax1.plot(Gas_CO, label='Orginal CO', color='green')
 #ax22.plot(CO_revy, color='green',label='CO Filter - Rev' )
+ax1.plot(Gas_CO, color='green', label='CO Filter')
 ax1.plot(co_filter, color='r', label='CO Filter')
+
+x_j = np.linspace(0, len(Gas_CO), len(Gas_CO2))
+
+COEFf =  poly.polyfit(x_j,Gas_CO,4)
+x_new = np.linspace(x_j[0], x_j[-1], num=len(x_j))
+fffit = poly.polyval(x_new, COEFf)
+print('lengths of x and gas co2   ', len(x_j), len(Gas_CO), len(x_new))
+print('typesesesesesesese', type(x_j), 'Gas- ',type(Gas_CO), 'new',type(x_new))
+fig5, ax5 = plt.subplots()
+ax5.scatter(x_j, Gas_CO, facecolors='None')
+ax1.plot(x_new, fffit, label='Polynomial fit')
+plt.show()
+
+
+
 #ax22.plot(Inline_Hap_PM, color = 'blue',) #label='Inline HAPEx',
 #ax22.plot(Cook_Hap_PM,  color = 'm',label='Cook HAPEx') #label='Cook HAPEx',
-ax22.plot(Gas_Pressure, color='b', label='Gas Sense Pressure')
+#ax22.plot(Gas_Pressure, color='b', label='Gas Sense Pressure')
 
 #going to solve for CO cooldown usingx previous steady state work
 # First USe Local Max
@@ -404,7 +420,31 @@ print('lengths of x and gas co2   ', len(x_j), len(Gas_CO2), len(x_new))
 print('typesesesesesesese', type(x_j), 'Gas- ',type(Gas_CO2), 'new',type(x_new))
 fig5, ax5 = plt.subplots()
 ax5.scatter(x_j, Gas_CO2, facecolors='None')
-ax.plot(x_new, fffit)
+ax.plot(x_new, fffit, label='Polynomial fit')
 plt.show()
 
 #co2_filter = np.polyfit(Gas_CO2, sine, deg=2)
+
+
+
+fig3, ax3 = plt.subplots()
+Filter_Cook_Hap_PM = Functions_malawi.Running_Average(Cook_Hap_PM, Running_Average_length)
+plt.title('Hapex Profile')
+ax3.set_ylabel('HAPEx (ug/m^3)')
+ax3.set_xlabel("Minutes")
+
+#plt.plot(Cook_Hap_PM, label='Hapex', color='green')
+plt.plot(Filter_Cook_Hap_PM, label='Hapex Filter', color='r')
+
+x_j = np.linspace(0, len(Cook_Hap_PM), len(Cook_Hap_PM))
+
+COEFf =  poly.polyfit(x_j,Cook_Hap_PM,4)
+x_new = np.linspace(x_j[0], x_j[-1], num=len(x_j))
+fffit = poly.polyval(x_new, COEFf)
+plt.plot(fffit, label='Polynomial fit')
+plt.show()
+
+
+plt.xticks(x, xval)
+plt.legend()
+plt.show()

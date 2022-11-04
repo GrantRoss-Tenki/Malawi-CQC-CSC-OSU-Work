@@ -13,7 +13,7 @@ import numpy.polynomial.polynomial as poly
 
 
 Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH6' #input("HH1 or HH2... etc:  ")
+Household = 'HH1' #input("HH1 or HH2... etc:  ")
 log_rate_per_min = 15
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
@@ -72,8 +72,8 @@ for file in E_files:
     Stage_3_Cook_PM.append(np.median(Cook_PM[End_jfk:]))
 
     Stage_1_Cook_Comp.append(int(((sum(Cook_comp[0:Start_jfk+1]))/len(Cook_comp[0:Start_jfk+1]))*10)/10)
-    Stage_2_Cook_Comp.append(int(((sum(Cook_comp[Start_jfk:End_jfk+1]))/len(Cook_comp[0:Start_jfk+1]))*10)/10)
-    Stage_3_Cook_Comp.append(int(((sum(Cook_comp[End_jfk:]))/len(Cook_comp[0:Start_jfk+1]))*10)/10)
+    Stage_2_Cook_Comp.append(int(((sum(Cook_comp[Start_jfk:End_jfk+1]))/(End_jfk-Start_jfk))*10)/10)
+    Stage_3_Cook_Comp.append(int((sum(Cook_comp[End_jfk:]))/(len(Cook_comp)-End_jfk)*10)/10)
 
 
     

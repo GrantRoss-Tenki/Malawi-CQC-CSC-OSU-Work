@@ -1,5 +1,5 @@
 import os
-import pandas as pd
+
 import numpy as np
 import csv
 import glob
@@ -10,14 +10,15 @@ import seaborn as sns
 import csv
 import Functions_malawi
 import numpy.polynomial.polynomial as poly
+import pandas as pd
 
 HH_Number_array = ['HH1', 'HH2', 'HH3', 'HH4', 'HH5','HH6']
 Stove_array = ['1','2','3']
 CCT_array = ['1','2','3', '4']
 
-Source = 'Work' #input("laptop or Work: ")  # 'work' or 'laptop'
+Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 Household = 'HH1' #input("HH1 or HH2... etc:  ")
-Stove = '1'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
+Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
 CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
@@ -27,6 +28,7 @@ else:
 # getting the metrics and times
 CCT_TIMES_METRICS = pd.read_csv(USB+":/Malawi 1.1 CCT Fire Start Times.csv")
 identifyer = Household+' - CCT-'+ CCT_Num
+USB_works = False
 if Stove == '1':
     for rows, name in enumerate(CCT_TIMES_METRICS.iloc[:,0]):
         if name == identifyer:
@@ -141,6 +143,7 @@ for file in l_files:
                         USB_Energy  = USB_CSV.iloc[:, 5]
                         USB_Usage = USB_CSV.iloc[:, 6]
                         USB_Proximity_DF = pd.DataFrame(USB_CSV.iloc[:, 6:])
+                        USB_works = True
                         for tv, f in enumerate(USB_Time):
                             if f[11:16] == Fire_Start[9:] or str(f[10:16]) == Fire_Start[10:]:
                                 USB_FIRE_START_TV = tv
@@ -156,6 +159,14 @@ for file in l_files:
                                     break
                                 else:
                                     Beacon_Proximity_to_cook_Fali = True
+    elif USB_works == True:
+        counnter = 0
+        Collect_amps = []
+        for a,g in enumerate(USB_Usage):
+            if g == 1:
+                Collect_amps.append(USB_Current[a])
+                counnter = counnter + 1
+        print('average amps collected- ',np.average(Collect_amps), '- number of spots- ',len(Collect_amps))
 
     elif file[0] == 'G':
         Gas_name = 'GasSense ' + file[9:13]
@@ -448,3 +459,5 @@ plt.show()
 plt.xticks(x, xval)
 plt.legend()
 plt.show()
+
+

@@ -17,7 +17,7 @@ Stove_array = ['1','2','3']
 CCT_array = ['1','2','3', '4']
 
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH1' #input("HH1 or HH2... etc:  ")
+Household = 'HH3' #input("HH1 or HH2... etc:  ")
 Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
 CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
@@ -143,6 +143,7 @@ for file in l_files:
                         USB_Energy  = USB_CSV.iloc[:, 5]
                         USB_Usage = USB_CSV.iloc[:, 6]
                         USB_Proximity_DF = pd.DataFrame(USB_CSV.iloc[:, 6:])
+                        print('==--=-=--=-here is the wattage used =-----', USB_Energy.iloc[-1])
                         USB_works = True
                         for tv, f in enumerate(USB_Time):
                             if f[11:16] == Fire_Start[9:] or str(f[10:16]) == Fire_Start[10:]:
@@ -153,7 +154,7 @@ for file in l_files:
                                 if name[0:17] == ('RSSI ' + Cook_Beacon_name):
                                     Beacon_Proximity_to_cook_Fali = False
                                     Cook_beacon_proximity = USB_Proximity_DF.iloc[:,col]
-                                    #print('beacon proximity: ', Proximity_to_cook)
+                                    print('beacon proximity: ', Proximity_to_cook)
                             else:
                                 if Beacon_Proximity_to_cook_Fali == False:
                                     break
@@ -166,7 +167,7 @@ for file in l_files:
             if g == 1:
                 Collect_amps.append(USB_Current[a])
                 counnter = counnter + 1
-        print('average amps collected- ',np.average(Collect_amps), '- number of spots- ',len(Collect_amps))
+        print('average amps collected- ',np.average(Collect_amps), '- number of spots and minutes- ',len(Collect_amps)/20)
 
     elif file[0] == 'G':
         Gas_name = 'GasSense ' + file[9:13]

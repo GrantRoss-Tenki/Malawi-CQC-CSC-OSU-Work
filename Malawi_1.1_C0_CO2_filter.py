@@ -18,7 +18,7 @@ CCT_array = ['1','2','3', '4']
 
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 Household = 'HH4' #input("HH1 or HH2... etc:  ")
-Stove = '1'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
+Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
 CCT_Num = '2'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
@@ -219,6 +219,19 @@ if  Beacon_Proximity_to_cook_Fali == False:
     print('----Beacon Proximity------ Before---',Beacon_prox_before,'-- Cooking ---', Beacon_prox_Cooking,'--- After ---',Beacon_prox_Done)
 
 
+Path_for_running_average = USB+":/Malawi 1.1/"+Household+"/S- "+Stove+"; CCT-"+CCT_Num+"/Watts_running_average.csv"
+Watt_5_time_avg = Functions_malawi.Running_Average(USB_Power, 5)
+
+# Dict_watt_average = {'|wattage|': Watt_5_time_avg}
+# DF_wattaverag = pd.DataFrame(Dict_watt_average)
+for tv, a in enumerate(Watt_5_time_avg): 
+    if a < 0: 
+        Watt_5_time_avg[tv] = 0
+# DF_wattaverag.to_csv(Path_for_running_average, index=False, mode='a')
+
+##### 
+
+
 
 co2_filter = Functions_malawi.Running_Average(Gas_CO2, Running_Average_length)
 co_filter = Functions_malawi.Running_Average(Gas_CO, Running_Average_length)
@@ -232,10 +245,10 @@ for tt in x:
     xval.append(int(tt/15))
 
 fig, ax = plt.subplots()
-plt.title('CO2 Profile')
+plt.title('Household CCT Instant Wattage')
 
-plt.plot(Gas_CO2, label='Orginal CO2', color='green')
-plt.plot(co2_filter, label='CO2 Filter', color='r')
+# plt.plot(Gas_CO2, label='Orginal CO2', color='green')
+plt.plot(Watt_5_time_avg, label='Wattage', color='g')
 
 #ax2 = ax.twinx()
 labels = [x]
@@ -244,7 +257,7 @@ labels = [x]
 #ax2.plot(Cook_Hap_PM,label='Cook HAPEx',  color = 'm')
 
 #getting start up before fire start
-plt.axvline(GAS_FIRE_START_TV, color='k',linestyle = '--')#label='Fire Start',
+plt.axvline(GAS_FIRE_START_TV, color='k',linestyle = '--',label='Fire Start')
 
 Avg_Fire_CO2_Setup = np.average(co2_filter[0:GAS_FIRE_START_TV])
 Median_Fire_CO2_Setup = np.median(co2_filter[0:GAS_FIRE_START_TV])
@@ -255,12 +268,12 @@ print('CO2 Before Fire Slope:  ', int(Slope_CO2_to_Start))
 
 
 
-ax.set_ylabel('CO2 - PPM')
-ax.set_xlabel("Minutes")
-plt.ylabel('CO2 (PPM)')
+# ax.set_ylabel('CO2 - PPM')
+# ax.set_xlabel("Minutes")
+# plt.ylabel('CO2 (PPM)')
 if Boil_time != '-1':
     Gas_boil = (GAS_FIRE_START_TV) + (15*int(Boil_time))
-    plt.axvline(Gas_boil, color='k', linestyle=':')# label='Boil Time',
+    plt.axvline(Gas_boil, color='k', linestyle=':',label='Boil Time')
     if GasSense_Failure == False:
         Avg_Fire_CO2_Start_to_boil = np.average(co2_filter[GAS_FIRE_START_TV:Gas_boil +1])
         Median_Fire_CO2_Start_to_boil = np.median(co2_filter[GAS_FIRE_START_TV:Gas_boil +1])
@@ -270,7 +283,7 @@ if Boil_time != '-1':
         print('CO2 Start - Boil Slope:  ', int(Slope_CO2_Boil))
 if Coking_Length != '-1':
     Gas_CE = (GAS_FIRE_START_TV) + (15 * int(Coking_Length))
-    plt.axvline(Gas_CE, color='k')# label='Cooking End',
+    plt.axvline(Gas_CE, color='k',label='Cooking End')
     if GasSense_Failure == False:
         Avg_CO2_Cooking_length = np.average(co2_filter[GAS_FIRE_START_TV:Gas_CE+1])
         Median_CO2_Boil_to_Cooking_end = np.median(co2_filter[GAS_FIRE_START_TV:Gas_CE +1])
@@ -290,24 +303,25 @@ if Coking_Length != '-1' and Boil_time != '-1':
         print('CO2 Cooldown Slope:  ', int(Slope_CO2_Cooldown), 'Cooldown Length (minutes):  ', int(((len(co2_filter) - 1 - Gas_CE) / 15)))
 
 
-
+plt.xlabel("Minutes")
+plt.ylabel("(W)")
 plt.xticks(x, xval)
 plt.legend()
-#plt.show()
+plt.show()
 
 
-fig2, ax1 = plt.subplots()
+# fig2, ax1 = plt.subplots()
 
-labels2 = [x]
-plt.title('CO Profile')
-#plt.ylabel("CO - PPM")
+# labels2 = [x]
+# plt.title('CO Profile')
+# plt.ylabel("CO - PPM")
 
 
 
 
 
 # getitng the slope before the fire starr
-plt.axvline(GAS_FIRE_START_TV, color='k',linestyle = '--') #label='Fire Start',
+# plt.axvline(GAS_FIRE_START_TV, color='k',linestyle = '--') #label='Fire Start',
 Avg_Fire_CO_Setup = np.average(co_filter[0:GAS_FIRE_START_TV])
 Median_Fire_CO_Setup = np.median(co_filter[0:GAS_FIRE_START_TV])
 print('Average CO PPM to Start:  ', int(Avg_Fire_CO_Setup))
@@ -315,12 +329,12 @@ print('Median CO PPM to Start:  ', int(Median_Fire_CO_Setup))
 Slope_CO_to_Start = (co_filter[GAS_FIRE_START_TV] - co_filter[0]) / ((GAS_FIRE_START_TV + 1 - 0) / 15)
 print('CO Before Fire Slope:  ', int(Slope_CO_to_Start))
 
-ax1.set_ylabel('CO (PPM)')
-ax1.set_xlabel("Minutes")
-#plt.ylabel('Hapex PM ')
+# ax1.set_ylabel('CO (PPM)')
+# ax1.set_xlabel("Minutes")
+# plt.ylabel('Hapex PM ')
 if Boil_time != '-1':
     Gas_boil = (GAS_FIRE_START_TV) + (15*int(Boil_time))
-    plt.axvline(Gas_boil, color='k', linestyle=':') # label='Boil Time',
+    # plt.axvline(Gas_boil, color='k', linestyle=':') # label='Boil Time',
     if GasSense_Failure == False:
         Avg_Fire_CO_Start_to_boil = np.average(co_filter[GAS_FIRE_START_TV:Gas_boil +1])
         Median_Fire_CO_Start_to_boil = np.median(co_filter[GAS_FIRE_START_TV:Gas_boil +1])
@@ -328,7 +342,7 @@ if Boil_time != '-1':
         print('Median CO PPM from Start - Boil:  ', int(Median_Fire_CO_Start_to_boil))
 if Coking_Length != '-1':
     Gas_CE = (GAS_FIRE_START_TV) + (15 * int(Coking_Length))
-    plt.axvline(Gas_CE,  color='k')#label='Cooking End',
+    # plt.axvline(Gas_CE,  color='k')#label='Cooking End',
     if GasSense_Failure == False:
         Avg_CO_Cooking_length = np.average(co_filter[GAS_FIRE_START_TV:Gas_CE+1])
         Median_CO_Boil_to_Cooking_end = np.median(co_filter[GAS_FIRE_START_TV:Gas_CE +1])
@@ -365,7 +379,7 @@ if Coking_Length != '-1' and Boil_time != '-1':
         print('Median CO PPM from Boil - Cooking End:  ', int(Median_CO_Boil_to_Cooking_end))
 
 
-plt.xticks(x, xval)
+# plt.xticks(x, xval)
 #ax1.plot(X_Max_CO_Cooking, Y_Max_CO_Cooking, label='Local Max ',color = 'k', marker=".", markersize=30)
 
 #ax22 = ax1.twinx()
@@ -379,20 +393,20 @@ print(' Length of the co revy and CO: ', len(CO_revy), '---',len(co_filter))
 
 #ax1.plot(Gas_CO, label='Orginal CO', color='green')
 #ax22.plot(CO_revy, color='green',label='CO Filter - Rev' )
-ax1.plot(Gas_CO, color='green', label='CO Filter')
-ax1.plot(co_filter, color='r', label='CO Filter')
+# ax1.plot(Gas_CO, color='green', label='CO Filter')
+# ax1.plot(co_filter, color='r', label='CO Filter')
 
 x_j = np.linspace(0, len(Gas_CO), len(Gas_CO2))
 
-COEFf =  poly.polyfit(x_j,Gas_CO,4)
-x_new = np.linspace(x_j[0], x_j[-1], num=len(x_j))
-fffit = poly.polyval(x_new, COEFf)
-print('lengths of x and gas co2   ', len(x_j), len(Gas_CO), len(x_new))
-print('typesesesesesesese', type(x_j), 'Gas- ',type(Gas_CO), 'new',type(x_new))
-fig5, ax5 = plt.subplots()
-ax5.scatter(x_j, Gas_CO, facecolors='None')
-ax1.plot(x_new, fffit, label='Polynomial fit')
-plt.show()
+# COEFf =  poly.polyfit(x_j,Gas_CO,4)
+# x_new = np.linspace(x_j[0], x_j[-1], num=len(x_j))
+# fffit = poly.polyval(x_new, COEFf)
+# print('lengths of x and gas co2   ', len(x_j), len(Gas_CO), len(x_new))
+# print('typesesesesesesese', type(x_j), 'Gas- ',type(Gas_CO), 'new',type(x_new))
+# fig5, ax5 = plt.subplots()
+# ax5.scatter(x_j, Gas_CO, facecolors='None')
+# ax1.plot(x_new, fffit, label='Polynomial fit')
+# plt.show()
 
 
 
@@ -416,8 +430,8 @@ Co_MIN_tv, Co_MAX_tv ,Co_MIN_Count, Co_MAX_Count = Functions_malawi.Local_Max_mi
 #HAPEX_Steady_start_Time_value = Functions_malawi.SteadyState_Finder(Inline_Hap_PM, 25, Hap_MIN_Count,Inline_Hap_PM[Gas_CE],Hap_MAX_Count ,10)
 #print(HAPEX_Steady_start_Time_value)
 #ax1.plot(Steady_start_Time_value, Gas_CO[Steady_start_Time_value], label='Local Max ',color = 'k', marker=".", markersize=30)
-plt.legend()
-plt.show()
+# plt.legend()
+# plt.show()
 
 
 
@@ -430,35 +444,35 @@ x_new = np.linspace(x_j[0], x_j[-1], num=len(x_j))
 fffit = poly.polyval(x_new, COEFf)
 print('lengths of x and gas co2   ', len(x_j), len(Gas_CO2), len(x_new))
 print('typesesesesesesese', type(x_j), 'Gas- ',type(Gas_CO2), 'new',type(x_new))
-fig5, ax5 = plt.subplots()
-ax5.scatter(x_j, Gas_CO2, facecolors='None')
-ax.plot(x_new, fffit, label='Polynomial fit')
-plt.show()
+# fig5, ax5 = plt.subplots()
+# ax5.scatter(x_j, Gas_CO2, facecolors='None')
+# ax.plot(x_new, fffit, label='Polynomial fit')
+# # plt.show()
 
 #co2_filter = np.polyfit(Gas_CO2, sine, deg=2)
 
 
 
-fig3, ax3 = plt.subplots()
+# fig3, ax3 = plt.subplots()
 Filter_Cook_Hap_PM = Functions_malawi.Running_Average(Cook_Hap_PM, Running_Average_length)
-plt.title('Hapex Profile')
-ax3.set_ylabel('HAPEx (ug/m^3)')
-ax3.set_xlabel("Minutes")
+# plt.title('Hapex Profile')
+# ax3.set_ylabel('HAPEx (ug/m^3)')
+# ax3.set_xlabel("Minutes")
 
 #plt.plot(Cook_Hap_PM, label='Hapex', color='green')
-plt.plot(Filter_Cook_Hap_PM, label='Hapex Filter', color='r')
+# plt.plot(Filter_Cook_Hap_PM, label='Hapex Filter', color='r')
 
 x_j = np.linspace(0, len(Cook_Hap_PM), len(Cook_Hap_PM))
 
 COEFf =  poly.polyfit(x_j,Cook_Hap_PM,4)
 x_new = np.linspace(x_j[0], x_j[-1], num=len(x_j))
 fffit = poly.polyval(x_new, COEFf)
-plt.plot(fffit, label='Polynomial fit')
-plt.show()
+# plt.plot(fffit, label='Polynomial fit')
+# plt.show()
 
 
-plt.xticks(x, xval)
-plt.legend()
-plt.show()
+# plt.xticks(x, xval)
+# plt.legend()
+# plt.show()
 
 

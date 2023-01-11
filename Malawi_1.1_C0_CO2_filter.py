@@ -17,9 +17,9 @@ Stove_array = ['1','2','3']
 CCT_array = ['1','2','3', '4']
 
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH3' #input("HH1 or HH2... etc:  ")
-Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
-CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
+Household = 'HH4' #input("HH1 or HH2... etc:  ")
+Stove = '1'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
+CCT_Num = '2'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
     USB = 'D'
@@ -417,7 +417,7 @@ Co_MIN_tv, Co_MAX_tv ,Co_MIN_Count, Co_MAX_Count = Functions_malawi.Local_Max_mi
 #print(HAPEX_Steady_start_Time_value)
 #ax1.plot(Steady_start_Time_value, Gas_CO[Steady_start_Time_value], label='Local Max ',color = 'k', marker=".", markersize=30)
 plt.legend()
-#plt.show()
+plt.show()
 
 
 

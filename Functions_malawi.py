@@ -637,3 +637,37 @@ def FF_to_jet_flame_usage(FF_start, FF_end, USB_JFK_usage_array):
     jet_flame_on = round(JFK_off_place - JFK_on_place)
     print('---------------------from Function -----: ',total_CE_length, Jet_Flame_end_min, FF_end, tv,Jet_flame_start_min)
     return percentage,Jet_flame_start_min ,Jet_Flame_end_min, jet_flame_on
+
+
+def Counting_regions(array, Upper_bound):
+    # the regions should be anything less than 8 and the maximum is 3
+    r_1 = []; r_2 = []; r_3 = [];r_4 = [];r_5 = [];r_6 = [];r_7 = []; r_8= []
+    count_1 = 1; count_2 = 1; count_3=1; count_4=1; count_5=1; count_6=1; count_7=1;count_8=1
+    if Upper_bound > 3:
+        print('This function does not work')
+    for value in array:
+        if 2.75 <= value < 3: 
+            r_8.append(count_8)
+            count_8 = count_8 +1
+        elif 2.5 <= value < 2.75: 
+            r_7.append(count_7)
+            count_7 = count_7 +1
+        elif 2.25 <= value < 2.5: 
+            r_6.append(count_6)
+            count_6 = count_6 +1
+        elif 2 <= value < 2.25: 
+            r_5.append(count_5)
+            count_5 = count_5 +1
+        elif 1.75 <= value < 2: 
+            r_4.append(count_4)
+            count_4 = count_4 +1
+        elif 1.5 <= value < 1.75: 
+            r_3.append(count_3)
+            count_3 = count_3 +1
+        elif 1 <= value < 1.5: 
+            r_2.append(count_2)
+            count_2 = count_2 +1
+        elif 0.75 <= value < 1: 
+            r_1.append(count_1)
+            count_1 = count_1 +1
+    return (r_1, r_2, r_3, r_4, r_5, r_6, r_7, r_8)

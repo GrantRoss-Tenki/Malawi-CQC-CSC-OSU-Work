@@ -432,7 +432,8 @@ Event_jet_flame_percent = []
 Event_jet_flame_start_min = []
 Event_jet_flame_end_min = []
 Event_jet_flame_time_on = []
-
+Event_Watt_R_1 = []; Event_Watt_R_2 = []; Event_Watt_R_3 = []; Event_Watt_R_4 = []; Event_Watt_R_5 = []; Event_Watt_R_6 = []
+Event_Watt_R_7 = [];  Event_Watt_R_8 = []; 
 
 prev_fuel_bound_1 = [0]
 prev_fuel_bound_2 = [0]
@@ -565,6 +566,17 @@ for Event in Event_counter:
         DF_Raw_Event_matrix.to_csv(HH_event_raw_timescale_path,index=False, mode='a')
 
 
+        Wattage_running_average = Functions_malawi.Running_Average(USB_Energy, 20)
+        for tv, a in enumerate(Wattage_running_average): 
+            if a < 0: 
+                Wattage_running_average[tv] = 0
+
+        r_1, r_2, r_3, r_4, r_5, r_6, r_7, r_8 = Functions_malawi.Counting_regions(Wattage_running_average, max(Wattage_running_average))
+        Event_Watt_R_1.append(r_1); Event_Watt_R_2.append(r_2); Event_Watt_R_3.append(r_3)
+        Event_Watt_R_4.append(r_4); Event_Watt_R_5.append(r_5); Event_Watt_R_6.append(r_6)
+        Event_Watt_R_7.append(r_7);  Event_Watt_R_8.append(r_8) 
+
+
         if (IS_there_a_Cook_beacon_proximity == True) and (EVENT_CURRENT_CHECK != 0):
             Beacon_Use_event_number.append(Event)
             #print('==-=-=proximity -- Start Time Value -=-', (Combined_Cooking_start[Event]))
@@ -595,6 +607,9 @@ for Event in Event_counter:
         Event_jet_flame_time_on.append("")
         Adjusting_the_jet_flame.append("")
         Percentage_away_from_stove_CE.append("")
+        Event_Watt_R_1.append(""); Event_Watt_R_2.append(""); Event_Watt_R_3.append("")
+        Event_Watt_R_4.append(""); Event_Watt_R_5.append(""); Event_Watt_R_6.append("")
+        Event_Watt_R_7.append("");  Event_Watt_R_8.append("") 
 
     if Cook_Beacon_place == True:
         Event_Avergage_Cook_Beacon_Acceleration.append(np.average(list(set(Cook_Beacon_accel[(Combined_Cooking_start[Event]*Log_rate_per_min):(Combined_Cooking_end[Event]*Log_rate_per_min)]))))
@@ -815,11 +830,13 @@ for Day in Day_counter:
     HAPEX_title_column = []
     USB_title_column = []
     Beacon_title_column = [] 
+    Wattage_column = []
     for E in Event_counter:
         Fuel_title_column.append('----FUEL----')
         HAPEX_title_column.append('----HAPEx----')
         USB_title_column.append('----USB----')
         Beacon_title_column.append('----BEACON----')
+        Wattage_column.append('--Wattage--')
         if (Combined_Cooking_end[E] < Minute_Day_End_TV[Day-1]) and (Combined_Cooking_end[E] >  Minute_Day_Start_TV[Day-1]):
             Event_per_Day_count = Event_per_Day_count +1
             EVENT_LENGTH_count.append(Combined_Cooking_end[E]-Combined_Cooking_start[E])
@@ -977,7 +994,8 @@ Dict_Event = {'|Event|': Event_counter, '|Start Time|':Event_start_time, '|End T
    '|Median USB Current|':Event_Median_USB_Current, '|StDev USB Current|':Event_StDeV_USB_Current,'|Avg. USB Voltage|':Event_Average_USB_Voltage,
     '|Median USB Voltage|':Event_Median_USB_Voltage, '|StDev USB Voltage|':Event_StDeV_USB_Voltage,'|Jet Flame on for ~(min)|':Event_jet_flame_time_on,'|Jet Flame Percentage(%)|':Event_jet_flame_percent,
     '|Jet Flame Start from Fire (min)|':Event_jet_flame_start_min, '|Jet Flame End from Fire end (min)|':Event_jet_flame_end_min,'|Time at Stove (Min)|': Length_of_time_at_stove,'|Time Away from Stove (Min)|':length_of_time_away_from_stove, 
-    '|# of times adjusting the Jet flame|':Adjusting_the_jet_flame, '|Percent away from stove durring FF CE|':Percentage_away_from_stove_CE}
+    '|# of times adjusting the Jet flame|':Adjusting_the_jet_flame, '|Percent away from stove durring FF CE|':Percentage_away_from_stove_CE, '--Wattage--':Wattage_column[0:(len(Event_counter)+1)],'|0.75 - 1|':Event_Watt_R_1, '|1 - 1.5|':Event_Watt_R_2,
+    '|1.5 - 1.75|':Event_Watt_R_3, '|1.75 - 2|':Event_Watt_R_4, '|2 - 2.25|':Event_Watt_R_5, '|2.25 - 2.5|':Event_Watt_R_6, '|2.5 - 2.75|':Event_Watt_R_7, '|2.75 - 3|':Event_Watt_R_8}
 
 
 DF_Dict_Event = pd.DataFrame(Dict_Event)
@@ -1042,7 +1060,7 @@ print('DONE WITH FILE.....')
 
 
 
-Path_Raw_Events = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary_"+KPT_NUM+".csv"
+Path_Raw_Events = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Summary_with_Wattage_useage"+KPT_NUM+".csv"
 Path_Proximity = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Beacon_Proximity_"+KPT_NUM+".csv"
 #Path_Raw_Event = "C:/Users/gvros/Desktop/Oregon State Masters/Work/OSU, CSC, CQC Project files/"+Phase+"/Compiler_"+str(q)+"_exact"
 #File_event_Raw_metrics = str(Path_Raw_Event) + "/Raw_E_metrics/"+Phase+"_HH_raw_Event_metrics_"+str(id_number)+"_"+str(q)+"_exact_1.11"+".csv"

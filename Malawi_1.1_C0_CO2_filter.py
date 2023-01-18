@@ -19,7 +19,7 @@ CCT_array = ['1','2','3', '4']
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 Household = 'HH4' #input("HH1 or HH2... etc:  ")
 Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
-CCT_Num = '2'#input("CCT Number - 1, 2, or 3: ")
+CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
     USB = 'D'
@@ -219,15 +219,21 @@ if  Beacon_Proximity_to_cook_Fali == False:
     print('----Beacon Proximity------ Before---',Beacon_prox_before,'-- Cooking ---', Beacon_prox_Cooking,'--- After ---',Beacon_prox_Done)
 
 
-Path_for_running_average = USB+":/Malawi 1.1/"+Household+"/S- "+Stove+"; CCT-"+CCT_Num+"/Watts_running_average.csv"
-Watt_5_time_avg = Functions_malawi.Running_Average(USB_Power, 5)
+Path_for_running_average = USB+":/Malawi 1.1/"+Household+"/Watts_running_average.csv"
+Watt_5_time_avg = Functions_malawi.Running_Average(USB_Power, 20)
 
-# Dict_watt_average = {'|wattage|': Watt_5_time_avg}
-# DF_wattaverag = pd.DataFrame(Dict_watt_average)
+
 for tv, a in enumerate(Watt_5_time_avg): 
     if a < 0: 
         Watt_5_time_avg[tv] = 0
-# DF_wattaverag.to_csv(Path_for_running_average, index=False, mode='a')
+r_1, r_2, r_3, r_4, r_5, r_6, r_7, r_8 = Functions_malawi.Counting_regions(Watt_5_time_avg, max(Watt_5_time_avg))
+print('-==-=-- min and max of 5 time ',max(Watt_5_time_avg), min(Watt_5_time_avg), (max(Watt_5_time_avg)/8))
+print('-==-=-- min and max of 5 time ', r_1, r_2, r_3, r_4, r_5, r_6, r_7, r_8)
+export= (Household, '-CCT- ',CCT_Num,'---', r_1, r_2, r_3, r_4, r_5, r_6, r_7, r_8)
+print('-==-=-- min and max of 5 time ', export)
+Dict_watt_average = {'----___------': export}
+DF_wattaverag = pd.DataFrame(Dict_watt_average)
+DF_wattaverag.to_csv(Path_for_running_average, index=False, mode='a')
 
 ##### 
 

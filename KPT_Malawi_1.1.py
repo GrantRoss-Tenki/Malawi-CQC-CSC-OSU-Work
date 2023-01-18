@@ -13,8 +13,8 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH3' #input("HH1 or HH2... etc:  ")
-Source = 'work' #input("laptop or Work: ")  # 'work' or 'laptop'
+Household_Number = 'HH1' #input("HH1 or HH2... etc:  ")
+Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
 Cooldown_Spread = 30
@@ -565,8 +565,9 @@ for Event in Event_counter:
         Df_JFK_event_matrix.to_csv(HH_event_raw_timescale_path,index=False, mode='a')
         DF_Raw_Event_matrix.to_csv(HH_event_raw_timescale_path,index=False, mode='a')
 
-
-        Wattage_running_average = Functions_malawi.Running_Average(USB_Energy, 20)
+        raw_wattage = pd.Series(list((USB_Energy.loc[Jet_flame_Start:Jet_flame_End+1])))
+        Wattage_running_average = Functions_malawi.Running_Average(raw_wattage, 20)
+        print('-=-=-=-=-=lengths of the event exports  ', np.average(Wattage_running_average), np.average(Wattage_running_average), type(Wattage_running_average), type(raw_wattage), type(USB_Energy))
         for tv, a in enumerate(Wattage_running_average): 
             if a < 0: 
                 Wattage_running_average[tv] = 0
@@ -1069,7 +1070,7 @@ Path_Proximity = USB_D+":/Malawi 1.1/"+Household_Number+"_KPT_Beacon_Proximity_"
 
 
 # DF_Dict_sensors.to_csv(Path_Raw_Events,index=False, mode='a')
-# DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
+DF_Dict_Event.to_csv(Path_Raw_Events,index=False, mode='a')
 # #Df_Event_Proximity.to_csv(Path_Proximity,index=False, mode='a')
 # DF_Dict_Startup.to_csv(Path_Raw_Events,index=False, mode='a')
 # DF_Dict_Cooldown.to_csv(Path_Raw_Events,index=False, mode='a')

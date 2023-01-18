@@ -13,7 +13,7 @@ import csv
 import Functions_malawi
 import itertools  
 
-Household_Number = 'HH1' #input("HH1 or HH2... etc:  ")
+Household_Number = 'HH6' #input("HH1 or HH2... etc:  ")
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
 KPT_NUM = '1'
 Start_Up_Spread = 10
@@ -297,7 +297,7 @@ for file in l_files:
                                 USB_Energy = WHOLE_CSV.iloc[:,Column+4]
                                 USB_Usage = WHOLE_CSV.iloc[:,Column+5]
                                 Proxmimity_column_count = np.arange(Column + 6, len(row), 1)
-                                print('~~~~~~~USB first values ~~~~~',USB_Current[0],USB_Power[0],sum(USB_Usage[2641:2655])   )
+                                print('~~~~~~~USB first values ~~~~~',USB_Battery[0], USB_Energy[0],USB_Current[29290],sum(USB_Usage[2641:2655]), USB_Power[29290]   )
                                 for prox in Proxmimity_column_count:
                                     row_Name = row[prox]
                                     if row_Name[0:17] == ('RSSI Beacon  ' + Cook_beacon):
@@ -565,9 +565,9 @@ for Event in Event_counter:
         Df_JFK_event_matrix.to_csv(HH_event_raw_timescale_path,index=False, mode='a')
         DF_Raw_Event_matrix.to_csv(HH_event_raw_timescale_path,index=False, mode='a')
 
-        raw_wattage = pd.Series(list((USB_Energy.loc[Jet_flame_Start:Jet_flame_End+1])))
+        raw_wattage = list((USB_Power.loc[Jet_flame_Start:Jet_flame_End]))
         Wattage_running_average = Functions_malawi.Running_Average(raw_wattage, 20)
-        print('-=-=-=-=-=lengths of the event exports  ', np.average(Wattage_running_average), np.average(Wattage_running_average), type(Wattage_running_average), type(raw_wattage), type(USB_Energy))
+        print('-=-=-=-=-=lengths of the event exports  ', Jet_flame_Start, raw_wattage[0:5],np.average(USB_Power),np.average(raw_wattage), len(raw_wattage),type(Wattage_running_average), type(raw_wattage), type(USB_Energy))
         for tv, a in enumerate(Wattage_running_average): 
             if a < 0: 
                 Wattage_running_average[tv] = 0

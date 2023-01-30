@@ -17,9 +17,9 @@ Stove_array = ['1','2','3']
 CCT_array = ['1','2','3', '4']
 
 Source = 'laptop' #input("laptop or Work: ")  # 'work' or 'laptop'
-Household = 'HH4' #input("HH1 or HH2... etc:  ")
+Household = 'HH5' #input("HH1 or HH2... etc:  ")
 Stove = '3'#input("1 = TSF, 2 = CQC, 3 = JFK:  ")
-CCT_Num = '1'#input("CCT Number - 1, 2, or 3: ")
+CCT_Num = '2'#input("CCT Number - 1, 2, or 3: ")
 Running_Average_length = 12 #int(input(" Enter Number for running length (8 would be ~ half a minute):  "))
 if Source == 'laptop':
     USB = 'D'
@@ -160,14 +160,14 @@ for file in l_files:
                                     break
                                 else:
                                     Beacon_Proximity_to_cook_Fali = True
-    elif USB_works == True:
-        counnter = 0
-        Collect_amps = []
-        for a,g in enumerate(USB_Usage):
-            if g == 1:
-                Collect_amps.append(USB_Current[a])
-                counnter = counnter + 1
-        print('average amps collected- ',np.average(Collect_amps), '- number of spots and minutes- ',len(Collect_amps)/20)
+    # elif USB_works == True:
+    #     counnter = 0
+    #     Collect_amps = []
+    #     for a,g in enumerate(USB_Usage):
+    #         if g == 1:
+    #             Collect_amps.append(USB_Current[a])
+    #             counnter = counnter + 1
+    #     print('average amps collected- ',np.average(Collect_amps), '- number of spots and minutes- ',len(Collect_amps)/20)
 
     elif file[0] == 'G':
         Gas_name = 'GasSense ' + file[9:13]
@@ -316,6 +316,14 @@ plt.legend()
 plt.show()
 
 
+output_Stove_Path = USB+":/Malawi 1.1/Output_wattage_for_one_event.csv"
+dict_wattage_for_one_event = {'wattage avg':Watt_5_time_avg, 'raw wattage':USB_Power}
+dict_x = {'x':x, 'xval':xval, }
+DF_dict_wattage_for_one_event = pd.DataFrame(dict_wattage_for_one_event)
+DF_dict_x = pd.DataFrame(dict_x)
+
+DF_dict_wattage_for_one_event.to_csv(output_Stove_Path,index=False, mode='a')
+DF_dict_x.to_csv(output_Stove_Path,index=False, mode='a')
 # fig2, ax1 = plt.subplots()
 
 # labels2 = [x]
@@ -460,7 +468,7 @@ print('typesesesesesesese', type(x_j), 'Gas- ',type(Gas_CO2), 'new',type(x_new))
 
 
 # fig3, ax3 = plt.subplots()
-Filter_Cook_Hap_PM = Functions_malawi.Running_Average(Cook_Hap_PM, Running_Average_length)
+# Filter_Cook_Hap_PM = Functions_malawi.Running_Average(Cook_Hap_PM, Running_Average_length)
 # plt.title('Hapex Profile')
 # ax3.set_ylabel('HAPEx (ug/m^3)')
 # ax3.set_xlabel("Minutes")
@@ -468,11 +476,11 @@ Filter_Cook_Hap_PM = Functions_malawi.Running_Average(Cook_Hap_PM, Running_Avera
 #plt.plot(Cook_Hap_PM, label='Hapex', color='green')
 # plt.plot(Filter_Cook_Hap_PM, label='Hapex Filter', color='r')
 
-x_j = np.linspace(0, len(Cook_Hap_PM), len(Cook_Hap_PM))
+# x_j = np.linspace(0, len(Cook_Hap_PM), len(Cook_Hap_PM))
 
-COEFf =  poly.polyfit(x_j,Cook_Hap_PM,4)
-x_new = np.linspace(x_j[0], x_j[-1], num=len(x_j))
-fffit = poly.polyval(x_new, COEFf)
+# COEFf =  poly.polyfit(x_j,Cook_Hap_PM,4)
+# x_new = np.linspace(x_j[0], x_j[-1], num=len(x_j))
+# fffit = poly.polyval(x_new, COEFf)
 # plt.plot(fffit, label='Polynomial fit')
 # plt.show()
 

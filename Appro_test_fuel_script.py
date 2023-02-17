@@ -10,21 +10,21 @@ from csv import reader
 import matplotlib.pyplot as plt
 import seaborn as sns
 import csv
-import Functions_malawi
+import Fuel_Algorithm_Function
 import itertools  
 
 Fuel_Path = "F:/FUEL_TEST"
 #place the path to your Fuel CSV. Put this in its own folder to read the file, for right now it only works for a single file
-Day_met_path = os.getcwd()
 csv_R_m = glob.glob(os.path.join(Fuel_Path, "*.csv"))
 
 for file in csv_R_m:
     with open(file, 'r') as f:
+        print()
         csv_reader = csv.reader(f)
         for idx, row in enumerate(csv_reader):
             if 'Timestamp' in row:
                 print('You have found the data')
-                WHOLE_CSV = pd.read_csv(Fuel_Path, skiprows=(idx), encoding='unicode_escape')
+                WHOLE_CSV = pd.read_csv(file, skiprows=(idx))
                 
                 for Column, Metric in enumerate(row):
                     if Column == 0:
@@ -33,4 +33,12 @@ for file in csv_R_m:
                         Fuel = WHOLE_CSV.iloc[:,Column]
                 break
 
-print(Fuel[0:3])
+
+KG_removed, Array_mean_coutner = Fuel_Algorithm_Function.FUEL_REMOVAL(Fuel, 0.03, 15, True, 30)
+#print(KG_removed)
+print('Spaces from Array_mean_coutner', Array_mean_coutner)
+Removal_time_spaces = Fuel_Algorithm_Function.FuelRemovalTime(KG_removed, True)
+#print(Removal_time_spaces)
+
+Total_removed_Fuel = list(set(KG_removed))
+print(' Total Fuel Removed ', sum(Total_removed_Fuel))

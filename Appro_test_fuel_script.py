@@ -50,4 +50,4 @@ print(' Total Fuel Removed ', sum(Total_removed_Fuel))
 
 Usage, Fire_start, Fire_end = Fire_finder_function.FireFinder(Stove_temp, Stove_Usage, True, 1,10,1,5,30,8,12)
 print('Fire Start', Fire_start)
-print('Fire End', Fire_end)
+print('Fire End    ', Fire_end)

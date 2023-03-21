@@ -11,9 +11,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import csv
 import Fuel_Algorithm_Function
+import Fire_finder_function
 import itertools  
 
-Fuel_Path = "F:/FUEL_TEST"
+Fuel_Path = "F:/Kiernan File Transfer/Test_files"
 #place the path to your Fuel CSV. Put this in its own folder to read the file, for right now it only works for a single file
 csv_R_m = glob.glob(os.path.join(Fuel_Path, "*.csv"))
 
@@ -31,6 +32,10 @@ for file in csv_R_m:
                         time = WHOLE_CSV.iloc[:,Column]
                     elif Metric[0:8] =='firewood':
                         Fuel = WHOLE_CSV.iloc[:,Column]
+                    elif Metric[0:9] == 'CQC Usage':
+                        Stove_Usage = WHOLE_CSV.iloc[:,Column]
+                    elif Metric[0:8] == 'CQC Temp':
+                        Stove_temp = WHOLE_CSV.iloc[:,Column]
                 break
 
 
@@ -42,3 +47,7 @@ Removal_time_spaces = Fuel_Algorithm_Function.FuelRemovalTime(KG_removed, True)
 
 Total_removed_Fuel = list(set(KG_removed))
 print(' Total Fuel Removed ', sum(Total_removed_Fuel))
+
+Usage, Fire_start, Fire_end = Fire_finder_function.FireFinder(Stove_temp, Stove_Usage, True, 1,10,1,5,30,8,12)
+print('Fire Start', Fire_start)
+print('Fire End', Fire_end)
